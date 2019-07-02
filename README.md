@@ -9,10 +9,10 @@ Prepare root files with quantization using "Example7.C"
 
 ## STEP 2
 `
-cd SignalWindows
-root mySw.C
-mySw a
-a.Loop()
+cd SignalWindows   
+root mySw.C   
+mySw a   
+a.Loop()   
 `
 
 
