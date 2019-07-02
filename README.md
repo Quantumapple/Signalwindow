@@ -8,12 +8,22 @@ Standalone root is available.
 Prepare root files with quantization using "Example7.C"  
 
 ## STEP 2
+Let's say that the root file name is "results.root" (Strongly recommended!)  
 ```
 cd SignalWindows   
 root mySw.C   
 mySw a   
 a.Loop()   
 ```
+
+## STEP 3 
+```
+cp sw.root fit_median
+root Make2Dplots.C
+Make2Dplots a
+a.Loop(1)
+```
+You need to change the number in a.Loop(1) from 1 to 6 and repeatedly run the code.
 
 
 
