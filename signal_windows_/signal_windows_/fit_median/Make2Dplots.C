@@ -196,12 +196,13 @@ void Make2Dplots::Loop(int eta_ = 1)
         // if (Cut(ientry) < 0) continue;
 
         if( eta_ == 1 && fabs(ntEgEta->at(0)) > 0.8 ) continue; // test with barrel only
-        if( eta_ == 2 && (fabs(ntEgEta->at(0)) < 0.8 || fabs(ntEgEta->at(0)) > 1.4)) continue; // test with barrel only
-        if( eta_ == 3 && (fabs(ntEgEta->at(0)) < 1.4 || fabs(ntEgEta->at(0)) > 1.7)) continue; // test with barrel only
-        if( eta_ == 4 && (fabs(ntEgEta->at(0)) < 1.7 || fabs(ntEgEta->at(0)) > 2.1)) continue; // test with barrel only
-        if( eta_ == 5 && (fabs(ntEgEta->at(0)) < 2.1 || fabs(ntEgEta->at(0)) > 2.7)) continue; // test with barrel only
-        if( eta_ == 6 && (fabs(ntEgEta->at(0)) < 2.7 || fabs(ntEgEta->at(0)) > 3.0)) continue; // test with barrel only
+        if( eta_ == 2 && (fabs(ntEgEta->at(0)) < 0.8 || fabs(ntEgEta->at(0)) > 1.4)) continue; // 
+        if( eta_ == 3 && (fabs(ntEgEta->at(0)) < 1.4 || fabs(ntEgEta->at(0)) > 1.7)) continue; // 
+        if( eta_ == 4 && (fabs(ntEgEta->at(0)) < 1.7 || fabs(ntEgEta->at(0)) > 2.1)) continue; // 
+        if( eta_ == 5 && (fabs(ntEgEta->at(0)) < 2.1 || fabs(ntEgEta->at(0)) > 2.7)) continue; // 
+        if( eta_ == 6 && (fabs(ntEgEta->at(0)) < 2.7 || fabs(ntEgEta->at(0)) > 3.0)) continue; // 
 
+        //cout << ntEgEta->at(0) << endl;
         if( ntEgEt->at(0) > (float) (10 + nth) && ntEgEt->at(0) < (float) (11 + nth) ){
           for(unsigned long i = 0; i < ntPix1EGdphi->size(); i++) {
              pix1egDphi_.push_back(ntPix1EGdphi->at(i)); 
@@ -304,28 +305,28 @@ void Make2Dplots::Loop(int eta_ = 1)
         }
      }// event loop
 
-     std::sort (pix1egDphi_.begin(), pix1egDphi_.end()); 
-     std::sort (pix2egDphi_.begin(), pix2egDphi_.end()); 
-     std::sort (pix3egDphi_.begin(), pix3egDphi_.end()); 
-     std::sort (pix4egDphi_.begin(), pix4egDphi_.end()); 
+     std::sort(pix1egDphi_.begin(), pix1egDphi_.end()); 
+     std::sort(pix2egDphi_.begin(), pix2egDphi_.end()); 
+     std::sort(pix3egDphi_.begin(), pix3egDphi_.end()); 
+     std::sort(pix4egDphi_.begin(), pix4egDphi_.end()); 
 
-     std::sort (pix12egDphi_.begin(), pix12egDphi_.end()); 
-     std::sort (pix13egDphi_.begin(), pix13egDphi_.end()); 
-     std::sort (pix14egDphi_.begin(), pix14egDphi_.end()); 
-     std::sort (pix23egDphi_.begin(), pix23egDphi_.end()); 
-     std::sort (pix24egDphi_.begin(), pix24egDphi_.end()); 
-     std::sort (pix34egDphi_.begin(), pix34egDphi_.end()); 
+     std::sort(pix12egDphi_.begin(), pix12egDphi_.end()); 
+     std::sort(pix13egDphi_.begin(), pix13egDphi_.end()); 
+     std::sort(pix14egDphi_.begin(), pix14egDphi_.end()); 
+     std::sort(pix23egDphi_.begin(), pix23egDphi_.end()); 
+     std::sort(pix24egDphi_.begin(), pix24egDphi_.end()); 
+     std::sort(pix34egDphi_.begin(), pix34egDphi_.end()); 
 
-     std::sort (pix012Dphi_.begin(), pix012Dphi_.end()); 
-     std::sort (pix013Dphi_.begin(), pix013Dphi_.end()); 
-     std::sort (pix014Dphi_.begin(), pix014Dphi_.end()); 
-     std::sort (pix023Dphi_.begin(), pix023Dphi_.end()); 
-     std::sort (pix024Dphi_.begin(), pix024Dphi_.end()); 
-     std::sort (pix034Dphi_.begin(), pix034Dphi_.end()); 
-     std::sort (pix123Dphi_.begin(), pix123Dphi_.end()); 
-     std::sort (pix124Dphi_.begin(), pix124Dphi_.end()); 
-     std::sort (pix134Dphi_.begin(), pix134Dphi_.end()); 
-     std::sort (pix234Dphi_.begin(), pix234Dphi_.end()); 
+     std::sort(pix012Dphi_.begin(), pix012Dphi_.end()); 
+     std::sort(pix013Dphi_.begin(), pix013Dphi_.end()); 
+     std::sort(pix014Dphi_.begin(), pix014Dphi_.end()); 
+     std::sort(pix023Dphi_.begin(), pix023Dphi_.end()); 
+     std::sort(pix024Dphi_.begin(), pix024Dphi_.end()); 
+     std::sort(pix034Dphi_.begin(), pix034Dphi_.end()); 
+     std::sort(pix123Dphi_.begin(), pix123Dphi_.end()); 
+     std::sort(pix124Dphi_.begin(), pix124Dphi_.end()); 
+     std::sort(pix134Dphi_.begin(), pix134Dphi_.end()); 
+     std::sort(pix234Dphi_.begin(), pix234Dphi_.end()); 
 
      int pix1egDphi_size = pix1egDphi_.size();
      int pix2egDphi_size = pix2egDphi_.size();
@@ -374,11 +375,13 @@ void Make2Dplots::Loop(int eta_ = 1)
      int pix134Dphi_medianIndex = getMedianIndex(pix134Dphi_);
      int pix234Dphi_medianIndex = getMedianIndex(pix234Dphi_);
 
+
      // get median
      float pix1egDphi_median = getMedian(pix1egDphi_);
      float pix2egDphi_median = getMedian(pix2egDphi_);
      float pix3egDphi_median = getMedian(pix3egDphi_);
      float pix4egDphi_median = getMedian(pix4egDphi_);
+    
 
      float pix12egDphi_median = getMedian(pix12egDphi_);
      float pix13egDphi_median = getMedian(pix13egDphi_);
@@ -386,6 +389,7 @@ void Make2Dplots::Loop(int eta_ = 1)
      float pix23egDphi_median = getMedian(pix23egDphi_);
      float pix24egDphi_median = getMedian(pix24egDphi_);
      float pix34egDphi_median = getMedian(pix34egDphi_);
+
 
      float pix012Dphi_median = getMedian(pix012Dphi_);
      float pix013Dphi_median = getMedian(pix013Dphi_);
@@ -397,6 +401,7 @@ void Make2Dplots::Loop(int eta_ = 1)
      float pix124Dphi_median = getMedian(pix124Dphi_);
      float pix134Dphi_median = getMedian(pix134Dphi_);
      float pix234Dphi_median = getMedian(pix234Dphi_);
+
 
      // calculate error
      int pix1egDphi_low = (int)(pix1egDphi_medianIndex - (0.668 * pix1egDphi_medianIndex));
@@ -516,6 +521,7 @@ void Make2Dplots::Loop(int eta_ = 1)
      pix124DphiErr[nth] = pix124Dphi_medianErr/2.;
      pix134DphiErr[nth] = pix134Dphi_medianErr/2.;
      pix234DphiErr[nth] = pix234Dphi_medianErr/2.;
+
 
   }// Et scanning loop
 

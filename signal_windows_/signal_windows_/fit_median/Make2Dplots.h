@@ -124,9 +124,9 @@ Make2Dplots::Make2Dplots(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../sw.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("sw.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("../sw.root");
+         f = new TFile("sw.root");
       }
       f->GetObject("t",tree);
 
