@@ -23,7 +23,9 @@ root Make2Dplots.C
 Make2Dplots a
 a.Loop(1)
 ```
-You need to change the number in a.Loop(1) from 1 to 6 and repeatedly run the code.
+You need to change the number in a.Loop(1) from 1 to 6 and repeatedly run the code.    
+I recommend you do `mkdir -p plots` and move all png files into plots directory.  
+And follow the step 9-1 in master branch README.  
 
 
 
