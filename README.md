@@ -16,13 +16,22 @@ ssh -p 4280 username@ui20.sdfarm.kr
 Install [root v6.06.00](https://root.cern.ch/content/release-60600), [Delphes-3.4.1](https://cp3.irmp.ucl.ac.be/projects/delphes/wiki/WorkBook/QuickTour) and [pythia8-v2.3.5](https://cp3.irmp.ucl.ac.be/projects/delphes/wiki/WorkBook/Pythia8)
 
 ## STEP 2
-copy MinBias_100k.pileup from lxplus
-path:`/eos/cms/store/group/upgrade/delphes/PhaseII/MinBias_100k.pileup`
+Copy MinBias_100k.pileup from lxplus to KISTI Delphes directory     
+`scp <username>@lxplus6.cern.ch:/eos/cms/store/group/upgrade/delphes/PhaseII/MinBias_100k.pileup .`
 
+## STEP 3
+Fork the git repository and do `git clone -b jongho git@github.com:<username>/Signalwindow.git`
+
+## STEP 4
+Edit the paths in DelphesCards/\*.tcl files, condor/setenv.sh
+
+## STEP 5
+`condor_submit submit.jds`
 
 # Measure signal windows with delphes sample
 
 ## STEP 0
+You can pass this step if you did git clone   
 Fork the git repository and do `git clone -b jongho git@github.com:<username>/Signalwindow.git`
 
 ## STEP 1
