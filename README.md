@@ -4,6 +4,21 @@ Level-1 pixel track trigger based on Delphes
 Incomplete part will be filled soon.  
 Standalone root is available.  
 
+# Submit condor job at KISTI server
+
+## STEP 0
+Connect ui20 machine  
+```
+ssh -p 4280 username@ui20.sdfarm.kr
+```
+
+## STEP 1
+Install [root v6.06.00]{https://root.cern.ch/content/release-60600}, [Delphes-3.4.1]{https://cp3.irmp.ucl.ac.be/projects/delphes/wiki/WorkBook/QuickTour} and [pythia8-v2.3.5]{https://cp3.irmp.ucl.ac.be/projects/delphes/wiki/WorkBook/Pythia8}
+
+
+
+# Measure signal windows with delphes sample
+
 ## STEP 0
 Fork the git repository and do `git clone -b jongho git@github.com:<username>/Signalwindow.git`
 
