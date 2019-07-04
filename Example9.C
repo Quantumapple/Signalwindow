@@ -715,8 +715,8 @@ void Example9(const char *inputFile)
 	ExRootTreeReader *treeReader = new ExRootTreeReader(chain);
 	//ExRootResult *result = new ExRootResult();
 
-	//TFile *result = new TFile("results.root","RECREATE");
-	TFile *result = new TFile("L1X_modified_by_Example9.root","RECREATE");
+	TFile *result = new TFile("results.root","RECREATE");
+	//TFile *result = new TFile("L1X_modified_by_Example9.root","RECREATE");
 	result->mkdir("l1PiXTRKTree");
 	result->cd("l1PiXTRKTree");
 
