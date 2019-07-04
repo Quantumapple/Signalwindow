@@ -8,7 +8,7 @@ Standalone root is available.
 Fork the git repository and do `git clone -b jongho git@github.com:<username>/Signalwindow.git`
 
 ## STEP 1
-Prepare root files with quantization using "Example7.C"  
+Prepare root files with quantization using "Example9.C"  
 
 ## STEP 2
 Let's say that the root file name is "results.root" (Strongly recommended!)  
