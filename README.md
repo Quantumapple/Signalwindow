@@ -13,7 +13,7 @@ ssh -p 4280 username@ui20.sdfarm.kr
 ```
 
 ## STEP 1
-Install [root v6.06.00]{https://root.cern.ch/content/release-60600}, [Delphes-3.4.1]{https://cp3.irmp.ucl.ac.be/projects/delphes/wiki/WorkBook/QuickTour} and [pythia8-v2.3.5]{https://cp3.irmp.ucl.ac.be/projects/delphes/wiki/WorkBook/Pythia8}
+Install [root v6.06.00](https://root.cern.ch/content/release-60600), [Delphes-3.4.1](https://cp3.irmp.ucl.ac.be/projects/delphes/wiki/WorkBook/QuickTour) and [pythia8-v2.3.5](https://cp3.irmp.ucl.ac.be/projects/delphes/wiki/WorkBook/Pythia8)
 
 
 
