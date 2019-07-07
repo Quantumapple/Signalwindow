@@ -236,14 +236,15 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
             if( fabs(eCalTrack->EtaOuter) <= 3.0)
             {
 				double j11 = 0, k11, l11;
-				double eCalX, eCalY, eCalZ, eCalEt, eCalEta, eCalPhi;
+				double eCalX, eCalY, eCalZ, eCalPt, eCalEta, eCalPhi;
 				//egVector.Et()
-				j11 = egVector.Et();
+				//j11 = egVector.Et();
+				j11 = eCalTrack->PT;
 				k11 = fmod(j11 , 0.26);
-				if(fabs(k11) < 0.13) eCalEt = j11 - k11;
+				if(fabs(k11) < 0.13) eCalPt = j11 - k11;
 				else{
-					if(j11 < 0) eCalEt = j11 - k11 - 0.26;
-					else eCalEt = j11 - k11 + 0.26;
+					if(j11 < 0) eCalPt = j11 - k11 - 0.26;
+					else eCalPt = j11 - k11 + 0.26;
 				}
 				//eCalTrack->EtaOuter
 				j11 = eCalTrack->EtaOuter;
@@ -285,7 +286,6 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
 					if(j11 < 0) eCalZ = j11 - k11 - 0.02;
 					else eCalZ = j11 - k11 + 0.02;
 				}
-                egCrysClusterEt.push_back(eCalEt);
                 egCrysClusterEta.push_back(eCalEta);
                 egCrysClusterPhi.push_back(eCalPhi);
                 egCrysClusterGx.push_back(eCalX/10.);
@@ -293,7 +293,8 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
                 egCrysClusterGz.push_back(eCalZ/10.);
                 //egCrysClusterEt.push_back(tower->ET);
                 //egVector.SetPtEtaPhiM(eCalTrack->PT, eCalTrack->EtaOuter, eCalTrack->PhiOuter, 0.000511);
-                egVector.SetPtEtaPhiM(eCalTrack->PT, eCalEta, eCalPhi, 0.000511);
+                egVector.SetPtEtaPhiM(eCalPt, eCalEta, eCalPhi, 0.000511);
+                egCrysClusterEt.push_back(egVector.Et());
             }
         }
         //if( TowerN && TrackN ) 
