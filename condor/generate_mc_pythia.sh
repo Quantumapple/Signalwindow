@@ -13,11 +13,12 @@ sed -i "718s/results.root/results_$1.root/g" Example10_$1.C
 
 root -l -b << EOF
 .L Example10_$1.C
-Example9("Results/job_$1/SingleEle200PU.root")
+Example10("Results/job_$1/SingleEle200PU.root")
 .q
 EOF
 
-mv results_$1.root Results/job_$1/results_$1.root
+xrdcp file:///$PWD/results_$1.root root://cluster142.knu.ac.kr//store/user/jongho/MinBias200PU_Delphes/Test1/results_$1.root
+#mv results_$1.root Results/job_$1/results_$1.root
 rm Results/job_$1/SingleEle200PU.root
-rm Example9_$1.C
-rm job_$1.err job_$1.out
+rm Example10_$1.C
+rm results_$1.root
