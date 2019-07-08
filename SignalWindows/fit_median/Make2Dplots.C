@@ -51,7 +51,10 @@ void Make2Dplots::Loop(int eta_ = 1)
 
   Long64_t nentries = fChain->GetEntriesFast();
 
-  const TString eta_region[6] = {"|#eta|<0.8", "0.8<|#eta|<1.4", "1.4<|#eta|<1.7", "1.7<|#eta|<2.1", "2.1<|#eta|<2.7", "2.7<|#eta|<3.0"};
+  bool debugging = true;
+  
+  const TString eta_region[6] = {"EtaRegion1", "EtaRegion2", "EtaRegion3", "EtaRegion4", "EtaRegion5", "EtaRegion6"};
+  //const TString eta_region[6] = {"|#eta|<0.8", "0.8<|#eta|<1.4", "1.4<|#eta|<1.7", "1.7<|#eta|<2.1", "2.1<|#eta|<2.7", "2.7<|#eta|<3.0"};
   
   const int etStep = 1;
   const int binSize = 90;
@@ -164,7 +167,9 @@ void Make2Dplots::Loop(int eta_ = 1)
   pixpixDphiErr.push_back(pix234DphiErr);
 
   for(int nth = 0; nth < binSize; nth++){
-  
+  //for(int nth = 34; nth < 36; nth++){
+ 
+     cout << "Which bin: " << nth << endl; 
      Long64_t nbytes = 0, nb = 0;
      vector<float> pix1egDphi_;
      vector<float> pix2egDphi_;
@@ -247,6 +252,7 @@ void Make2Dplots::Loop(int eta_ = 1)
              pix24egDphi_dist->Fill(ntEgEt->at(0), ntPix24EGdphi->at(i));
           }
           for(unsigned long i = 0; i < ntPix34EGdphi->size(); i++) {
+             if( debugging ) cout << ntPix34EGdphi->at(i) << endl;
              if(fabs(ntPix34EGdphi->at(i)) > 0.2 ) continue;
              pix34egDphi_.push_back(ntPix34EGdphi->at(i));          
              pix34egDphi_dist->Fill(ntEgEt->at(0), ntPix34EGdphi->at(i));
@@ -305,6 +311,8 @@ void Make2Dplots::Loop(int eta_ = 1)
         }
      }// event loop
 
+     if( debugging ) cout << "Escape event loop" << endl;
+
      std::sort(pix1egDphi_.begin(), pix1egDphi_.end()); 
      std::sort(pix2egDphi_.begin(), pix2egDphi_.end()); 
      std::sort(pix3egDphi_.begin(), pix3egDphi_.end()); 
@@ -327,6 +335,7 @@ void Make2Dplots::Loop(int eta_ = 1)
      std::sort(pix124Dphi_.begin(), pix124Dphi_.end()); 
      std::sort(pix134Dphi_.begin(), pix134Dphi_.end()); 
      std::sort(pix234Dphi_.begin(), pix234Dphi_.end()); 
+     if( debugging ) cout << "Sorting done" << endl;
 
      int pix1egDphi_size = pix1egDphi_.size();
      int pix2egDphi_size = pix2egDphi_.size();
@@ -350,7 +359,17 @@ void Make2Dplots::Loop(int eta_ = 1)
      int pix124Dphi_size = pix124Dphi_.size();
      int pix134Dphi_size = pix134Dphi_.size();
      int pix234Dphi_size = pix234Dphi_.size();
-
+     
+     if( debugging ) {
+         cout << "single size: " << pix1egDphi_size << ", " << pix2egDphi_size << ", " << pix3egDphi_size << ", " << pix4egDphi_size << endl;
+         cout << "  double size: " << pix12egDphi_size << ", " << pix13egDphi_size << ", " << pix14egDphi_size << ", " <<  
+             pix23egDphi_size << ", " << pix24egDphi_size << ", " << pix34egDphi_size << endl;
+         cout << "    triple size: " << pix012Dphi_size << ", " << pix013Dphi_size << ", " << pix014Dphi_size << ", " << 
+             pix023Dphi_size << ", " << pix024Dphi_size << ", " << pix034Dphi_size << ", " << pix123Dphi_size << ", " << 
+             pix124Dphi_size << ", " << pix134Dphi_size << ", " << pix234Dphi_size << endl;
+         cout << "getting size done" << endl; 
+     }
+    
      // get index for median
      int pix1egDphi_medianIndex = getMedianIndex(pix1egDphi_);
      int pix2egDphi_medianIndex = getMedianIndex(pix2egDphi_);
@@ -375,6 +394,7 @@ void Make2Dplots::Loop(int eta_ = 1)
      int pix134Dphi_medianIndex = getMedianIndex(pix134Dphi_);
      int pix234Dphi_medianIndex = getMedianIndex(pix234Dphi_);
 
+     if( debugging ) cout << "getting index done" << endl;
 
      // get median
      float pix1egDphi_median = getMedian(pix1egDphi_);
@@ -382,7 +402,6 @@ void Make2Dplots::Loop(int eta_ = 1)
      float pix3egDphi_median = getMedian(pix3egDphi_);
      float pix4egDphi_median = getMedian(pix4egDphi_);
     
-
      float pix12egDphi_median = getMedian(pix12egDphi_);
      float pix13egDphi_median = getMedian(pix13egDphi_);
      float pix14egDphi_median = getMedian(pix14egDphi_);
@@ -402,6 +421,7 @@ void Make2Dplots::Loop(int eta_ = 1)
      float pix134Dphi_median = getMedian(pix134Dphi_);
      float pix234Dphi_median = getMedian(pix234Dphi_);
 
+     if( debugging ) cout << "getting median done" << endl;
 
      // calculate error
      int pix1egDphi_low = (int)(pix1egDphi_medianIndex - (0.668 * pix1egDphi_medianIndex));
@@ -522,6 +542,7 @@ void Make2Dplots::Loop(int eta_ = 1)
      pix134DphiErr[nth] = pix134Dphi_medianErr/2.;
      pix234DphiErr[nth] = pix234Dphi_medianErr/2.;
 
+     if( debugging ) cout << "Move to the next loop" << endl << endl;
 
   }// Et scanning loop
 
