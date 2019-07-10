@@ -99,7 +99,7 @@ class test {
 
 		int Ele, Pos;
 		int skip;
-		float EgN;
+		float EGN;
 		int eta_region;
 
 		int withoutEM_count_Ele, withEM_count_Ele;

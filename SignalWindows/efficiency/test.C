@@ -75,24 +75,19 @@ void test::Loop()
         nt_genEta = propgenElPartEta->at(0);
         nt_genPt = propgenElPartPt->at(0);
 
-        nt_lastSimtkpt = lastSimtkpt;
-        nt_initialSimtkpt = initialSimtkpt;
-
         float tempDR = 999.;
         int   indx = -1;
         int   indx_closestEg = -1;
 
         //find closest egamma object to the gen electron
-        EgN=egCrysClusterEt->size();
-        int cl3d_N_ = cl3d_pt->size();
-        int tower_N_ = tower_pt->size();
+        EGN=egCrysClusterEt->size();
 
         float closest_dr = 9999.;
         int closest_eg = 0;
         int egCount = 0;
 
         // loop over barrel egamma objects
-        for(int i=0; i < EgN;i++){
+        for(int i=0; i < EGN;i++){
 
             float dPhi = deltaPhi(propgenElPartPhi->at(0), egCrysClusterPhi->at(i));
 
