@@ -33,7 +33,7 @@ void BookHistograms(ExRootResult *result)
 
 }
 
-double ReturnCustomGaus(int flag)
+double ReturnCustomGaus(int flag, double eget)
 {
 
     int a = gRandom->Integer(2);
@@ -44,8 +44,14 @@ double ReturnCustomGaus(int flag)
     TF1 *PhiGaus = new TF1("PhiGaus","gaus(0)",-0.03,0.03);
     PhiGaus->SetParameters(421.143, -2.95267e-05, 0.00347567);
     
-    TF1 *EtGaus = new TF1("EtGaus","gaus(0)",-0.1,1.0);
-    EtGaus->SetParameters(1043.81, 0.0992722, 0.0337839);
+    TF1 *EtGaus1 = new TF1("EtGaus1","gaus(0)",-0.1,1.0);
+    EtGaus1->SetParameters(1043.81, 0.0992722, 0.0237839);
+    
+    TF1 *EtGaus2 = new TF1("EtGaus2","gaus(0)",-0.1,1.0);
+    EtGaus2->SetParameters(1043.81, 0.0992722, 0.0337839);
+    
+    TF1 *EtGaus3 = new TF1("EtGaus2","gaus(0)",-0.1,1.0);
+    EtGaus3->SetParameters(1043.81, 0.0992722, 0.0437839);
     
     TF1 *XGaus = new TF1("XGaus","gaus(0)",-2.0,2.0);
     XGaus->SetParameters(343.316, -0.000918254, 0.347522);
@@ -63,7 +69,9 @@ double ReturnCustomGaus(int flag)
     if( flag == 2 && a == 0 ) return PhiGaus->GetRandom();
     if( flag == 2 && a == 1 ) return -1.*PhiGaus->GetRandom();
 
-    if( flag == 3 ) return fabs(EtGaus->GetRandom());
+    if( flag == 3 && eget < 30.) return fabs(EtGaus1->GetRandom());
+    if( flag == 3 && eget >= 30. && eget < 60.) return fabs(EtGaus2->GetRandom());
+    if( flag == 3 && eget >= 60. ) return fabs(EtGaus3->GetRandom());
     
     if( flag == 4 && a == 0 ) return XGaus->GetRandom();
     if( flag == 4 && a == 1 ) return -1.*XGaus->GetRandom();
@@ -216,28 +224,28 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
             eCalTrack = (Track*) branchTrack->At(k);
             double eCalX, eCalY, eCalZ, eCalEt, eCalEta, eCalPhi;
 
+            eCalEt = eCalTrack->PT;
             //ECal track phi
             eCalPhi = eCalTrack->PhiOuter;
-            eCalPhi += ReturnCustomGaus(2);
+            eCalPhi += ReturnCustomGaus(2, eCalEt);
 
             //ECal track eta
             eCalEta = eCalTrack->EtaOuter;
-            eCalEta += ReturnCustomGaus(1);
+            eCalEta += ReturnCustomGaus(1, eCalEt);
 
             //ECal track Et
-            eCalEt = eCalTrack->PT;
-            double eCalnum = eCalEt*ReturnCustomGaus(3);
+            double eCalnum = eCalEt*ReturnCustomGaus(3, eCalEt);
             int a = gRandom->Integer(2);
             if( a == 0 ) eCalEt += eCalnum;
             if( a == 1 ) eCalEt -= eCalnum;
 
             //ECal track X, Y, Z 
             eCalX = eCalTrack->XOuter/10.;
-            eCalX += ReturnCustomGaus(4);
+            eCalX += ReturnCustomGaus(4, eCalEt);
             eCalY = eCalTrack->YOuter/10.;
-            eCalY += ReturnCustomGaus(5);
+            eCalY += ReturnCustomGaus(5, eCalEt);
             eCalZ = eCalTrack->ZOuter/10.;
-            eCalZ += ReturnCustomGaus(6);
+            eCalZ += ReturnCustomGaus(6, eCalEt);
 
             egCrysClusterEta.push_back(eCalEta);
             egCrysClusterPhi.push_back(eCalPhi);
