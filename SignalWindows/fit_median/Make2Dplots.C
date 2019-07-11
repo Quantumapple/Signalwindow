@@ -51,8 +51,6 @@ void Make2Dplots::Loop(int eta_ = 1)
 
   Long64_t nentries = fChain->GetEntriesFast();
 
-  bool debugging = true;
-  
   const TString eta_region[6] = {"EtaRegion1", "EtaRegion2", "EtaRegion3", "EtaRegion4", "EtaRegion5", "EtaRegion6"};
   //const TString eta_region[6] = {"|#eta|<0.8", "0.8<|#eta|<1.4", "1.4<|#eta|<1.7", "1.7<|#eta|<2.1", "2.1<|#eta|<2.7", "2.7<|#eta|<3.0"};
   
@@ -65,11 +63,11 @@ void Make2Dplots::Loop(int eta_ = 1)
   float pix2egDphi[binSize], pix2egDphiErr[binSize];
   float pix3egDphi[binSize], pix3egDphiErr[binSize];
   float pix4egDphi[binSize], pix4egDphiErr[binSize];
-
-  TH2F* pix1egDphi_dist = new TH2F("pix1egDphi_dist","pix1egDphi_dist", 90,10,100,100,-0.2,0.2);
-  TH2F* pix2egDphi_dist = new TH2F("pix2egDphi_dist","pix2egDphi_dist", 90,10,100,100,-0.2,0.2);
-  TH2F* pix3egDphi_dist = new TH2F("pix3egDphi_dist","pix3egDphi_dist", 90,10,100,100,-0.2,0.2);
-  TH2F* pix4egDphi_dist = new TH2F("pix4egDphi_dist","pix4egDphi_dist", 90,10,100,100,-0.2,0.2);
+//100->5000
+  TH2F* pix1egDphi_dist = new TH2F("pix1egDphi_dist","pix1egDphi_dist", 90,10,100,5000,-0.2,0.2);
+  TH2F* pix2egDphi_dist = new TH2F("pix2egDphi_dist","pix2egDphi_dist", 90,10,100,5000,-0.2,0.2);
+  TH2F* pix3egDphi_dist = new TH2F("pix3egDphi_dist","pix3egDphi_dist", 90,10,100,5000,-0.2,0.2);
+  TH2F* pix4egDphi_dist = new TH2F("pix4egDphi_dist","pix4egDphi_dist", 90,10,100,5000,-0.2,0.2);
 
   // eg-pixelpixel dphi
   float pix12egDphi[binSize], pix12egDphiErr[binSize];
@@ -79,12 +77,12 @@ void Make2Dplots::Loop(int eta_ = 1)
   float pix24egDphi[binSize], pix24egDphiErr[binSize];
   float pix34egDphi[binSize], pix34egDphiErr[binSize];
 
-  TH2F* pix12egDphi_dist = new TH2F("pix12egDphi_dist","pix12egDphi_dist", 90,10,100,100,-0.2,0.2);
-  TH2F* pix13egDphi_dist = new TH2F("pix13egDphi_dist","pix13egDphi_dist", 90,10,100,100,-0.2,0.2);
-  TH2F* pix14egDphi_dist = new TH2F("pix14egDphi_dist","pix14egDphi_dist", 90,10,100,100,-0.2,0.2);
-  TH2F* pix23egDphi_dist = new TH2F("pix23egDphi_dist","pix23egDphi_dist", 90,10,100,100,-0.2,0.2);
-  TH2F* pix24egDphi_dist = new TH2F("pix24egDphi_dist","pix24egDphi_dist", 90,10,100,100,-0.2,0.2);
-  TH2F* pix34egDphi_dist = new TH2F("pix34egDphi_dist","pix34egDphi_dist", 90,10,100,100,-0.2,0.2);
+  TH2F* pix12egDphi_dist = new TH2F("pix12egDphi_dist","pix12egDphi_dist", 90,10,100,5000,-0.2,0.2);
+  TH2F* pix13egDphi_dist = new TH2F("pix13egDphi_dist","pix13egDphi_dist", 90,10,100,5000,-0.2,0.2);
+  TH2F* pix14egDphi_dist = new TH2F("pix14egDphi_dist","pix14egDphi_dist", 90,10,100,5000,-0.2,0.2);
+  TH2F* pix23egDphi_dist = new TH2F("pix23egDphi_dist","pix23egDphi_dist", 90,10,100,5000,-0.2,0.2);
+  TH2F* pix24egDphi_dist = new TH2F("pix24egDphi_dist","pix24egDphi_dist", 90,10,100,5000,-0.2,0.2);
+  TH2F* pix34egDphi_dist = new TH2F("pix34egDphi_dist","pix34egDphi_dist", 90,10,100,5000,-0.2,0.2);
 
   // pixel-pixel dphi
   float pix012Dphi[binSize], pix012DphiErr[binSize];
@@ -98,16 +96,16 @@ void Make2Dplots::Loop(int eta_ = 1)
   float pix134Dphi[binSize], pix134DphiErr[binSize];
   float pix234Dphi[binSize], pix234DphiErr[binSize];
 
-  TH2F* pix012Dphi_dist = new TH2F("pix012Dphi_dist","pix012Dphi_dist", 90,10,100,100,-0.02,0.02);
-  TH2F* pix013Dphi_dist = new TH2F("pix013Dphi_dist","pix013Dphi_dist", 90,10,100,100,-0.02,0.02);
-  TH2F* pix014Dphi_dist = new TH2F("pix014Dphi_dist","pix014Dphi_dist", 90,10,100,100,-0.02,0.02);
-  TH2F* pix023Dphi_dist = new TH2F("pix023Dphi_dist","pix023Dphi_dist", 90,10,100,100,-0.02,0.02);
-  TH2F* pix024Dphi_dist = new TH2F("pix024Dphi_dist","pix024Dphi_dist", 90,10,100,100,-0.02,0.02);
-  TH2F* pix034Dphi_dist = new TH2F("pix034Dphi_dist","pix034Dphi_dist", 90,10,100,100,-0.02,0.02);
-  TH2F* pix123Dphi_dist = new TH2F("pix123Dphi_dist","pix123Dphi_dist", 90,10,100,100,-0.02,0.02);
-  TH2F* pix124Dphi_dist = new TH2F("pix124Dphi_dist","pix124Dphi_dist", 90,10,100,100,-0.02,0.02);
-  TH2F* pix134Dphi_dist = new TH2F("pix134Dphi_dist","pix134Dphi_dist", 90,10,100,100,-0.02,0.02);
-  TH2F* pix234Dphi_dist = new TH2F("pix234Dphi_dist","pix234Dphi_dist", 90,10,100,100,-0.02,0.02);
+  TH2F* pix012Dphi_dist = new TH2F("pix012Dphi_dist","pix012Dphi_dist", 90,10,100,5000,-0.02,0.02);
+  TH2F* pix013Dphi_dist = new TH2F("pix013Dphi_dist","pix013Dphi_dist", 90,10,100,5000,-0.02,0.02);
+  TH2F* pix014Dphi_dist = new TH2F("pix014Dphi_dist","pix014Dphi_dist", 90,10,100,5000,-0.02,0.02);
+  TH2F* pix023Dphi_dist = new TH2F("pix023Dphi_dist","pix023Dphi_dist", 90,10,100,5000,-0.02,0.02);
+  TH2F* pix024Dphi_dist = new TH2F("pix024Dphi_dist","pix024Dphi_dist", 90,10,100,5000,-0.02,0.02);
+  TH2F* pix034Dphi_dist = new TH2F("pix034Dphi_dist","pix034Dphi_dist", 90,10,100,5000,-0.02,0.02);
+  TH2F* pix123Dphi_dist = new TH2F("pix123Dphi_dist","pix123Dphi_dist", 90,10,100,5000,-0.02,0.02);
+  TH2F* pix124Dphi_dist = new TH2F("pix124Dphi_dist","pix124Dphi_dist", 90,10,100,5000,-0.02,0.02);
+  TH2F* pix134Dphi_dist = new TH2F("pix134Dphi_dist","pix134Dphi_dist", 90,10,100,5000,-0.02,0.02);
+  TH2F* pix234Dphi_dist = new TH2F("pix234Dphi_dist","pix234Dphi_dist", 90,10,100,5000,-0.02,0.02);
 
   vector<float*> pixegDphi, pixegDphiErr;
   vector<float*> pixpixegDphi, pixpixegDphiErr;
@@ -167,9 +165,7 @@ void Make2Dplots::Loop(int eta_ = 1)
   pixpixDphiErr.push_back(pix234DphiErr);
 
   for(int nth = 0; nth < binSize; nth++){
-  //for(int nth = 34; nth < 36; nth++){
- 
-     cout << "Which bin: " << nth << endl; 
+  
      Long64_t nbytes = 0, nb = 0;
      vector<float> pix1egDphi_;
      vector<float> pix2egDphi_;
@@ -201,13 +197,12 @@ void Make2Dplots::Loop(int eta_ = 1)
         // if (Cut(ientry) < 0) continue;
 
         if( eta_ == 1 && fabs(ntEgEta->at(0)) > 0.8 ) continue; // test with barrel only
-        if( eta_ == 2 && (fabs(ntEgEta->at(0)) < 0.8 || fabs(ntEgEta->at(0)) > 1.4)) continue; // 
-        if( eta_ == 3 && (fabs(ntEgEta->at(0)) < 1.4 || fabs(ntEgEta->at(0)) > 1.7)) continue; // 
-        if( eta_ == 4 && (fabs(ntEgEta->at(0)) < 1.7 || fabs(ntEgEta->at(0)) > 2.1)) continue; // 
-        if( eta_ == 5 && (fabs(ntEgEta->at(0)) < 2.1 || fabs(ntEgEta->at(0)) > 2.7)) continue; // 
-        if( eta_ == 6 && (fabs(ntEgEta->at(0)) < 2.7 || fabs(ntEgEta->at(0)) > 3.0)) continue; // 
+        if( eta_ == 2 && (fabs(ntEgEta->at(0)) < 0.8 || fabs(ntEgEta->at(0)) > 1.4)) continue; // test with barrel only
+        if( eta_ == 3 && (fabs(ntEgEta->at(0)) < 1.4 || fabs(ntEgEta->at(0)) > 1.7)) continue; // test with barrel only
+        if( eta_ == 4 && (fabs(ntEgEta->at(0)) < 1.7 || fabs(ntEgEta->at(0)) > 2.1)) continue; // test with barrel only
+        if( eta_ == 5 && (fabs(ntEgEta->at(0)) < 2.1 || fabs(ntEgEta->at(0)) > 2.7)) continue; // test with barrel only
+        if( eta_ == 6 && (fabs(ntEgEta->at(0)) < 2.7 || fabs(ntEgEta->at(0)) > 3.0)) continue; // test with barrel only
 
-        //cout << ntEgEta->at(0) << endl;
         if( ntEgEt->at(0) > (float) (10 + nth) && ntEgEt->at(0) < (float) (11 + nth) ){
           for(unsigned long i = 0; i < ntPix1EGdphi->size(); i++) {
              pix1egDphi_.push_back(ntPix1EGdphi->at(i)); 
@@ -252,7 +247,6 @@ void Make2Dplots::Loop(int eta_ = 1)
              pix24egDphi_dist->Fill(ntEgEt->at(0), ntPix24EGdphi->at(i));
           }
           for(unsigned long i = 0; i < ntPix34EGdphi->size(); i++) {
-             if( debugging ) cout << ntPix34EGdphi->at(i) << endl;
              if(fabs(ntPix34EGdphi->at(i)) > 0.2 ) continue;
              pix34egDphi_.push_back(ntPix34EGdphi->at(i));          
              pix34egDphi_dist->Fill(ntEgEt->at(0), ntPix34EGdphi->at(i));
@@ -311,31 +305,28 @@ void Make2Dplots::Loop(int eta_ = 1)
         }
      }// event loop
 
-     if( debugging ) cout << "Escape event loop" << endl;
+     std::sort (pix1egDphi_.begin(), pix1egDphi_.end()); 
+     std::sort (pix2egDphi_.begin(), pix2egDphi_.end()); 
+     std::sort (pix3egDphi_.begin(), pix3egDphi_.end()); 
+     std::sort (pix4egDphi_.begin(), pix4egDphi_.end()); 
 
-     std::sort(pix1egDphi_.begin(), pix1egDphi_.end()); 
-     std::sort(pix2egDphi_.begin(), pix2egDphi_.end()); 
-     std::sort(pix3egDphi_.begin(), pix3egDphi_.end()); 
-     std::sort(pix4egDphi_.begin(), pix4egDphi_.end()); 
+     std::sort (pix12egDphi_.begin(), pix12egDphi_.end()); 
+     std::sort (pix13egDphi_.begin(), pix13egDphi_.end()); 
+     std::sort (pix14egDphi_.begin(), pix14egDphi_.end()); 
+     std::sort (pix23egDphi_.begin(), pix23egDphi_.end()); 
+     std::sort (pix24egDphi_.begin(), pix24egDphi_.end()); 
+     std::sort (pix34egDphi_.begin(), pix34egDphi_.end()); 
 
-     std::sort(pix12egDphi_.begin(), pix12egDphi_.end()); 
-     std::sort(pix13egDphi_.begin(), pix13egDphi_.end()); 
-     std::sort(pix14egDphi_.begin(), pix14egDphi_.end()); 
-     std::sort(pix23egDphi_.begin(), pix23egDphi_.end()); 
-     std::sort(pix24egDphi_.begin(), pix24egDphi_.end()); 
-     std::sort(pix34egDphi_.begin(), pix34egDphi_.end()); 
-
-     std::sort(pix012Dphi_.begin(), pix012Dphi_.end()); 
-     std::sort(pix013Dphi_.begin(), pix013Dphi_.end()); 
-     std::sort(pix014Dphi_.begin(), pix014Dphi_.end()); 
-     std::sort(pix023Dphi_.begin(), pix023Dphi_.end()); 
-     std::sort(pix024Dphi_.begin(), pix024Dphi_.end()); 
-     std::sort(pix034Dphi_.begin(), pix034Dphi_.end()); 
-     std::sort(pix123Dphi_.begin(), pix123Dphi_.end()); 
-     std::sort(pix124Dphi_.begin(), pix124Dphi_.end()); 
-     std::sort(pix134Dphi_.begin(), pix134Dphi_.end()); 
-     std::sort(pix234Dphi_.begin(), pix234Dphi_.end()); 
-     if( debugging ) cout << "Sorting done" << endl;
+     std::sort (pix012Dphi_.begin(), pix012Dphi_.end()); 
+     std::sort (pix013Dphi_.begin(), pix013Dphi_.end()); 
+     std::sort (pix014Dphi_.begin(), pix014Dphi_.end()); 
+     std::sort (pix023Dphi_.begin(), pix023Dphi_.end()); 
+     std::sort (pix024Dphi_.begin(), pix024Dphi_.end()); 
+     std::sort (pix034Dphi_.begin(), pix034Dphi_.end()); 
+     std::sort (pix123Dphi_.begin(), pix123Dphi_.end()); 
+     std::sort (pix124Dphi_.begin(), pix124Dphi_.end()); 
+     std::sort (pix134Dphi_.begin(), pix134Dphi_.end()); 
+     std::sort (pix234Dphi_.begin(), pix234Dphi_.end()); 
 
      int pix1egDphi_size = pix1egDphi_.size();
      int pix2egDphi_size = pix2egDphi_.size();
@@ -359,17 +350,7 @@ void Make2Dplots::Loop(int eta_ = 1)
      int pix124Dphi_size = pix124Dphi_.size();
      int pix134Dphi_size = pix134Dphi_.size();
      int pix234Dphi_size = pix234Dphi_.size();
-     
-     if( debugging ) {
-         cout << "single size: " << pix1egDphi_size << ", " << pix2egDphi_size << ", " << pix3egDphi_size << ", " << pix4egDphi_size << endl;
-         cout << "  double size: " << pix12egDphi_size << ", " << pix13egDphi_size << ", " << pix14egDphi_size << ", " <<  
-             pix23egDphi_size << ", " << pix24egDphi_size << ", " << pix34egDphi_size << endl;
-         cout << "    triple size: " << pix012Dphi_size << ", " << pix013Dphi_size << ", " << pix014Dphi_size << ", " << 
-             pix023Dphi_size << ", " << pix024Dphi_size << ", " << pix034Dphi_size << ", " << pix123Dphi_size << ", " << 
-             pix124Dphi_size << ", " << pix134Dphi_size << ", " << pix234Dphi_size << endl;
-         cout << "getting size done" << endl; 
-     }
-    
+
      // get index for median
      int pix1egDphi_medianIndex = getMedianIndex(pix1egDphi_);
      int pix2egDphi_medianIndex = getMedianIndex(pix2egDphi_);
@@ -394,21 +375,18 @@ void Make2Dplots::Loop(int eta_ = 1)
      int pix134Dphi_medianIndex = getMedianIndex(pix134Dphi_);
      int pix234Dphi_medianIndex = getMedianIndex(pix234Dphi_);
 
-     if( debugging ) cout << "getting index done" << endl;
-
      // get median
      float pix1egDphi_median = getMedian(pix1egDphi_);
      float pix2egDphi_median = getMedian(pix2egDphi_);
      float pix3egDphi_median = getMedian(pix3egDphi_);
      float pix4egDphi_median = getMedian(pix4egDphi_);
-    
+
      float pix12egDphi_median = getMedian(pix12egDphi_);
      float pix13egDphi_median = getMedian(pix13egDphi_);
      float pix14egDphi_median = getMedian(pix14egDphi_);
      float pix23egDphi_median = getMedian(pix23egDphi_);
      float pix24egDphi_median = getMedian(pix24egDphi_);
      float pix34egDphi_median = getMedian(pix34egDphi_);
-
 
      float pix012Dphi_median = getMedian(pix012Dphi_);
      float pix013Dphi_median = getMedian(pix013Dphi_);
@@ -420,8 +398,6 @@ void Make2Dplots::Loop(int eta_ = 1)
      float pix124Dphi_median = getMedian(pix124Dphi_);
      float pix134Dphi_median = getMedian(pix134Dphi_);
      float pix234Dphi_median = getMedian(pix234Dphi_);
-
-     if( debugging ) cout << "getting median done" << endl;
 
      // calculate error
      int pix1egDphi_low = (int)(pix1egDphi_medianIndex - (0.668 * pix1egDphi_medianIndex));
@@ -470,6 +446,29 @@ void Make2Dplots::Loop(int eta_ = 1)
      int pix134Dphi_high = (int)(pix134Dphi_medianIndex + (0.668 * (pix134Dphi_size-1-pix134Dphi_medianIndex)));
      int pix234Dphi_high = (int)(pix234Dphi_medianIndex + (0.668 * (pix234Dphi_size-1-pix234Dphi_medianIndex)));
 
+     float pix1egDphi_medianErr = pix1egDphi_.at(pix1egDphi_high) - pix1egDphi_.at(pix1egDphi_low);
+     float pix2egDphi_medianErr = pix2egDphi_.at(pix2egDphi_high) - pix2egDphi_.at(pix2egDphi_low);
+     float pix3egDphi_medianErr = pix3egDphi_.at(pix3egDphi_high) - pix3egDphi_.at(pix3egDphi_low);
+     float pix4egDphi_medianErr = pix4egDphi_.at(pix4egDphi_high) - pix4egDphi_.at(pix4egDphi_low);
+
+     float pix12egDphi_medianErr = pix12egDphi_.at(pix12egDphi_high) - pix12egDphi_.at(pix12egDphi_low);
+     float pix13egDphi_medianErr = pix13egDphi_.at(pix13egDphi_high) - pix13egDphi_.at(pix13egDphi_low);
+     float pix14egDphi_medianErr = pix14egDphi_.at(pix14egDphi_high) - pix14egDphi_.at(pix14egDphi_low);
+     float pix23egDphi_medianErr = pix23egDphi_.at(pix23egDphi_high) - pix23egDphi_.at(pix23egDphi_low);
+     float pix24egDphi_medianErr = pix24egDphi_.at(pix24egDphi_high) - pix24egDphi_.at(pix24egDphi_low);
+     float pix34egDphi_medianErr = pix34egDphi_.at(pix34egDphi_high) - pix34egDphi_.at(pix34egDphi_low);
+
+     float pix012Dphi_medianErr = pix012Dphi_.at(pix012Dphi_high) - pix012Dphi_.at(pix012Dphi_low);
+     float pix013Dphi_medianErr = pix013Dphi_.at(pix013Dphi_high) - pix013Dphi_.at(pix013Dphi_low);
+     float pix014Dphi_medianErr = pix014Dphi_.at(pix014Dphi_high) - pix014Dphi_.at(pix014Dphi_low);
+     float pix023Dphi_medianErr = pix023Dphi_.at(pix023Dphi_high) - pix023Dphi_.at(pix023Dphi_low);
+     float pix024Dphi_medianErr = pix024Dphi_.at(pix024Dphi_high) - pix024Dphi_.at(pix024Dphi_low);
+     float pix034Dphi_medianErr = pix034Dphi_.at(pix034Dphi_high) - pix034Dphi_.at(pix034Dphi_low);
+     float pix123Dphi_medianErr = pix123Dphi_.at(pix123Dphi_high) - pix123Dphi_.at(pix123Dphi_low);
+     float pix124Dphi_medianErr = pix124Dphi_.at(pix124Dphi_high) - pix124Dphi_.at(pix124Dphi_low);
+     float pix134Dphi_medianErr = pix134Dphi_.at(pix134Dphi_high) - pix134Dphi_.at(pix134Dphi_low);
+     float pix234Dphi_medianErr = pix234Dphi_.at(pix234Dphi_high) - pix234Dphi_.at(pix234Dphi_low);
+/*
      float pix1egDphi_medianErr = 0.;
      float pix2egDphi_medianErr = 0.;
      float pix3egDphi_medianErr = 0.;
@@ -492,7 +491,7 @@ void Make2Dplots::Loop(int eta_ = 1)
      float pix124Dphi_medianErr =0.; 
      float pix134Dphi_medianErr =0.; 
      float pix234Dphi_medianErr =0.; 
-
+*/
      x[nth] = 10.5 + float(nth);
      xErr[nth] = 0.;
 
@@ -542,8 +541,6 @@ void Make2Dplots::Loop(int eta_ = 1)
      pix134DphiErr[nth] = pix134Dphi_medianErr/2.;
      pix234DphiErr[nth] = pix234Dphi_medianErr/2.;
 
-     if( debugging ) cout << "Move to the next loop" << endl << endl;
-
   }// Et scanning loop
 
 
@@ -581,12 +578,14 @@ void Make2Dplots::Loop(int eta_ = 1)
      if(i==3) scatter_plot = pix4egDphi_dist;
 
      if(scatter_plot != NULL){
-       scatter_plot->GetYaxis()->SetRangeUser(-0.2,0.2);
+       scatter_plot->GetYaxis()->SetRangeUser(-0.1,0.1);
+//       scatter_plot->GetYaxis()->SetRangeUser(-0.2,0.2);
        scatter_plot->GetXaxis()->SetTitle("L1 E/gamma E_{T} [GeV]");
        scatter_plot->GetYaxis()->SetTitle("#Delta#phi [rad.]");
-       scatter_plot->SetMarkerColor(kRed);
+       scatter_plot->SetMarkerColor(1);
        //scatter_plot->SetMarkerSize(.25);
        scatter_plot->SetMarkerStyle(6);
+//       scatter_plot->Draw("colz");
        scatter_plot->Draw("scat=1.");
      }
      if(scatter_plot == NULL) std::cout << "NULL" << std::endl;
@@ -599,21 +598,41 @@ void Make2Dplots::Loop(int eta_ = 1)
      gr1->SetLineColor(kBlue);
      gr1->SetMarkerSize(.8);
      gr1->SetMarkerStyle(20);
-     gr1->SetFillColorAlpha(kBlue, 0.4); // for error
-     gr1->Draw("samepE3");
+  //   gr1->SetFillColorAlpha(kBlue, 0.4); // for error
+ //    gr1->Draw("samepE3");
 
      TF1 *median_fitFunc = new TF1("func","( [0]*pow(x,0) + [1]*pow(x,[2])*exp(-pow(x,[3])) )", 10., 100.);
-     median_fitFunc->SetLineColor(kGreen);
-     median_fitFunc->SetLineStyle(1);
-     median_fitFunc->SetLineWidth(2);
+     median_fitFunc->SetLineColor(kRed);
+     median_fitFunc->SetLineStyle(7);
+     median_fitFunc->SetLineWidth(4);
 
      gr1->Fit(median_fitFunc,"0");
+     double ab[4]={0};
+     median_fitFunc->GetParameters(ab);
+
+
+double x1[200],y1[200],x2[200],y2[200];
+for ( int j = 0;j<110;j++){
+    x1[j]=j+10;
+    x2[j]=0.5;
+    y1[j]=ab[0]*pow(j+10,0) + ab[1]*pow(j+10,ab[2])*exp(-pow(j+10,ab[3]));
+    y2[j]=0.017;  // eCal-Pix matching shadow width, cmssw 0.017
+}//asdf
+    TGraphErrors* gr2 = new TGraphErrors(110,x1,y1,x2,y2); //0.0017 0.003
+     
+     gr2->SetLineColor(kYellow);
+     gr2->SetFillColorAlpha(kYellow, 0.40);
+//    
+     gr2->Draw("sameE3");
+
+     
      median_fitFunc->Draw("lsame");
 
      TLegend* leg = new TLegend(0.3,0.7,0.5,0.9);
-     leg->AddEntry(scatter_plot, "Scattered #Delta#phi distribution as a function of L1 EG E_{T}","pl");
-     leg->AddEntry(gr1, "Median point of #Delta#phi","fp");
+//     leg->AddEntry(scatter_plot, "Scattered #Delta#phi distribution as a function of L1 EG E_{T}","pl");
+//     leg->AddEntry(gr1, "Median point of #Delta#phi","fp");
      leg->AddEntry(median_fitFunc,"Fit of median point", "l");
+     leg->AddEntry(gr2,"Signal window", "f");
      leg->AddEntry((TObject*)0, eta_region[eta_-1], "");
      leg->SetTextFont(42);
      leg->SetTextSize(0.035);
@@ -675,12 +694,13 @@ void Make2Dplots::Loop(int eta_ = 1)
      if(i==5) scatter_plot = pix34egDphi_dist;
 
      if(scatter_plot != NULL){
-       scatter_plot->GetYaxis()->SetRangeUser(-0.2,0.2);
+       scatter_plot->GetYaxis()->SetRangeUser(-0.15,0.15);
        scatter_plot->GetXaxis()->SetTitle("L1 E/gamma E_{T} [GeV]");
        scatter_plot->GetYaxis()->SetTitle("#Delta#phi [rad.]");
-       scatter_plot->SetMarkerColor(kRed);
+       scatter_plot->SetMarkerColor(1);
        //scatter_plot->SetMarkerSize(.25);
        scatter_plot->SetMarkerStyle(6);
+ //      scatter_plot->Draw("colz");
        scatter_plot->Draw("scat=1.");
 
      }
@@ -693,12 +713,12 @@ void Make2Dplots::Loop(int eta_ = 1)
      gr1->SetMarkerStyle(20);
      gr1->SetFillColorAlpha(kBlue, 0.4);
      gr1->SetLineWidth(1);
-     gr1->Draw("samep");
+//     gr1->Draw("samep");
 
      TF1 *median_fitFunc = new TF1("func","( [0]*pow(x,0) + [1]*pow(x,[2])*exp(-pow(x,[3])) )", 10., 100.);
-     median_fitFunc->SetLineColor(kGreen);
-     median_fitFunc->SetLineStyle(1);
-     median_fitFunc->SetLineWidth(2);
+     median_fitFunc->SetLineColor(kRed);
+     median_fitFunc->SetLineStyle(7);
+     median_fitFunc->SetLineWidth(4);
 
      gr1->Fit(median_fitFunc,"0");
      median_fitFunc->Draw("lsame");
@@ -707,22 +727,22 @@ void Make2Dplots::Loop(int eta_ = 1)
      median_fitFunc->GetParameters(ab);
 //MARK
 double x1[200],y1[200],x2[200],y2[200];
-for ( int j = 10;j<120;j++){
+for ( int j = 0;j<110;j++){
     x1[j]=j;
     x2[j]=0.5;
     y1[j]=ab[0]*pow(j,0) + ab[1]*pow(j,ab[2])*exp(-pow(j,ab[3]));
-    y2[j]=0.03;
+    y2[j]=0.017;  // eCal-PixPix matching shadow width  cmssw 0.017
 }
     TGraphErrors* gr2 = new TGraphErrors(110,x1,y1,x2,y2); //0.0017 0.003
      
-     gr2->SetLineColor(kBlue);
-     gr2->SetFillColorAlpha(kBlue, 0.40);
+     gr2->SetLineColor(kYellow);
+     gr2->SetFillColorAlpha(kYellow, 0.40);
 //    
      gr2->Draw("sameE3");
      median_fitFunc->Draw("lsame");
      TLegend* leg = new TLegend(0.3,0.2,0.5,0.4);
-     leg->AddEntry(scatter_plot, "Scattered #Delta#phi distribution as a function of L1 EG E_{T}","pl");
-     leg->AddEntry(gr1, "Median point of #Delta#phi","lp");
+ //    leg->AddEntry(scatter_plot, "Scattered #Delta#phi distribution as a function of L1 EG E_{T}","pl");
+   //  leg->AddEntry(gr1, "Median point of #Delta#phi","lp");
      leg->AddEntry(median_fitFunc,"Fit of median point", "l");
      leg->AddEntry(gr2,"Signal window", "f");
      leg->AddEntry((TObject*)0, eta_region[eta_-1], "");
@@ -796,7 +816,7 @@ delete gr2;
        scatter_plot->GetYaxis()->SetRangeUser(-0.015,0.015);
        scatter_plot->GetXaxis()->SetTitle("L1 E/gamma E_{T} [GeV]");
        scatter_plot->GetYaxis()->SetTitle("#Delta#phi [rad.]");
-       scatter_plot->SetMarkerColor(kRed);
+       scatter_plot->SetMarkerColor(1);
        //scatter_plot->SetMarkerSize(.25);
        scatter_plot->SetMarkerStyle(6);
        scatter_plot->Draw("scat=1.");
@@ -808,9 +828,9 @@ delete gr2;
      gr1->SetMarkerColor(kBlue);
      gr1->SetMarkerSize(.8);
      gr1->SetMarkerStyle(20);
-     gr1->SetFillColorAlpha(kBlue, 0.4);
+     gr1->SetFillColorAlpha(kYellow, 0.4);
      gr1->SetLineWidth(1);
-     gr1->Draw("samep");
+//     gr1->Draw("samep");
 
      TF1 *median_fitFunc = new TF1("func","( [0]*pow(x,0) + [1]*pow(x,[2])*exp(-pow(x,[3])) )", 10., 100.);
 
@@ -819,9 +839,9 @@ delete gr2;
      median_fitFunc->SetParLimits(2, -2., 0.2);
      median_fitFunc->SetParLimits(3, -0.7, 0.5);
 
-     median_fitFunc->SetLineColor(kGreen);
-     median_fitFunc->SetLineStyle(1);
-     median_fitFunc->SetLineWidth(2);
+     median_fitFunc->SetLineColor(kRed);
+     median_fitFunc->SetLineStyle(7);
+     median_fitFunc->SetLineWidth(4);
 
      gr1->Fit(median_fitFunc,"0");
 
@@ -830,24 +850,24 @@ delete gr2;
 
 
 double x1[200],y1[200],x2[200],y2[200];
-for ( int j = 10;j<120;j++){
-    x1[j]=j;
+for ( int j = 0;j<110;j++){
+    x1[j]=j+10;
     x2[j]=0.5;
-    y1[j]=ab[0]*pow(j,0) + ab[1]*pow(j,ab[2])*exp(-pow(j,ab[3]));
-    y2[j]=0.003;
-}
+    y1[j]=ab[0]*pow(j+10,0) + ab[1]*pow(j+10,ab[2])*exp(-pow(j+10,ab[3]));
+    y2[j]=0.003;  // Pix-Pix matching shadow width  cmssw 0.003
+}//asdf
     TGraphErrors* gr2 = new TGraphErrors(110,x1,y1,x2,y2); //0.0017 0.003
      
-     gr2->SetLineColor(kBlue);
-     gr2->SetFillColorAlpha(kBlue, 0.40);
+     gr2->SetLineColor(kYellow);
+     gr2->SetFillColorAlpha(kYellow, 0.40);
 //    
-     gr2->Draw("sameE3");
+     gr2->Draw("sameE3");  //pix-pix
      median_fitFunc->Draw("lsame");
 
      TLegend* leg = new TLegend(0.2,0.2,0.4,0.4);
    //  leg->AddEntry(scatter_plot, "Scattered #Delta#phi distribution as a function of L1 EG E_{T}","peZ");
-     leg->AddEntry(scatter_plot, "Scattered #Delta#phi distribution as a function of L1 EG E_{T}","pl");
-     leg->AddEntry(gr1, "Median point of #Delta#phi", "lp");
+//     leg->AddEntry(scatter_plot, "Scattered #Delta#phi distribution as a function of L1 EG E_{T}","pl");
+//asd     leg->AddEntry(gr1, "Median point of #Delta#phi", "lp");
   //   leg->AddEntry(gr1, "Median point of #Delta#phi", "pe3");
      leg->AddEntry(median_fitFunc,"Fit of median point", "l");
      leg->AddEntry(gr2,"Signal window", "f");
