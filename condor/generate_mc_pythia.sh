@@ -14,7 +14,7 @@ mkdir -p Results/job_$1
 
 cp Example11.C Example11_$1.C
 tempNum=$1
-sed -i "647s/results.root/results_${tempNum}.root/g" Example11_$1.C
+sed -i "655s/results.root/results_${tempNum}.root/g" Example11_$1.C
 
 root -l -b << EOF
 .L Example11_$1.C
@@ -28,10 +28,11 @@ eval `scramv1 runtime -sh`
 cd -
 
 cp x509up_u* /tmp
+voms-proxy-info -all
 
-xrdcp file:///${PWD}/results_${tempNum}.root root://cluster142.knu.ac.kr//store/user/jongho/MinBias200PU_Delphes/Test1
-#mv results_$1.root Results/job_$1/results_$1.root
+#xrdcp txtfile root://cluster142.knu.ac.kr//store/user/jongho/MinBias200PU_Delphes/Test1
+mv results_${tempNum}.root Results/job_$1/results_${tempNum}.root
 rm Results/job_$1/SingleEle200PU.root
 rm Example11_$1.C
-rm results_${tempNum}.root
+#rm results_${tempNum}.root
 
