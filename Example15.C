@@ -151,47 +151,66 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
             eCalTrack = (Track*) branchTrack->At(k);
             double eCalX, eCalY, eCalZ, eCalEt, eCalEta, eCalPhi;
             eCalX = eCalTrack->XOuter/10.;
+            eCalX -= 0.001923;
+            eCalX = gRandom->Gaus(eCalX, 0.3729);
+            
             eCalY = eCalTrack->YOuter/10.;
+            eCalY -= 0.00132;
+            eCalY = gRandom->Gaus(eCalY, 0.3711);
+            
             eCalZ = eCalTrack->ZOuter/10.;
+            eCalZ += 0.004241;
+            eCalZ = gRandom->Gaus(eCalZ, 0.6597);
 
-            float R = sqrt(eCalX*eCalX+eCalY*eCalY);
-            float R3 = sqrt(eCalX*eCalX+eCalY*eCalY+eCalZ*eCalZ);
+            TVector3 v1;
+            v1.SetXYZ(eCalX, eCalY, eCalZ);
+            eCalEta = v1.Eta();
+            eCalPhi = v1.Phi();
+            
+            //ECal track Et
+            eCalEt = eCalTrack->PT;
+            float tempEt = eCalEt*0.1012;
+            eCalEt -= tempEt;
+            eCalEt = gRandom->Gaus(eCalEt, eCalEt*0.02769);
+
+            //float R = sqrt(eCalX*eCalX+eCalY*eCalY);
+            //float R3 = sqrt(eCalX*eCalX+eCalY*eCalY+eCalZ*eCalZ);
             
             //ECal track eta
-            eCalEta = eCalTrack->EtaOuter;
-            eCalEta += -8.084e-5;
-            if( eCalEt < 30. ) eCalEta = gRandom->Gaus(eCalEta, 0.004276-0.002);
-            if( eCalEt >= 30. && eCalEt < 60. ) eCalEta = gRandom->Gaus(eCalEta, 0.004276-0.001);
-            if( eCalEt >= 60. ) eCalEta = gRandom->Gaus(eCalEta, 0.004276);
+            //eCalEta = eCalTrack->EtaOuter;
+            //eCalEta += -8.084e-5;
+            //if( eCalEt < 30. ) eCalEta = gRandom->Gaus(eCalEta, 0.004276-0.002);
+            //if( eCalEt >= 30. && eCalEt < 60. ) eCalEta = gRandom->Gaus(eCalEta, 0.004276-0.001);
+            //if( eCalEt >= 60. ) eCalEta = gRandom->Gaus(eCalEta, 0.004276);
             
-            if( fabs(eCalEta) < 0.8 )
-            {
-                //ECal track Et
-                eCalEt = eCalTrack->PT;
-                float tempEt = eCalEt*0.1012;
-                eCalEt -= tempEt;
-                eCalEt = gRandom->Gaus(eCalEt, eCalEt*0.02769);
-                
-                //ECal track phi
-                eCalPhi = eCalTrack->PhiOuter;
-                eCalPhi += -5.092e-5;
+            //if( fabs(eCalEta) < 0.8 )
+            //{
+            //    //ECal track Et
+            //    eCalEt = eCalTrack->PT;
+            //    float tempEt = eCalEt*0.1012;
+            //    eCalEt -= tempEt;
+            //    eCalEt = gRandom->Gaus(eCalEt, eCalEt*0.02769);
+            //    
+            //    //ECal track phi
+            //    eCalPhi = eCalTrack->PhiOuter;
+            //    eCalPhi += -5.092e-5;
 
-                if( eCalEt < 30. ) eCalPhi = gRandom->Gaus(eCalPhi, 0.003668-0.0010);
-                if( eCalEt >= 30. && eCalEt < 60. ) eCalPhi = gRandom->Gaus(eCalPhi, 0.003668);
-                if( eCalEt >= 60. ) eCalPhi = gRandom->Gaus(eCalPhi, 0.003668+0.0010);
-                
-                eCalX = R*cos(eCalPhi);
-                eCalY = R*sin(eCalPhi);
-                eCalZ = R3*cos(2.*atan(-eCalEta));
-            }
-            else
-            {
-                eCalEt = eCalTrack->PT;
-                eCalPhi = eCalTrack->PhiOuter;
-                eCalX = R*cos(eCalPhi);
-                eCalY = R*sin(eCalPhi);
-                eCalZ = R3*cos(2.*atan(-eCalEta));
-            }
+            //    if( eCalEt < 30. ) eCalPhi = gRandom->Gaus(eCalPhi, 0.003668-0.0010);
+            //    if( eCalEt >= 30. && eCalEt < 60. ) eCalPhi = gRandom->Gaus(eCalPhi, 0.003668);
+            //    if( eCalEt >= 60. ) eCalPhi = gRandom->Gaus(eCalPhi, 0.003668+0.0010);
+            //    
+            //    eCalX = R*cos(eCalPhi);
+            //    eCalY = R*sin(eCalPhi);
+            //    eCalZ = R3*cos(2.*atan(-eCalEta));
+            //}
+            //else
+            //{
+            //    eCalEt = eCalTrack->PT;
+            //    eCalPhi = eCalTrack->PhiOuter;
+            //    eCalX = R*cos(eCalPhi);
+            //    eCalY = R*sin(eCalPhi);
+            //    eCalZ = R3*cos(2.*atan(-eCalEta));
+            //}
             
             //ECal track Et
             //eCalEt = eCalTrack->PT;
