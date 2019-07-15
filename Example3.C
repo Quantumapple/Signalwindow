@@ -107,7 +107,7 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
     tt->Branch("egCrysClusterGz",&egCrysClusterGz);
 
     TClonesArray *branchParticle = treeReader->UseBranch("Particle");
-    TClonesArray *branchTower = treeReader->UseBranch("ECalTower");
+    //TClonesArray *branchTower = treeReader->UseBranch("ECalTower");
     TClonesArray *branchTrack = treeReader->UseBranch("EFlowTrack");
     TClonesArray *branchPixelL1 = treeReader->UseBranch("TrackPixel1");
     TClonesArray *branchPixelL2 = treeReader->UseBranch("TrackPixel2");
@@ -136,7 +136,6 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
     Track *trackD4;
     Track *trackD5;
     
-    Tower *tower;
     Track *eCalTrack;
 
     TLorentzVector egVector;
@@ -186,28 +185,26 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
             propgenElPartPt.push_back(particle->PT);
         }
 
-        int TowerN = branchTower->GetEntriesFast();
-        for(unsigned int k = 0; k < TowerN; k++)
+        int TrackN = branchTrack->GetEntriesFast();
+        for(unsigned int k = 0; k < TrackN; k++)
         {
-            eCalTower = (Tower*) branchTower->At(k);
+            eCalTrack = (Track*) branchTrack->At(k);
             double eCalX, eCalY, eCalZ, eCalEt, eCalEta, eCalPhi;
-            double j11 = 0, k11, l11;
 
             //ECal tower phi
-            eCalPhi = eCalTower->Phi;
+            eCalPhi = eCalTrack->PhiOuter;
 
             //ECal tower eta
-            eCalEta = eCalTower->Eta;
+            eCalEta = eCalTrack->EtaOuter;
 
             //ECal tower Et
-            eCalEt = eCalTower->ET;
+            eCalEt = eCalTrack->PT;
 
             // 1.29m = 129cm
             //ECal position (unit: cm)
-            eCalX = 129*cos(eCalPhi);   // x = rcos(phi)
-            eCalY = 129*sin(eCalPhi);   // y = rsin(phi)
-            double theta = 2.*atan(exp(-eCalEta));
-            eCalZ = 129*cos(theta);     // z = rcos(theta)
+            eCalX = eCalTrack->XOuter;   // x = rcos(phi)
+            eCalY = eCalTrack->YOuter;   // y = rsin(phi)
+            eCalZ = eCalTrack->ZOuter;     // z = rcos(theta)
 
             egCrysClusterEta.push_back(eCalEta);
             egCrysClusterPhi.push_back(eCalPhi);
@@ -375,9 +372,7 @@ void Example3(const char *inputFile)
   ExRootTreeReader *treeReader = new ExRootTreeReader(chain);
   //ExRootResult *result = new ExRootResult();
   
-  //TFile *result = new TFile("results.root","RECREATE");
-  //TFile *result = new TFile("MinBiasResults.root","RECREATE");
-  TFile *result = new TFile("temp.root","RECREATE");
+  TFile *result = new TFile("results.root","RECREATE");
   result->mkdir("l1PiXTRKTree");
   result->cd("l1PiXTRKTree");
   
