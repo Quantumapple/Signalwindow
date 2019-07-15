@@ -160,7 +160,7 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
             
             eCalZ = eCalTrack->ZOuter/10.;
             eCalZ += 0.004241;
-            eCalZ = gRandom->Gaus(eCalZ, 0.6597);
+            eCalZ = gRandom->Gaus(eCalZ, 0.6597-0.15);
 
             TVector3 v1;
             v1.SetXYZ(eCalX, eCalY, eCalZ);
