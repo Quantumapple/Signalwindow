@@ -202,9 +202,9 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
 
             // 1.29m = 129cm
             //ECal position (unit: cm)
-            eCalX = eCalTrack->XOuter;   // x = rcos(phi)
-            eCalY = eCalTrack->YOuter;   // y = rsin(phi)
-            eCalZ = eCalTrack->ZOuter;     // z = rcos(theta)
+            eCalX = eCalTrack->XOuter/10.;   // x = rcos(phi)
+            eCalY = eCalTrack->YOuter/10.;   // y = rsin(phi)
+            eCalZ = eCalTrack->ZOuter/10.;     // z = rcos(theta)
 
             egCrysClusterEta.push_back(eCalEta);
             egCrysClusterPhi.push_back(eCalPhi);
