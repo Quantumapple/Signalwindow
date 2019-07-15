@@ -13,4 +13,4 @@ accounting_group=group_cms
 #request_memory=2933
 #request_disk = 10G
 notification = Error
-queue 1
+queue 250
