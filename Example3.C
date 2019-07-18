@@ -74,7 +74,6 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
     std::vector<float> propgenElPartEta;
     std::vector<float> propgenElPartPt;
 
-    int EgN = 0;
     std::vector<float> egCrysClusterEt;
     std::vector<float> egCrysClusterEta;
     std::vector<float> egCrysClusterPhi;
@@ -98,7 +97,6 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
     tt->Branch("fRecHitGy", &fRecHitGy);
     tt->Branch("fRecHitGz", &fRecHitGz);
 
-    tt->Branch("EgN", &EgN, "EgN/I");
     tt->Branch("egCrysClusterEt", &egCrysClusterEt);
     tt->Branch("egCrysClusterEta", &egCrysClusterEta);
     tt->Branch("egCrysClusterPhi", &egCrysClusterPhi);
@@ -107,8 +105,8 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
     tt->Branch("egCrysClusterGz",&egCrysClusterGz);
 
     TClonesArray *branchParticle = treeReader->UseBranch("Particle");
-    //TClonesArray *branchTower = treeReader->UseBranch("ECalTower");
-    TClonesArray *branchTrack = treeReader->UseBranch("EFlowTrack");
+    TClonesArray *branchTower = treeReader->UseBranch("ECalTower");
+    //TClonesArray *branchTrack = treeReader->UseBranch("EFlowTrack");
     TClonesArray *branchPixelL1 = treeReader->UseBranch("TrackPixel1");
     TClonesArray *branchPixelL2 = treeReader->UseBranch("TrackPixel2");
     TClonesArray *branchPixelL3 = treeReader->UseBranch("TrackPixel3");
@@ -135,7 +133,8 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
     Track *trackD3;
     Track *trackD4;
     Track *trackD5;
-    
+   
+    Tower *eCalTower;
     Track *eCalTrack;
 
     TLorentzVector egVector;
@@ -163,7 +162,6 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
         propgenElPartEta.clear();
         propgenElPartPt.clear();
 
-        EgN = 0;
         egCrysClusterEta.clear();
         egCrysClusterPhi.clear();
         egCrysClusterEt.clear();
@@ -185,26 +183,30 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
             propgenElPartPt.push_back(particle->PT);
         }
 
-        int TrackN = branchTrack->GetEntriesFast();
+        int TrackN = branchTower->GetEntriesFast();
         for(unsigned int k = 0; k < TrackN; k++)
         {
-            eCalTrack = (Track*) branchTrack->At(k);
+            eCalTower = (Tower*) branchTower->At(k);
             double eCalX, eCalY, eCalZ, eCalEt, eCalEta, eCalPhi;
 
             //ECal tower phi
-            eCalPhi = eCalTrack->PhiOuter;
+            eCalPhi = eCalTower->Phi;
 
             //ECal tower eta
-            eCalEta = eCalTrack->EtaOuter;
+            eCalEta = eCalTower->Eta;
 
             //ECal tower Et
-            eCalEt = eCalTrack->PT;
+            eCalEt = eCalTower->ET;
+            float tempEt = eCalEt*0.1008;
+            eCalEt -= tempEt;
+            eCalEt = gRandom->Gaus(eCalEt, eCalEt*0.02769);
 
             // 1.29m = 129cm
             //ECal position (unit: cm)
-            eCalX = eCalTrack->XOuter/10.;   // x = rcos(phi)
-            eCalY = eCalTrack->YOuter/10.;   // y = rsin(phi)
-            eCalZ = eCalTrack->ZOuter/10.;     // z = rcos(theta)
+            eCalX = 129*cos(eCalPhi);   // x = r*cos(phi)
+            eCalY = 129*sin(eCalPhi);   // y = r*sin(phi)
+            float theta = 2.*atan(-exp(eCalEta));
+            eCalZ = 129./tan(theta);     // z = r*tan(theta)
 
             egCrysClusterEta.push_back(eCalEta);
             egCrysClusterPhi.push_back(eCalPhi);
@@ -213,8 +215,6 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
             egCrysClusterGy.push_back(eCalY);
             egCrysClusterGz.push_back(eCalZ);
         }
-    
-        EgN = egCrysClusterEta.size();
 
         // Loop over 1st pixel layer
         for(unsigned int k = 0; k < branchPixelL1->GetEntriesFast(); k++)
