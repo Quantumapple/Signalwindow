@@ -49,7 +49,6 @@ set ExecutionPath {
   TrackMerger
 
   ECal
-  ECal2
   HCal
 
   ElectronFilter
@@ -768,102 +767,102 @@ module SimpleCalorimeter ECal {
 
 }
 
-module SimpleCalorimeter ECal2 {
-  set ParticleInputArray ParticlePropagator/stableParticles
-  set TrackInputArray TrackMerger/tracks
-
-  set TowerOutputArray ecalTowers
-  set EFlowTrackOutputArray eflowTracks
-  set EFlowTowerOutputArray eflowPhotons
-
-  set IsEcal true
-
-  set EnergyMin 0.5
-  set EnergySignificanceMin 1.0
-
-  set SmearTowerCenter true
-
-  set pi [expr {acos(-1)}]
-
-  # lists of the edges of each tower in eta and phi
-  # each list starts with the lower edge of the first tower
-  # the list ends with the higher edged of the last tower
-
-  # assume 0.02 x 0.02 resolution in eta,phi in the barrel |eta| < 1.5
-
-  #set PhiBins {}
-  for {set i -180} {$i <= 180} {incr i} {
-    add PhiBins [expr {$i * $pi/180.0}]
-  }
-  
-  # 0.02 unit in eta up to eta = 1.5 (barrel)
-  for {set i -85} {$i <= 86} {incr i} {
-    set eta [expr {$i * 0.0174}]
-    add EtaPhiBins $eta $PhiBins
-  }
-  
-  # assume 0.02 x 0.02 resolution in eta,phi in the endcaps 1.5 < |eta| < 3.0 (HGCAL- ECAL)
-
-  #set PhiBins {}
-  for {set i -180} {$i <= 180} {incr i} {
-    add PhiBins [expr {$i * $pi/180.0}]
-  }
-  
-  # 0.02 unit in eta up to eta = 3
-  for {set i 1} {$i <= 84} {incr i} {
-    set eta [expr { -2.958 + $i * 0.0174}]
-    add EtaPhiBins $eta $PhiBins
-  }
-
-  for {set i 1} {$i <= 84} {incr i} {
-    set eta [expr { 1.4964 + $i * 0.0174}]
-    add EtaPhiBins $eta $PhiBins
-  }
-  
-  # take present CMS granularity for HF
-
-  # 0.175 x (0.175 - 0.35) resolution in eta,phi in the HF 3.0 < |eta| < 5.0
-  set PhiBins {}
-  for {set i -18} {$i <= 18} {incr i} {
-    add PhiBins [expr {$i * $pi/18.0}]
-  }
-
-  foreach eta {-5 -4.7 -4.525 -4.35 -4.175 -4 -3.825 -3.65 -3.475 -3.3 -3.125 -2.958 3.125 3.3 3.475 3.65 3.825 4 4.175 4.35 4.525 4.7 5} {
-    add EtaPhiBins $eta $PhiBins
-  }
-
-
-  add EnergyFraction {0} {0.0}
-  # energy fractions for e, gamma and pi0
-  add EnergyFraction {11} {1.0}
-  add EnergyFraction {22} {1.0}
-  add EnergyFraction {111} {1.0}
-  # energy fractions for muon, neutrinos and neutralinos
-  add EnergyFraction {12} {0.0}
-  add EnergyFraction {13} {0.0}
-  add EnergyFraction {14} {0.0}
-  add EnergyFraction {16} {0.0}
-  add EnergyFraction {1000022} {0.0}
-  add EnergyFraction {1000023} {0.0}
-  add EnergyFraction {1000025} {0.0}
-  add EnergyFraction {1000035} {0.0}
-  add EnergyFraction {1000045} {0.0}
-  # energy fractions for K0short and Lambda
-  add EnergyFraction {310} {0.3}
-  add EnergyFraction {3122} {0.3}
-
-  # set ResolutionFormula {resolution formula as a function of eta and energy}
-
-  # for the ECAL barrel (|eta| < 1.5), see hep-ex/1306.2016 and 1502.02701
-  # for the endcaps (1.5 < |eta| < 3.0), we take HGCAL  see LHCC-P-008, Fig. 3.39, p.117
-
-  set ResolutionFormula {  (abs(eta) <= 1.50)                    * sqrt(energy^2*0.009^2 + energy*0.12^2 + 0.45^2) +
-                           (abs(eta) > 1.50 && abs(eta) <= 1.75) * sqrt(energy^2*0.006^2 + energy*0.20^2) + \
-                           (abs(eta) > 1.75 && abs(eta) <= 2.15) * sqrt(energy^2*0.007^2 + energy*0.21^2) + \
-                           (abs(eta) > 2.15 && abs(eta) <= 3.00) * sqrt(energy^2*0.008^2 + energy*0.24^2) + \
-                           (abs(eta) >= 3.0 && abs(eta) <= 5.0)  * sqrt(energy^2*0.08^2 + energy*1.98^2)}
-
-}
+#module SimpleCalorimeter ECal2 {
+#  set ParticleInputArray ParticlePropagator/stableParticles
+#  set TrackInputArray TrackMerger/tracks
+#
+#  set TowerOutputArray ecalTowers
+#  set EFlowTrackOutputArray eflowTracks
+#  set EFlowTowerOutputArray eflowPhotons
+#
+#  set IsEcal true
+#
+#  set EnergyMin 0.5
+#  set EnergySignificanceMin 1.0
+#
+#  set SmearTowerCenter true
+#
+#  set pi [expr {acos(-1)}]
+#
+#  # lists of the edges of each tower in eta and phi
+#  # each list starts with the lower edge of the first tower
+#  # the list ends with the higher edged of the last tower
+#
+#  # assume 0.02 x 0.02 resolution in eta,phi in the barrel |eta| < 1.5
+#
+#  #set PhiBins {}
+#  for {set i -180} {$i <= 180} {incr i} {
+#    add PhiBins [expr {$i * $pi/180.0}]
+#  }
+#  
+#  # 0.02 unit in eta up to eta = 1.5 (barrel)
+#  for {set i -85} {$i <= 86} {incr i} {
+#    set eta [expr {$i * 0.0174}]
+#    add EtaPhiBins $eta $PhiBins
+#  }
+#  
+#  # assume 0.02 x 0.02 resolution in eta,phi in the endcaps 1.5 < |eta| < 3.0 (HGCAL- ECAL)
+#
+#  #set PhiBins {}
+#  for {set i -180} {$i <= 180} {incr i} {
+#    add PhiBins [expr {$i * $pi/180.0}]
+#  }
+#  
+#  # 0.02 unit in eta up to eta = 3
+#  for {set i 1} {$i <= 84} {incr i} {
+#    set eta [expr { -2.958 + $i * 0.0174}]
+#    add EtaPhiBins $eta $PhiBins
+#  }
+#
+#  for {set i 1} {$i <= 84} {incr i} {
+#    set eta [expr { 1.4964 + $i * 0.0174}]
+#    add EtaPhiBins $eta $PhiBins
+#  }
+#  
+#  # take present CMS granularity for HF
+#
+#  # 0.175 x (0.175 - 0.35) resolution in eta,phi in the HF 3.0 < |eta| < 5.0
+#  set PhiBins {}
+#  for {set i -18} {$i <= 18} {incr i} {
+#    add PhiBins [expr {$i * $pi/18.0}]
+#  }
+#
+#  foreach eta {-5 -4.7 -4.525 -4.35 -4.175 -4 -3.825 -3.65 -3.475 -3.3 -3.125 -2.958 3.125 3.3 3.475 3.65 3.825 4 4.175 4.35 4.525 4.7 5} {
+#    add EtaPhiBins $eta $PhiBins
+#  }
+#
+#
+#  add EnergyFraction {0} {0.0}
+#  # energy fractions for e, gamma and pi0
+#  add EnergyFraction {11} {1.0}
+#  add EnergyFraction {22} {1.0}
+#  add EnergyFraction {111} {1.0}
+#  # energy fractions for muon, neutrinos and neutralinos
+#  add EnergyFraction {12} {0.0}
+#  add EnergyFraction {13} {0.0}
+#  add EnergyFraction {14} {0.0}
+#  add EnergyFraction {16} {0.0}
+#  add EnergyFraction {1000022} {0.0}
+#  add EnergyFraction {1000023} {0.0}
+#  add EnergyFraction {1000025} {0.0}
+#  add EnergyFraction {1000035} {0.0}
+#  add EnergyFraction {1000045} {0.0}
+#  # energy fractions for K0short and Lambda
+#  add EnergyFraction {310} {0.3}
+#  add EnergyFraction {3122} {0.3}
+#
+#  # set ResolutionFormula {resolution formula as a function of eta and energy}
+#
+#  # for the ECAL barrel (|eta| < 1.5), see hep-ex/1306.2016 and 1502.02701
+#  # for the endcaps (1.5 < |eta| < 3.0), we take HGCAL  see LHCC-P-008, Fig. 3.39, p.117
+#
+#  set ResolutionFormula {  (abs(eta) <= 1.50)                    * sqrt(energy^2*0.009^2 + energy*0.12^2 + 0.45^2) +
+#                           (abs(eta) > 1.50 && abs(eta) <= 1.75) * sqrt(energy^2*0.006^2 + energy*0.20^2) + \
+#                           (abs(eta) > 1.75 && abs(eta) <= 2.15) * sqrt(energy^2*0.007^2 + energy*0.21^2) + \
+#                           (abs(eta) > 2.15 && abs(eta) <= 3.00) * sqrt(energy^2*0.008^2 + energy*0.24^2) + \
+#                           (abs(eta) >= 3.0 && abs(eta) <= 5.0)  * sqrt(energy^2*0.08^2 + energy*1.98^2)}
+#
+#}
 
 #############
 #   HCAL
@@ -977,15 +976,15 @@ module PdgCodeFilter ElectronFilter {
 
 module TreeWriter TreeWriter {
 # add Branch InputArray BranchName BranchClass
-#  add Branch Delphes/allParticles Particle GenParticle
-  add Branch Delphes/stableParticles Particle GenParticle
+  add Branch Delphes/allParticles Particle GenParticle
+#  add Branch Delphes/stableParticles Particle GenParticle
   #add Branch PileUpMerger/vertices Vertex Vertex
 
   #add Branch ECal/eflowPhotons EFlowPhoton Tower
   #add Branch HCal/eflowNeutralHadrons EFlowNeutralHadron Tower
   #add Branch HCal/eflowTracks EFlowTrack Track
-  add Branch ECal/ecalTowers ECalTower Tower
-  add Branch ECal2/ecalTowers ECalTower2 Tower
+ add Branch ECal/ecalTowers ECalTower Tower
+#  add Branch ECal2/ecalTowers ECalTower2 Tower
 
   add Branch TrackMerger1/tracks TrackPixel1 Track
   add Branch TrackMerger2/tracks TrackPixel2 Track
