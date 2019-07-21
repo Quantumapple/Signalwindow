@@ -1,2 +1,9 @@
-rm result.log
-root -l -b  < x_phi.C >> result.log &
+#!/bin/bash
+
+rm *.txt *.png
+
+root -l -b << EOF
+.L test.C
+test a
+a.Loop(6)
+EOF
