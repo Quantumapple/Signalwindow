@@ -59,7 +59,7 @@ int getMedianIndex(const std::vector<float> &vec)
     }
 }
 
-void test::Loop(int eta_ = 1)
+void Make2Dplots::Loop(int eta_ = 1)
 {
     bool debug = false;
 
