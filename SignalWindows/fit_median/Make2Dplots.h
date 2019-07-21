@@ -24,7 +24,7 @@
 #include <TGraphErrors.h>
 #include <TGaxis.h>
 
-#include "../Style/tdrstyle.C"
+#include "./Style/tdrstyle.C"
 
 class Make2Dplots {
 public :
