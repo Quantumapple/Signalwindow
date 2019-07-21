@@ -3,7 +3,7 @@
 rm *.txt *.png
 
 root -l -b << EOF
-.L test.C
-test a
-a.Loop(6)
+.L Make2Dplots.C
+Make2Dplots a
+a.Loop(1)
 EOF
