@@ -704,11 +704,15 @@ module SimpleCalorimeter ECal {
   }
 
 
-  add EnergyFraction {0} {0.0}
-  # energy fractions for e, gamma and pi0
-  add EnergyFraction {11} {1.0}
-  add EnergyFraction {22} {1.0}
-  add EnergyFraction {111} {1.0}
+  # default energy fractions {abs(PDG code)} {Fecal Fhcal}
+  add EnergyFraction {0} {1.0}
+  # energy fractions for e, gamma and hadron (mainly u,d)
+  add EnergyFraction {11} {0.0}
+  add EnergyFraction {22} {0.0}
+  add EnergyFraction {111} {0.6}
+  add EnergyFraction {211} {0.6}
+  add EnergyFraction {2112} {0.6}
+  add EnergyFraction {2212} {0.6}
   # energy fractions for muon, neutrinos and neutralinos
   add EnergyFraction {12} {0.0}
   add EnergyFraction {13} {0.0}
@@ -719,9 +723,16 @@ module SimpleCalorimeter ECal {
   add EnergyFraction {1000025} {0.0}
   add EnergyFraction {1000035} {0.0}
   add EnergyFraction {1000045} {0.0}
-  # energy fractions for K0short and Lambda
+  # energy fractions for K0short, Lambda and hadron (mainly c,s)
+  add EnergyFraction {130} {0.3} 
   add EnergyFraction {310} {0.3}
+  add EnergyFraction {3112} {0.3}
   add EnergyFraction {3122} {0.3}
+  add EnergyFraction {321} {0.3}
+  add EnergyFraction {3222} {0.3}
+  add EnergyFraction {3312} {0.3}
+  add EnergyFraction {3322} {0.3}
+  add EnergyFraction {3334} {0.3}
 
   # set ResolutionFormula {resolution formula as a function of eta and energy}
 
@@ -807,10 +818,10 @@ module SimpleCalorimeter HCal {
   # energy fractions for e, gamma and hadron (mainly u,d)
   add EnergyFraction {11} {0.0}
   add EnergyFraction {22} {0.0}
-  add EnergyFraction {111} {0.6}
-  add EnergyFraction {211} {0.6}
-  add EnergyFraction {2112} {0.6}
-  add EnergyFraction {2212} {0.6}
+  add EnergyFraction {111} {0.4}
+  add EnergyFraction {211} {0.4}
+  add EnergyFraction {2112} {0.4}
+  add EnergyFraction {2212} {0.4}
   # energy fractions for muon, neutrinos and neutralinos
   add EnergyFraction {12} {0.0}
   add EnergyFraction {13} {0.0}
@@ -822,15 +833,15 @@ module SimpleCalorimeter HCal {
   add EnergyFraction {1000035} {0.0}
   add EnergyFraction {1000045} {0.0}
   # energy fractions for K0short, Lambda and hadron (mainly c,s)
-  add EnergyFraction {130} {0.3} 
-  add EnergyFraction {310} {0.3}
-  add EnergyFraction {3112} {0.3}
-  add EnergyFraction {3122} {0.3}
-  add EnergyFraction {321} {0.3}
-  add EnergyFraction {3222} {0.3}
-  add EnergyFraction {3312} {0.3}
-  add EnergyFraction {3322} {0.3}
-  add EnergyFraction {3334} {0.3}
+  add EnergyFraction {130} {0.7} 
+  add EnergyFraction {310} {0.7}
+  add EnergyFraction {3112} {0.7}
+  add EnergyFraction {3122} {0.7}
+  add EnergyFraction {321} {0.7}
+  add EnergyFraction {3222} {0.7}
+  add EnergyFraction {3312} {0.7}
+  add EnergyFraction {3322} {0.7}
+  add EnergyFraction {3334} {0.7}
 
 # set ResolutionFormula {resolution formula as a function of eta and energy}
   set ResolutionFormula {                    (abs(eta) <= 1.5) * sqrt(energy^2*0.05^2 + energy*1.00^2) + \
