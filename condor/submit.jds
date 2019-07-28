@@ -4,7 +4,7 @@ arguments  = $(Process)
 getenv     = True
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
-transfer_input_files = submit.tar 
+transfer_input_files = Example18.C 
 output = out/job_$(Process).out
 error = err/job_$(Process).err
 accounting_group=group_cms
@@ -13,4 +13,4 @@ accounting_group=group_cms
 #request_memory=2933
 #request_disk = 10G
 notification = Error
-queue 250
+queue 100
