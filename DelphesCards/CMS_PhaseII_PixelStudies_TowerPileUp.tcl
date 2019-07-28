@@ -865,8 +865,8 @@ module TreeWriter TreeWriter {
   #add Branch ECal/eflowPhotons EFlowPhoton Tower
   #add Branch HCal/eflowNeutralHadrons EFlowNeutralHadron Tower
   #add Branch HCal/eflowTracks EFlowTrack Track
-  add Branch ECal/ecalTowers ECalTower Tower
-  add Branch HCal/hcalTowers HCalTower Tower
+  #add Branch ECal/ecalTowers ECalTower Tower
+  #add Branch HCal/hcalTowers HCalTower Tower
   add Branch Calorimeter/towers Tower Tower
 
   add Branch TrackMerger1/tracks TrackPixel1 Track
