@@ -11,7 +11,7 @@ def now():
     from datetime import datetime
     return str(datetime.now().month) + str(datetime.now().day)+ str(datetime.now().hour)+str(datetime.now().minute)
 
-sample = "SE_PU200"
+sample = "Minbias_PU200"
 
 isfile = os.path.isfile
 join = os.path.join
