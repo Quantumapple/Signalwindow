@@ -21,7 +21,7 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt);
 
 //------------------------------------------------------------------------------
 
-void Example25(const char *inputFile)
+void Example26(const char *inputFile)
 {
 	gSystem->Load("libDelphes");
 
@@ -233,11 +233,16 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
             CalTower = (Tower*) branchTower->At(k);
 
             //if( CalTower->Eem == 0 || CalTower->Ehad != 0 ) continue;
-            if( CalTower->Eem/CalTower->Ehad < 0.675 ) continue;
+            if( CalTower->Eem/CalTower->Ehad < 0.432 ) continue;  // cut for Minbias
+            //if( CalTower->Eem/CalTower->Ehad < 0.810 ) continue;  // cut for old Minbias
+            //if( CalTower->Eem/CalTower->Ehad > 0.655 ) continue;  // cut for QCD
             double CalX, CalY, CalZ, CalEt, CalEta, CalPhi;
             CalPhi = CalTower->Phi;     
             CalEta = CalTower->Eta;     
-            CalEt = gRandom->Gaus(CalTower->ET, CalTower->ET*0.04644);
+            //CalEt = gRandom->Gaus(CalTower->ET, CalTower->ET*0.04644);
+            if( fabs(CalEta) < 0.8 ) CalEt = CalTower->ET;
+            if( fabs(CalEta) > 0.8 && fabs(CalEta) < 2.1 ) CalEt = gRandom->Gaus(CalTower->ET, CalTower->ET*0.01439);
+            if( fabs(CalEta) > 2.1 ) CalEt = gRandom->Gaus(CalTower->ET, CalTower->ET*0.01445);
 
             //Cal Phi smearing
             if( fabs(CalEta) < 0.8 ){
