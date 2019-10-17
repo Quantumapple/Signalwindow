@@ -155,6 +155,8 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
 
     bool kFlag = false;
 
+    int inf_count=0;
+
     // Loop over all events
     for(entry = 0; entry < allEntries; ++entry)
     {
@@ -229,20 +231,54 @@ void AnalyseEvents(ExRootTreeReader *treeReader, TFile *result, TTree *tt)
         }
         */
 
+        int had0count = 0;
         int TowerN = branchTower->GetEntriesFast();
         for(unsigned int k = 0; k < TowerN; k++)
         {                                 
             CalTower = (Tower*) branchTower->At(k);
-
-            
+ 
             Float_t ratio = CalTower->Eem/CalTower->Ehad;
             Float_t tmpEt = CalTower->ET;
-            Float_t cut = 0.00549948*tmpEt+0.225034;
 
-            if( ratio < cut ) continue;
-            //if( tmpEt < 20. && ratio < 0.2 ) continue;
-            //if( tmpEt > 20. && tmpEt < 60. && ratio < 0.35 ) continue;
-            //if( tmpEt > 60. && ratio < 0.65 ) continue;
+            if( CalTower->Ehad == 0 ) inf_count++;
+            if( tmpEt < 15. && inf_count%5==0 ) continue;
+            if( tmpEt > 15. && tmpEt < 25. && inf_count%3==0 ) continue;
+            if( tmpEt > 25. && tmpEt < 35. && inf_count%2==0 ) continue;
+            if( tmpEt > 35. && tmpEt < 40. && inf_count%4!=0 ) continue;
+            if( tmpEt > 40. && tmpEt < 50. && inf_count%4!=0 ) continue;
+            if( tmpEt > 50. && tmpEt < 60. && inf_count%5!=0 ) continue;
+            if( tmpEt > 60. && tmpEt < 65. && inf_count%7!=0 ) continue;
+            if( tmpEt > 65. && tmpEt < 75. && inf_count%10!=0 ) continue;
+            if( tmpEt > 75. &&                inf_count%15!=0 ) continue;
+
+            //cut4
+            if( tmpEt < 15. && ratio < 0.52 ) continue;
+            if( tmpEt > 15. && tmpEt < 20. && ratio < 0.47 ) continue;
+            if( tmpEt > 20. && tmpEt < 25. && ratio < 0.45 ) continue;
+            if( tmpEt > 25. && tmpEt < 30. && ratio < 0.43 ) continue;
+            if( tmpEt > 30. && tmpEt < 35. && ratio < 0.38 ) continue;
+            if( tmpEt > 35. && tmpEt < 45. && ratio < 0.35 ) continue;
+            if( tmpEt > 45. && tmpEt < 55. && ratio < 0.35 ) continue;
+            if( tmpEt > 55. && tmpEt < 65. && ratio < 0.34 ) continue;
+            if( tmpEt > 65. &&                ratio < 0.34 ) continue;
+            //if( tmpEt > 70. && ratio > 12.0 ) continue;
+            //if( tmpEt > 70. ) continue;
+            //cut3
+            //if( tmpEt < 20. && ratio < 0.3 ) continue;
+            //if( tmpEt > 20. && tmpEt < 30. && ratio < 0.45 ) continue;
+            //if( tmpEt > 30. && tmpEt < 40. && ratio < 0.55 ) continue;
+            //if( tmpEt > 40. && tmpEt < 50. && ratio < 0.65 ) continue;
+            //if( tmpEt > 50. && tmpEt < 60. && ratio < 2.00 ) continue;
+            //if( tmpEt > 60. && tmpEt < 70. && ratio < 4.00 ) continue;
+            //if( tmpEt > 70. && ratio < 6.00 ) continue;
+            //cut2
+            //if( tmpEt < 20. && ratio < 0.3 ) continue;
+            //if( tmpEt > 20. && tmpEt < 30. && ratio < 0.45 ) continue;
+            //if( tmpEt > 30. && tmpEt < 40. && ratio < 0.75 ) continue;
+            //if( tmpEt > 40. && tmpEt < 50. && ratio < 1.25 ) continue;
+            //if( tmpEt > 50. && tmpEt < 60. && ratio < 1.85 ) continue;
+            //if( tmpEt > 60. && tmpEt < 70. && ratio < 2.45 ) continue;
+            //if( tmpEt > 70. && ratio < 3.00 ) continue;
             
             double CalX, CalY, CalZ, CalEt, CalEta, CalPhi;
             CalPhi = CalTower->Phi;     
