@@ -16,8 +16,13 @@ void test::Loop()
    TH1F *h3 = new TH1F("dz1st4th","1st-4th",1000,-0.1,0.1); 
    TH1F *h4 = new TH1F("dz2nd3rd","2nd-3rd",1000,-0.1,0.1);
    TH1F *h5 = new TH1F("dz2nd4th","2nd-4th",1000,-0.1,0.1); 
-   TH1F *h6 = new TH1F("dz3rd4th","3rd-4th",1000,-0.1,0.1); 
+   TH1F *h6 = new TH1F("dz3rd4th","3rd-4th",1000,-0.1,0.1);
 
+   TH1F *h1z = new TH1F("dz1st","1st",1000,-2*1e-6,2*1e-6); 
+   TH1F *h2z = new TH1F("dz2nd","2nd",1000,-2*1e-6,2*1e-6); 
+   TH1F *h3z = new TH1F("dz3rd","3rd",1000,-2*1e-6,2*1e-6); 
+   TH1F *h4z = new TH1F("dz4th","4th",1000,-2*1e-6,2*1e-6); 
+   
    TH1F *a1 = new TH1F("dEcl1st2nd-1st3rd","1st2nd - 1st3rd #Delta#eta",1000,-0.05,0.05);
    TH1F *a2 = new TH1F("dEcl1st2nd-1st4th","1st2nd - 1st4th #Delta#eta",1000,-0.05,0.05);
    TH1F *a3 = new TH1F("dEcl1st2nd-2nd3rd","1st2nd - 2nd3rd #Delta#eta",1000,-0.05,0.05);
@@ -87,8 +92,49 @@ void test::Loop()
       float genX = propgenElPartX->at(0)/10.;
       float genY = propgenElPartY->at(0)/10.;
       float genZ = propgenElPartZ->at(0)/10.;
-
+     
+      // genZ - vertex (theta method)
+      for(int j = 0; j < first_layer_hits.size(); j++)
+      {
+          TVector3 v1pv(first_layer_hits[j].X()-genX, first_layer_hits[j].Y()-genY, first_layer_hits[j].Z()-genZ);
+          float slope = tan(v1pv.Theta());
+          float R = sqrt(pow(first_layer_hits[j].X(),2)+pow(first_layer_hits[j].Y(),2));
+          float Z = first_layer_hits[j].Z();
+          float vertex = Z - R/slope;
+          h1z->Fill(genZ-vertex);
+      }
       
+      for(int j = 0; j < second_layer_hits.size(); j++)
+      {
+          TVector3 v2pv(second_layer_hits[j].X()-genX, second_layer_hits[j].Y()-genY, second_layer_hits[j].Z()-genZ);
+          float slope = tan(v2pv.Theta());
+          float R = sqrt(pow(second_layer_hits[j].X(),2)+pow(second_layer_hits[j].Y(),2));
+          float Z = second_layer_hits[j].Z();
+          float vertex = Z - R/slope;
+          h2z->Fill(genZ-vertex);
+      }
+      
+      for(int j = 0; j < third_layer_hits.size(); j++)
+      {
+          TVector3 v3pv(third_layer_hits[j].X()-genX, third_layer_hits[j].Y()-genY, third_layer_hits[j].Z()-genZ);
+          float slope = tan(v3pv.Theta());
+          float R = sqrt(pow(third_layer_hits[j].X(),2)+pow(third_layer_hits[j].Y(),2));
+          float Z = third_layer_hits[j].Z();
+          float vertex = Z - R/slope;
+          h3z->Fill(genZ-vertex);
+      }
+      
+      for(int j = 0; j < fourth_layer_hits.size(); j++)
+      {
+          TVector3 v4pv(fourth_layer_hits[j].X()-genX, fourth_layer_hits[j].Y()-genY, fourth_layer_hits[j].Z()-genZ);
+          float slope = tan(v4pv.Theta());
+          float R = sqrt(pow(fourth_layer_hits[j].X(),2)+pow(fourth_layer_hits[j].Y(),2));
+          float Z = fourth_layer_hits[j].Z();
+          float vertex = Z - R/slope;
+          h4z->Fill(genZ-vertex);
+      }
+
+      // genZ - vertex (two pixel clusters method)
       for(int j = 0; j < size1; j++)
       {
           for(int k = 0; k < size2; k++)
@@ -149,6 +195,7 @@ void test::Loop()
           }
       }
 
+      // delta Eta and delta Phi difference
       TVector3 v12;
       TVector3 v13;
       TVector3 v23;
@@ -280,6 +327,10 @@ void test::Loop()
    h4->Write();
    h5->Write();
    h6->Write();
+   h1z->Write();
+   h2z->Write();
+   h3z->Write();
+   h4z->Write();
    a1->Write();
    a2->Write();
    a3->Write();
