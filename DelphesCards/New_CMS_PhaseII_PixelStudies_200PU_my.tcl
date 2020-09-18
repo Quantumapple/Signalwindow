@@ -76,7 +76,7 @@ module PileUpMerger PileUpMerger {
   set VertexOutputArray vertices
 
   # pre-generated minbias input file
-  set PileUpFile /cms/scratch/hknam/Delphes/delphes/mypu_9m_stable.pileup
+  set PileUpFile /cms_scratch/yerin/mypu_9m_stable_0.pileup 
   #set PileUpFile MinBias.pileup
   
   # average expected pile up

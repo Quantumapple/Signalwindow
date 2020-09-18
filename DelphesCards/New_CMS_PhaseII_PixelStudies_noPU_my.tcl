@@ -76,14 +76,15 @@ module PileUpMerger PileUpMerger {
   set VertexOutputArray vertices
 
   # pre-generated minbias input file
-  set PileUpFile /cms/ldap_home/jongho/L1PixelTrigger/Delphes/4ChangSeong/MinBias_100k.pileup
-  #set PileUpFile MinBias.pileup
+  #set PileUpFile /cms/scratch/hknam/Delphes/delphes/PileUp/mypu_9m_stable_0.pileup
+  set PileUpFile MinBias.pileup
   
   # average expected pile up
-  set MeanPileUp 200 
+  set MeanPileUp 0 
 
   # maximum spread in the beam direction in m
   set ZVertexSpread 0.25
+  #set ZVertexSpread 0.20
 
   # maximum spread in time in s
   set TVertexSpread 800E-12
@@ -735,7 +736,7 @@ module Calorimeter Calorimeter {
   add EnergyFraction {11} {1.0 0.0}
   add EnergyFraction {22} {1.0 0.0}
   add EnergyFraction {111} {1.0 0.0}
-  add EnergyFraction {211} {0.4 0.6}
+  add EnergyFraction {211} {0.30 0.70}
   # energy fractions for muon, neutrinos and neutralinos
   add EnergyFraction {12} {0.0 0.0}
   add EnergyFraction {13} {0.0 0.0}
@@ -869,7 +870,8 @@ module StatusPidFilter GenParticleFilter {
 module TreeWriter TreeWriter {
 
 # add Branch InputArray BranchName BranchClass
-  add Branch GenParticleFilter/filteredParticles Particle GenParticle
+  #add Branch GenParticleFilter/filteredParticles Particle GenParticle
+  add Branch Delphes/stableParticles Particle GenParticle
   
   add Branch Calorimeter/eflowTracks EFlowTrack Track
   add Branch Calorimeter/towers Tower Tower
