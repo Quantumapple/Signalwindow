@@ -1,16 +1,18 @@
-executable = generate_mc_pythia.sh 
+executable = generate_mc_pythia2.sh 
 universe   = vanilla
 arguments  = $(Process)
 getenv     = True
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
-transfer_input_files = Example25.C 
-output = out/job_$(Process).out
-error = err/job_$(Process).err
+transfer_input_files = Example35.C, disksmear_SE.C, disksmear_Minbias.C, disksmear.h 
+requirements = (Machine=!="cms-t3-wn3005.sdfarm.kr") && (Machine=!="cms-t3-wn3008.sdfarm.kr") && (Machine =!= "cms-t3-wn3013.sdfarm.kr") && (Machine=!="cms-t3-wn3009.sdfarm.kr") && (Machine=!="cms-t3-wn3012.sdfarm.kr") && (Machine=!="cms-t3-wn3014.sdfarm.kr")
+output = condor_logs/out/job_$(Process).out
+error = condor_logs/err/job_$(Process).err
+log = condor_logs/log/job_$(Process).log
 accounting_group=group_cms
-#request_Cpus=1
-#request_GPUs =0 
-#request_memory=2933
-#request_disk = 10G
 notification = Error
-queue 100
+request_cpus = 2
+request_memory = 5000
+request_disk = 10G
+JobBatchName = DelphesBkg
+queue 800
