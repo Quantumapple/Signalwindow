@@ -14,17 +14,49 @@ using namespace std;
 #include "TFrame.h"
 #include "TSystem.h"
 
+//---------------------  Function definition  ----------------------------------
+
+float ratiofunc(int type, int count);
+void AnalyseEvents(TTree *fTree1, TTree *fTree2, TFile *result, TTree *tt);
+
 //------------------------------------------------------------------------------
 
-//float ratiofunc(float x)
-float ratiofunc(int type, int count)
+void mix13()
 {
-    double param_R123_1[10] = {0.0678573,0.609147,-0.294585,-0.228479,0.386804,-0.676396,0.607686,-0.214137,0,0};
-    double param_R123_2[10] = {0.235596,1.98923,-0.0388373,-2.22096,2.40337,-7.17586,15.467,-21.9822,17.8493,-6.11948};
-    double param_R123_3[10] = {0.0119969, 0.286603, -0.470787, 0.00172564, 0.0233817, -0.0255747, 0, 0, 0, 0}; 
-    double param_R456_1[10] = {0.842313,-27.2558,0.779984,0.0101008,-0.0328682,0.0618374,-0.029615,0,0,0};
-    double param_R456_2[10] = {0.00846556,3.84928,-0.0322101,-0.533008,0.34178,-0.289075,-0.0497208,0.330497,-0.187506,0};
-    double param_R456_3[10] = {0.000331564,3.7808,-0.149153,-0.0571487,0.144501,-0.207412,0.172996,-0.0825695,0.0145481,0};
+
+    TFile *file1 = new TFile("input.root","OPEN");
+    TFile *file2 = new TFile("SE_NoPU.root","OPEN");
+
+    TTree *fTree1 = (TTree*)file1->Get("l1PiXTRKTree/L1PiXTRKTree");
+    TTree *fTree2 = (TTree*)file2->Get("l1PiXTRKTree/L1PiXTRKTree");
+
+    TFile *output = new TFile("output/merged_0.root","RECREATE");
+    output->mkdir("l1PiXTRKTree");
+    output->cd("l1PiXTRKTree");
+
+    TTree *tt = new TTree("L1PiXTRKTree","L1PiXTRKTree");
+
+    auto nevent1 = fTree1->GetEntries();
+    auto nevent2 = fTree2->GetEntries();
+    cout << nevent1 << ", " << nevent2 << endl;
+
+    //Long64_t nentries1 = fTree1->GetEntries();
+    //Long64_t nentries2 = fTree2->GetEntries();
+
+    //if( nevent1 != nevent2 ) {
+    //    cout << "You should match number entries between two files" << endl;
+    //    exit(0);
+    //}
+
+    AnalyseEvents(fTree1, fTree2, output, tt);
+    output->Write();
+}
+
+//------------------------------------------------------------------------------
+
+float ratiofunc(int type, int count, bool flag=true)
+{
+    double out = 0.;
 
     TF1 *f1 = new TF1("f1","[0]*exp([1]*pow(x,[2]))+[3]+[4]*x+[5]*x*x+[6]*pow(x,3)+[7]*pow(x,4)",0.003,1.);
     TF1 *f2 = new TF1("f2","[0]*exp([1]*pow(x,[2]))+[3]+[4]*x+[5]*x*x+[6]*pow(x,3)+[7]*pow(x,4)+[8]*pow(x,5)+[9]*pow(x,6)",0.0022,0.95);
@@ -32,45 +64,34 @@ float ratiofunc(int type, int count)
     TF1 *f4 = new TF1("f4","[0]*exp([1]*pow(x,[2]))+[3]+[4]*x+[5]*x*x+[6]*pow(x,3)",0.001,1.);
     TF1 *f5 = new TF1("f5","[0]*exp([1]*pow(x,[2]))+[3]+[4]*x+[5]*x*x+[6]*pow(x,3)+[7]*pow(x,4)+[8]*pow(x,5)",0.003,1.);
     TF1 *f6 = new TF1("f6","[0]*exp([1]*pow(x,[2]))+[3]+[4]*x+[5]*x*x+[6]*pow(x,3)+[7]*pow(x,4)+[8]*pow(x,5)",0.0035,0.97);
+    
+    f1->SetParameters(0.0678573,0.609147,-0.294585,-0.228479,0.386804,-0.676396,0.607686,-0.214137);
+    f2->SetParameters(0.235596,1.98923,-0.0388373,-2.22096,2.40337,-7.17586,15.467,-21.9822,17.8493,-6.11948);
+    f3->SetParameters(0.0119969, 0.286603, -0.470787, 0.00172564, 0.0233817, -0.0255747); 
+    f4->SetParameters(0.842313,-27.2558,0.779984,0.0101008,-0.0328682,0.0618374,-0.029615);
+    f5->SetParameters(0.00846556,3.84928,-0.0322101,-0.533008,0.34178,-0.289075,-0.0497208,0.330497,-0.187506,0);
+    f6->SetParameters(0.000331564,3.7808,-0.149153,-0.0571487,0.144501,-0.207412,0.172996,-0.0825695,0.0145481,0);
 
-    double out = 0.;
     if( type == 1 && count == 0 ){
-        for(int i=0; i < 10; i++){
-            f1->SetParameter(i,param_R123_1[i]);
-            out = f1->GetRandom();
-        }
+        out = fabs(f1->GetRandom(0.003, 0.32));
     }
     if( type == 1 && count == 1 ){
-        for(int i=0; i < 10; i++){
-            f2->SetParameter(i,param_R123_2[i]);
-            out = f2->GetRandom();
-        }
+        out = fabs(f2->GetRandom(0.0022, 0.32));
     }
     if( type == 1 && count > 1 ){
-        for(int i=0; i < 10; i++){
-            f3->SetParameter(i,param_R123_3[i]);
-            out = f3->GetRandom();
-        }
+        out = fabs(f3->GetRandom(0.0013, 0.22));
     }
     if( type == 2 && count == 0 ){
-        for(int i=0; i < 10; i++){
-            f4->SetParameter(i,param_R456_1[i]);
-            out = f4->GetRandom();
-        }
+        if( flag == false ) out = fabs(f4->GetRandom(0.25, 0.67));
+        if( flag == true  ) out = fabs(f4->GetRandom());
     }
     if( type == 2 && count == 1 ){
-        for(int i=0; i < 10; i++){
-            f5->SetParameter(i,param_R456_2[i]);
-            out = f5->GetRandom();
-        }
+        out = fabs(f5->GetRandom());
     }
     if( type == 2 && count > 1 ){
-        for(int i=0; i < 10; i++){
-            f6->SetParameter(i,param_R456_3[i]);
-            out = f6->GetRandom();
-        }
+        out = fabs(f6->GetRandom());
     }
-
+    
     return out;
 }
 
@@ -346,6 +367,8 @@ void AnalyseEvents(TTree *fTree1, TTree *fTree2, TFile *result, TTree *tt)
         b_pufGy->GetEntry(jentry1);
         b_pufGz->GetEntry(jentry1);
 
+        cout << endl;
+
         // Loop over Genparticle
         for(unsigned int k = 0; k < puGenPt->size(); k++)
         {
@@ -416,21 +439,25 @@ void AnalyseEvents(TTree *fTree1, TTree *fTree2, TFile *result, TTree *tt)
         //if( mergedCheck[3] < 2 ) Nflag[3] = 1;
         //if( mergedCheck[4] < 1 ) Nflag[4] = 1;
 
-        if(closest_dr < dr_cut && closest_dr != 9999. ){    
+        if(closest_dr < dr_cut && closest_dr != 9999. ) {    
             if( fabs(puEgEta->at(closest_eg)) < 1.7 ) Type=1;
             if( fabs(puEgEta->at(closest_eg)) > 1.7 ) Type=2;
             float ratio = 0;
-            float ratio0 = ratiofunc(Type, 0);
-            float ratio1 = ratiofunc(Type, 1);
-            float ratio2 = ratiofunc(Type, 2);
-            for(unsigned int j = 0; j < allEntries2; j++){
+            float ratio0 = ratiofunc(Type, 0, true);
+            float ratio1 = ratiofunc(Type, 1, true);
+            float ratio2 = ratiofunc(Type, 2, true);
+
+            float etaflag = fabs(puEgEta->at(closest_eg));
+
+            for(unsigned int j = 0; j < allEntries2; j++) {
                 Long64_t jentry3 = fTree2->LoadTree(j);
 
-                //if( Type == 1 && N_merged == 1 ) break;// if(N_merged > 5 ) break;
-                ratio = ratio0;
-                //if( N_merged == 0 ) ratio = ratio0;
-                //if( N_merged == 1 ) ratio = ratio1;
-                //if( N_merged > 1 ) ratio = ratio2;
+                //if( Type == 1 && N_merged == 1 ) break;
+                //if( N_merged > 1000 ) break;
+                //ratio = ratio0;
+                if( N_merged < 1 ) ratio = ratio0;
+                if( N_merged == 1 ) ratio = ratio1;
+                if( N_merged > 1 ) ratio = ratio2;
 
                 // single electron NoPU
                 b_sigGenPt->GetEntry(jentry3);
@@ -466,53 +493,251 @@ void AnalyseEvents(TTree *fTree1, TTree *fTree2, TFile *result, TTree *tt)
                 dZ = puGenZ->at(0) - sigGenZ->at(0);
                 float siggenpt = sigGenPt->at(0);
                 float pugenpt = puGenPt->at(0);
-                //if( fabs(dR) < 0.3 && fabs(dZ) < 0.005 && (siggenpt < pugenpt*ratio*1.20 && siggenpt > pugenpt*ratio*0.80) ){
-                if( fabs(dR) < 30. && fabs(dZ) < 0.5 && (siggenpt < pugenpt*ratio*1.20 && siggenpt > pugenpt*ratio*0.80) ){
-                    N_merged++;
+                if( Type == 1 && fabs(dR) < 0.3 && siggenpt < pugenpt*ratio ) {
+                    //cout << "Event from 200PU: " << i+1 << ", Event from NoPU: " << j+1 << endl;
+                    //cout << "  pT of 200PU event " << pugenpt << ", pT of NoPU event " << siggenpt << endl;
+                    //cout << "    EgEta: " << etaflag << ", vertex distance: " << fabs(dZ) << endl;
 
-                    //cout << "##merge##" << i+1 << "th event" << endl;
-                    //cout << "Target file Event : " << i+1 << ", Merging file Event : " << j+1 << ", dR : " << fabs(dR) << ", dZ : " << fabs(dZ) << endl;
-
-                    for(unsigned int k = 0; k < sigGenPt->size(); k++)
+                    if( etaflag < 0.8 && fabs(dZ) < 0.001 )
                     {
-                        propgenElPartPhi.push_back(sigGenPhi->at(k));
-                        propgenElPartEta.push_back(sigGenEta->at(k));
-                        propgenElPartPt.push_back(sigGenPt->at(k));
-                        propgenElPartX.push_back(sigGenX->at(k));
-                        propgenElPartY.push_back(sigGenY->at(k));
-                        propgenElPartZ.push_back(sigGenZ->at(k));
+                        N_merged++;
+
+                        for(unsigned int k = 0; k < sigGenPt->size(); k++)
+                        {
+                            propgenElPartPhi.push_back(sigGenPhi->at(k));
+                            propgenElPartEta.push_back(sigGenEta->at(k));
+                            propgenElPartPt.push_back(sigGenPt->at(k));
+                            propgenElPartX.push_back(sigGenX->at(k));
+                            propgenElPartY.push_back(sigGenY->at(k));
+                            propgenElPartZ.push_back(sigGenZ->at(k));
+                        }
+
+                        EgN = sigEgEt->size();
+                        for(unsigned int k = 0; k < EgN; k++)
+                        {
+                            egCrysClusterEta.push_back(sigEgEta->at(k));
+                            egCrysClusterPhi.push_back(sigEgPhi->at(k));
+                            egCrysClusterEt.push_back(sigEgEt->at(k)); 
+                            egCrysClusterGx.push_back(sigEgGx->at(k)); 
+                            egCrysClusterGy.push_back(sigEgGy->at(k)); 
+                            egCrysClusterGz.push_back(sigEgGz->at(k)); 
+                        }
+
+                        bN = sigbLa->size();
+                        for(unsigned int k = 0; k < bN; k++)
+                        {
+                            bRecHitLayer.push_back(sigbLa->at(k));
+                            bRecHitGx.push_back(sigbGx->at(k));
+                            bRecHitGy.push_back(sigbGy->at(k));
+                            bRecHitGz.push_back(sigbGz->at(k));
+                        }
+
+                        fN = sigfDi->size();
+                        for(unsigned int k = 0; k < fN; k++)
+                        {
+                            fRecHitDisk.push_back(sigfDi->at(k));
+                            fRecHitGx.push_back(sigfGx->at(k));
+                            fRecHitGy.push_back(sigfGy->at(k));
+                            fRecHitGz.push_back(sigfGz->at(k));
+                        }
+
+                        Double_t random_flag = gRandom->Uniform(0, 1);
+                        cout << "  Region 1 " << N_merged << " happened" << endl;
+                        if( random_flag < 0.7 ) break;
+                    }
+                    if( etaflag > 0.8 && etaflag < 1.4 && fabs(dZ) < 0.002 )
+                    {
+                        N_merged++;
+
+                        for(unsigned int k = 0; k < sigGenPt->size(); k++)
+                        {
+                            propgenElPartPhi.push_back(sigGenPhi->at(k));
+                            propgenElPartEta.push_back(sigGenEta->at(k));
+                            propgenElPartPt.push_back(sigGenPt->at(k));
+                            propgenElPartX.push_back(sigGenX->at(k));
+                            propgenElPartY.push_back(sigGenY->at(k));
+                            propgenElPartZ.push_back(sigGenZ->at(k));
+                        }
+
+                        EgN = sigEgEt->size();
+                        for(unsigned int k = 0; k < EgN; k++)
+                        {
+                            egCrysClusterEta.push_back(sigEgEta->at(k));
+                            egCrysClusterPhi.push_back(sigEgPhi->at(k));
+                            egCrysClusterEt.push_back(sigEgEt->at(k)); 
+                            egCrysClusterGx.push_back(sigEgGx->at(k)); 
+                            egCrysClusterGy.push_back(sigEgGy->at(k)); 
+                            egCrysClusterGz.push_back(sigEgGz->at(k)); 
+                        }
+
+                        bN = sigbLa->size();
+                        for(unsigned int k = 0; k < bN; k++)
+                        {
+                            bRecHitLayer.push_back(sigbLa->at(k));
+                            bRecHitGx.push_back(sigbGx->at(k));
+                            bRecHitGy.push_back(sigbGy->at(k));
+                            bRecHitGz.push_back(sigbGz->at(k));
+                        }
+
+                        fN = sigfDi->size();
+                        for(unsigned int k = 0; k < fN; k++)
+                        {
+                            fRecHitDisk.push_back(sigfDi->at(k));
+                            fRecHitGx.push_back(sigfGx->at(k));
+                            fRecHitGy.push_back(sigfGy->at(k));
+                            fRecHitGz.push_back(sigfGz->at(k));
+                        }
+
+                        Double_t random_flag = gRandom->Uniform(0, 1);
+                        cout << "  Region 2 " << N_merged << " happened" << endl;
+                        if( random_flag < 0.7 ) break;
+                    }
+                    if( etaflag > 1.4 && etaflag < 1.7 && fabs(dZ) < 0.005 )
+                    {
+                        N_merged++;
+
+                        for(unsigned int k = 0; k < sigGenPt->size(); k++)
+                        {
+                            propgenElPartPhi.push_back(sigGenPhi->at(k));
+                            propgenElPartEta.push_back(sigGenEta->at(k));
+                            propgenElPartPt.push_back(sigGenPt->at(k));
+                            propgenElPartX.push_back(sigGenX->at(k));
+                            propgenElPartY.push_back(sigGenY->at(k));
+                            propgenElPartZ.push_back(sigGenZ->at(k));
+                        }
+
+                        EgN = sigEgEt->size();
+                        for(unsigned int k = 0; k < EgN; k++)
+                        {
+                            egCrysClusterEta.push_back(sigEgEta->at(k));
+                            egCrysClusterPhi.push_back(sigEgPhi->at(k));
+                            egCrysClusterEt.push_back(sigEgEt->at(k)); 
+                            egCrysClusterGx.push_back(sigEgGx->at(k)); 
+                            egCrysClusterGy.push_back(sigEgGy->at(k)); 
+                            egCrysClusterGz.push_back(sigEgGz->at(k)); 
+                        }
+
+                        bN = sigbLa->size();
+                        for(unsigned int k = 0; k < bN; k++)
+                        {
+                            bRecHitLayer.push_back(sigbLa->at(k));
+                            bRecHitGx.push_back(sigbGx->at(k));
+                            bRecHitGy.push_back(sigbGy->at(k));
+                            bRecHitGz.push_back(sigbGz->at(k));
+                        }
+
+                        fN = sigfDi->size();
+                        for(unsigned int k = 0; k < fN; k++)
+                        {
+                            fRecHitDisk.push_back(sigfDi->at(k));
+                            fRecHitGx.push_back(sigfGx->at(k));
+                            fRecHitGy.push_back(sigfGy->at(k));
+                            fRecHitGz.push_back(sigfGz->at(k));
+                        }
+
+                        Double_t random_flag = gRandom->Uniform(0, 1);
+                        cout << "  Central " << N_merged << " happened" << endl;
+                        if( random_flag < 0.7 ) break;
+                    }
+                } // central region
+                    
+                if( etaflag > 2.1 ) ratio = ratiofunc(Type, 0, false);
+                if( Type == 2 && fabs(dR) < 0.3 && (siggenpt < pugenpt*ratio*1.20 && siggenpt > pugenpt*ratio*0.80) ) {
+                    if( etaflag > 1.7 && etaflag < 2.1 && fabs(dZ) < 0.03 )
+                    {
+                        N_merged++;
+
+                        for(unsigned int k = 0; k < sigGenPt->size(); k++)
+                        {
+                            propgenElPartPhi.push_back(sigGenPhi->at(k));
+                            propgenElPartEta.push_back(sigGenEta->at(k));
+                            propgenElPartPt.push_back(sigGenPt->at(k));
+                            propgenElPartX.push_back(sigGenX->at(k));
+                            propgenElPartY.push_back(sigGenY->at(k));
+                            propgenElPartZ.push_back(sigGenZ->at(k));
+                        }
+
+                        EgN = sigEgEt->size();
+                        for(unsigned int k = 0; k < EgN; k++)
+                        {
+                            egCrysClusterEta.push_back(sigEgEta->at(k));
+                            egCrysClusterPhi.push_back(sigEgPhi->at(k));
+                            egCrysClusterEt.push_back(sigEgEt->at(k)); 
+                            egCrysClusterGx.push_back(sigEgGx->at(k)); 
+                            egCrysClusterGy.push_back(sigEgGy->at(k)); 
+                            egCrysClusterGz.push_back(sigEgGz->at(k)); 
+                        }
+
+                        bN = sigbLa->size();
+                        for(unsigned int k = 0; k < bN; k++)
+                        {
+                            bRecHitLayer.push_back(sigbLa->at(k));
+                            bRecHitGx.push_back(sigbGx->at(k));
+                            bRecHitGy.push_back(sigbGy->at(k));
+                            bRecHitGz.push_back(sigbGz->at(k));
+                        }
+
+                        fN = sigfDi->size();
+                        for(unsigned int k = 0; k < fN; k++)
+                        {
+                            fRecHitDisk.push_back(sigfDi->at(k));
+                            fRecHitGx.push_back(sigfGx->at(k));
+                            fRecHitGy.push_back(sigfGy->at(k));
+                            fRecHitGz.push_back(sigfGz->at(k));
+                        }
+                        Double_t random_flag = gRandom->Uniform(0, 1);
+                        cout << "  Region 4 " << N_merged << " happened" << endl;
+                        if( random_flag < 0.7 ) break;
+                    }
+                    if( etaflag > 2.1 && fabs(dZ) < 0.3 )
+                    {
+                        N_merged++;
+
+                        for(unsigned int k = 0; k < sigGenPt->size(); k++)
+                        {
+                            propgenElPartPhi.push_back(sigGenPhi->at(k));
+                            propgenElPartEta.push_back(sigGenEta->at(k));
+                            propgenElPartPt.push_back(sigGenPt->at(k));
+                            propgenElPartX.push_back(sigGenX->at(k));
+                            propgenElPartY.push_back(sigGenY->at(k));
+                            propgenElPartZ.push_back(sigGenZ->at(k));
+                        }
+
+                        EgN = sigEgEt->size();
+                        for(unsigned int k = 0; k < EgN; k++)
+                        {
+                            egCrysClusterEta.push_back(sigEgEta->at(k));
+                            egCrysClusterPhi.push_back(sigEgPhi->at(k));
+                            egCrysClusterEt.push_back(sigEgEt->at(k)); 
+                            egCrysClusterGx.push_back(sigEgGx->at(k)); 
+                            egCrysClusterGy.push_back(sigEgGy->at(k)); 
+                            egCrysClusterGz.push_back(sigEgGz->at(k)); 
+                        }
+
+                        bN = sigbLa->size();
+                        for(unsigned int k = 0; k < bN; k++)
+                        {
+                            bRecHitLayer.push_back(sigbLa->at(k));
+                            bRecHitGx.push_back(sigbGx->at(k));
+                            bRecHitGy.push_back(sigbGy->at(k));
+                            bRecHitGz.push_back(sigbGz->at(k));
+                        }
+
+                        fN = sigfDi->size();
+                        for(unsigned int k = 0; k < fN; k++)
+                        {
+                            fRecHitDisk.push_back(sigfDi->at(k));
+                            fRecHitGx.push_back(sigfGx->at(k));
+                            fRecHitGy.push_back(sigfGy->at(k));
+                            fRecHitGz.push_back(sigfGz->at(k));
+                        }
+                        Double_t random_flag = gRandom->Uniform(0, 1);
+                        cout << "  Region 5/6 " << N_merged << " happened" << endl;
+                        if( random_flag < 0.7 ) break;
                     }
 
-                    EgN = sigEgEt->size();
-                    for(unsigned int k = 0; k < EgN; k++)
-                    {
-                        egCrysClusterEta.push_back(sigEgEta->at(k));
-                        egCrysClusterPhi.push_back(sigEgPhi->at(k));
-                        egCrysClusterEt.push_back(sigEgEt->at(k)); 
-                        egCrysClusterGx.push_back(sigEgGx->at(k)); 
-                        egCrysClusterGy.push_back(sigEgGy->at(k)); 
-                        egCrysClusterGz.push_back(sigEgGz->at(k)); 
-                    }
-
-                    bN = sigbLa->size();
-                    for(unsigned int k = 0; k < bN; k++)
-                    {
-                        bRecHitLayer.push_back(sigbLa->at(k));
-                        bRecHitGx.push_back(sigbGx->at(k));
-                        bRecHitGy.push_back(sigbGy->at(k));
-                        bRecHitGz.push_back(sigbGz->at(k));
-                    }
-
-                    fN = sigfDi->size();
-                    for(unsigned int k = 0; k < fN; k++)
-                    {
-                        fRecHitDisk.push_back(sigfDi->at(k));
-                        fRecHitGx.push_back(sigfGx->at(k));
-                        fRecHitGy.push_back(sigfGy->at(k));
-                        fRecHitGz.push_back(sigfGz->at(k));
-                    }
-                }
-            }
+                } // endcap region 
+            } // NoPU loop
             mergedCheck[N_merged]++;
         } // end of gen matching
 
@@ -536,46 +761,4 @@ void AnalyseEvents(TTree *fTree1, TTree *fTree2, TFile *result, TTree *tt)
     fTree1->ResetBranchAddresses();
 
 }
-
-
-    //------------------------------------------------------------------------------
-
-void mix10()
-{
-
-    //TFile *file1 = new TFile("root://cms-xrdr.private.lo:2094///xrd/store/user/jongho/Delphes/SE/0000/final_0.root","OPEN");
-    TFile *file1 = new TFile("input.root","OPEN");
-    TFile *file2 = new TFile("SE_NoPU.root","OPEN");
-
-    TTree *fTree1 = (TTree*)file1->Get("l1PiXTRKTree/L1PiXTRKTree");
-    TTree *fTree2 = (TTree*)file2->Get("l1PiXTRKTree/L1PiXTRKTree");
-
-    //file1->GetObject("l1PiXTRKTree/L1PiXTRKTree", fTree1);
-    //file2->GetObject("l1PiXTRKTree/L1PiXTRKTree", fTree2);
-
-    //TChain *chain1 = new TChain("l1PiXTRKTree/L1PiXTRKTree");
-    //chain1->Add("SingleElNOPU.root");
-    //TChain *chain2 = new TChain("l1PiXTRKTree/L1PiXTRKTree");
-    //chain2->Add("qcd200PU.root");
-
-    TFile *output = new TFile("output/merged_0.root","RECREATE");
-    output->mkdir("l1PiXTRKTree");
-    output->cd("l1PiXTRKTree");
-
-    TTree *tt = new TTree("L1PiXTRKTree","L1PiXTRKTree");
-
-    auto nevent1 = fTree1->GetEntries();
-    auto nevent2 = fTree2->GetEntries();
-    cout << nevent1 << ", " << nevent2 << endl;
-
-    //Long64_t nentries1 = fTree1->GetEntries();
-    //Long64_t nentries2 = fTree2->GetEntries();
-
-    //if( nevent1 != nevent2 ) {
-    //    cout << "You should match number entries between two files" << endl;
-    //    exit(0);
-    //}
-
-    AnalyseEvents(fTree1, fTree2, output, tt);
-    output->Write();
-}
+//------------------------------------------------------------------------------
