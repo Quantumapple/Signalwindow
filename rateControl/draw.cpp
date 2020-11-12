@@ -8,7 +8,7 @@
 
 void draw()
 {
-    float genN = 9256306.0; 
+    float genN = 9256306.0*2.6306; 
 
     int eta_r = 1;
 
@@ -120,15 +120,16 @@ void draw()
     }
     
     cout << "1 bin: " << hEG->GetBinContent(1) * 30000./genN << endl;
+    cout << "2 bin: " << hEG->GetBinContent(2) * 30000./genN << endl;
     cout << "11 bin: " << hEG->GetBinContent(11) * 30000./genN<< endl;
     cout << "11px 1 bin: " << hPXEG->GetBinContent(1) * 30000./genN<< endl;
     cout << "11px bin: " << hPXEG->GetBinContent(11) * 30000./genN<< endl;
     cout << "11px iso bin: " << hPXIsoEG->GetBinContent(11) * 30000./genN<< endl;
 
     //float s=14500.;
-    //float s=30000.;
+    float s=30000.;
     //float s=50000.;
-    float s=13500.;
+    //float s=13500.;
 
     hEG      -> Scale(s/genN);
     hPXEG    -> Scale(s/genN);
@@ -154,8 +155,8 @@ void draw()
     hEG->GetYaxis()->SetNdivisions(546);
     hEG->GetXaxis()->SetLabelSize(0.05);
     hEG->GetYaxis()->SetLabelSize(0.05);
-    hEG->GetXaxis()->SetRangeUser(9.5,100.5);
-    //hEG->GetXaxis()->SetRangeUser(9.5,60.5);
+    //hEG->GetXaxis()->SetRangeUser(9.5,100.5);
+    hEG->GetXaxis()->SetRangeUser(9.5,60.5);
     hEG->GetYaxis()->SetRangeUser(1,35000);
     hEG->GetYaxis()->SetTitleOffset(1.2);
     hEG->GetYaxis()->SetTitleSize(0.055);
@@ -189,8 +190,8 @@ void draw()
     Lgd->SetBorderSize(0);
     Lgd->SetFillStyle(0);
     Lgd->AddEntry(hEG,"Delphes L1 EG","lp");
-    Lgd->AddEntry(hPXEG,"Delphes L1 EG + Pixel","lp");
-    Lgd->AddEntry(hPXIsoEG,"Delphes L1 EG + Pixel + Isolation","lp");
+    Lgd->AddEntry(hPXEG,"Pixel matched","lp");
+    Lgd->AddEntry(hPXIsoEG,"Pixel matched + pixel iso.","lp");
     Lgd->Draw();
 
     float r_ = c1->GetRightMargin();
@@ -206,15 +207,17 @@ void draw()
     TString eta_str;
 
     //if(eta_r == 1) eta_str = "#it{#lbar#bf{#eta}#lbar < 1.5}";
-    //if(eta_r == 1) eta_str = "#it{1.5 < #lbar#bf{#eta}#lbar < 2.5}";
+    if(eta_r == 1) eta_str = "#it{1.5 < #lbar#bf{#eta}#lbar < 2.5}";
     //if(eta_r == 1) eta_str = "#it{2.5 < #lbar#bf{#eta}#lbar < 3.0}";
-    //if(eta_r == 1) eta_str = "#it{#lbar#bf{#eta}#lbar < 2.4}";
-    if(eta_r == 1) eta_str = "#it{#lbar#bf{#eta}#lbar < 3.0}";
+    //if(eta_r == 1) eta_str = "#it{#lbar#bf{#eta}#lbar < 2.5}";
+    //if(eta_r == 1) eta_str = "#it{#lbar#bf{#eta}#lbar < 3.0}";
 
-    TLatex eta_range(70,200,eta_str);
+    TLatex eta_range( 0.75*(1-r_), 0.87*(1-t_) ,eta_str);
+    //TLatex eta_range(70,200,eta_str);
     //TLatex eta_range(70,4500,eta_str);
     //TLatex eta_range(66.5,4500,eta_str);
-    eta_range.SetTextSize(0.05);
+    eta_range.SetNDC();
+    eta_range.SetTextSize(0.035);
     eta_range.Draw();
 
     TString l1rate = "l1rate";
@@ -227,7 +230,7 @@ void draw()
     //if(eta_r == 4) l1rate = l1rate + "_r4.png";
 
     c1->Print(l1rate);
-    //c1->SaveAs("l1rate_all.pdf");
+    c1->SaveAs("l1rate_all.pdf");
 
 
     //TCanvas *c2 = new TCanvas("c2","c2",700,700);
@@ -243,7 +246,6 @@ void draw()
     //c2->SetTickx(1);
 
     //c2->cd();
-
 
     r_PXEG->Add(hEG);
     r_PXEG->Divide(hPXEG);
