@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dirn=0022
+dirn=0020
 maxfile=999
 initfile=0
 
@@ -21,7 +21,7 @@ mkdir -p ./${tmp6}
 for tempNum in $(seq $initfile $maxfile); do
 
     mkdir -p ./job_${tempNum}
-    cp mix13.cc ./job_${tempNum}/mix13_${tempNum}.cc
+    cp mix13_r56.cc ./job_${tempNum}/mix13_r56_${tempNum}.cc
 
 cat << EOF > ./job_${tempNum}/merge_${tempNum}.sh
 #!/bin/bash
@@ -40,11 +40,11 @@ if [[ \${XRDEXIT} -eq 0 ]]; then
     
     xrdcp -f root://cms-xrdr.private.lo:2094///xrd/store/user/jongho/Delphes/SE/${dirn}/final_${tempNum}.root ./final_${tempNum}.root
     
-    sed -i "24s/mix13/mix13_${tempNum}/g" mix13_${tempNum}.cc
-    sed -i "27s/input/final_${tempNum}/g" mix13_${tempNum}.cc
-    sed -i "33s/merged_0.root/merged_${tempNum}.root/g" mix13_${tempNum}.cc
+    sed -i "24s/mix13_r56/mix13_r56_${tempNum}/g" mix13_r56_${tempNum}.cc
+    sed -i "27s/input/final_${tempNum}/g" mix13_r56_${tempNum}.cc
+    sed -i "33s/merged_0.root/merged_${tempNum}.root/g" mix13_r56_${tempNum}.cc
     
-    root -l -q -b mix13_${tempNum}.cc >& process_${tempNum}.log
+    root -l -q -b mix13_r56_${tempNum}.cc >& process_${tempNum}.log
 
     xrdcp -f merged_${tempNum}.root root://cms-xrdr.private.lo:2094///xrd/store/user/jongho/Delphes/mergeSE/${dirn}/merged_${tempNum}.root
 
@@ -70,7 +70,7 @@ output     = ${workdir}/condorLogs/out/condorOut_${tempNum}.out
 error      = ${workdir}/condorLogs/err/condorErr_${tempNum}.err
 log        = ${workdir}/condorLogs/log/condorLog_${tempNum}.log
 getenv     = True
-transfer_input_files = mix13.cc 
+transfer_input_files = mix13_r56.cc 
 accounting_group=group_cms
 when_to_transfer_output = ON_EXIT
 requirements = (Machine=!="cms-t3-wn3018.sdfarm.kr") && (Machine=!="cms-t3-wn3021.sdfarm.kr") && (Machine=!="bio-wn3006.sdfarm.kr") && (Machine=!="bio-wn3015.sdfarm.kr") && (Machine=!="bio-wn3013.sdfarm.kr")

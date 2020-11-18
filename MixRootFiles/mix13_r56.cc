@@ -21,7 +21,7 @@ void AnalyseEvents(TTree *fTree1, TTree *fTree2, TFile *result, TTree *tt);
 
 //------------------------------------------------------------------------------
 
-void mix13()
+void mix13_r56()
 {
 
     TFile *file1 = new TFile("input.root","OPEN");
@@ -447,296 +447,103 @@ void AnalyseEvents(TTree *fTree1, TTree *fTree2, TFile *result, TTree *tt)
             float ratio2 = ratiofunc(Type, 2);
 
             float etaflag = fabs(puEgEta->at(closest_eg));
+            if( etaflag > 2.1 )
+            {
+                for(unsigned int j = 0; j < allEntries2; j++) {
+                    Long64_t jentry3 = fTree2->LoadTree(j);
 
-            for(unsigned int j = 0; j < allEntries2; j++) {
-                Long64_t jentry3 = fTree2->LoadTree(j);
+                    //if( Type == 1 && N_merged == 1 ) break;
+                    //if( N_merged > 1000 ) break;
+                    //ratio = ratio0;
+                    if( N_merged < 1 ) ratio = ratio0;
+                    if( N_merged == 1 ) ratio = ratio1;
+                    if( N_merged > 1 ) ratio = ratio2;
 
-                //if( Type == 1 && N_merged == 1 ) break;
-                //if( N_merged > 1000 ) break;
-                //ratio = ratio0;
-                if( N_merged < 1 ) ratio = ratio0;
-                if( N_merged == 1 ) ratio = ratio1;
-                if( N_merged > 1 ) ratio = ratio2;
+                    // single electron NoPU
+                    b_sigGenPt->GetEntry(jentry3);
+                    b_sigGenPhi->GetEntry(jentry3);
+                    b_sigGenEta->GetEntry(jentry3);
+                    b_sigGenX->GetEntry(jentry3);
+                    b_sigGenY->GetEntry(jentry3);
+                    b_sigGenZ->GetEntry(jentry3);
 
-                // single electron NoPU
-                b_sigGenPt->GetEntry(jentry3);
-                b_sigGenPhi->GetEntry(jentry3);
-                b_sigGenEta->GetEntry(jentry3);
-                b_sigGenX->GetEntry(jentry3);
-                b_sigGenY->GetEntry(jentry3);
-                b_sigGenZ->GetEntry(jentry3);
+                    b_sigEgEt->GetEntry(jentry3);
+                    b_sigEgEta->GetEntry(jentry3);
+                    b_sigEgPhi->GetEntry(jentry3);
+                    b_sigEgGx->GetEntry(jentry3);
+                    b_sigEgGy->GetEntry(jentry3);
+                    b_sigEgGz->GetEntry(jentry3);
 
-                b_sigEgEt->GetEntry(jentry3);
-                b_sigEgEta->GetEntry(jentry3);
-                b_sigEgPhi->GetEntry(jentry3);
-                b_sigEgGx->GetEntry(jentry3);
-                b_sigEgGy->GetEntry(jentry3);
-                b_sigEgGz->GetEntry(jentry3);
+                    b_sigbLa->GetEntry(jentry3);
+                    b_sigbGx->GetEntry(jentry3);
+                    b_sigbGy->GetEntry(jentry3);
+                    b_sigbGz->GetEntry(jentry3);
 
-                b_sigbLa->GetEntry(jentry3);
-                b_sigbGx->GetEntry(jentry3);
-                b_sigbGy->GetEntry(jentry3);
-                b_sigbGz->GetEntry(jentry3);
+                    b_sigfDi->GetEntry(jentry3);
+                    b_sigfGx->GetEntry(jentry3);
+                    b_sigfGy->GetEntry(jentry3);
+                    b_sigfGz->GetEntry(jentry3);
 
-                b_sigfDi->GetEntry(jentry3);
-                b_sigfGx->GetEntry(jentry3);
-                b_sigfGy->GetEntry(jentry3);
-                b_sigfGz->GetEntry(jentry3);
+                    dphi = puGenPhi->at(0) - sigGenPhi->at(0);
+                    if( dphi >= float(M_PI)) dphi -= float(2*M_PI);
+                    if( dphi < -float(M_PI)) dphi += float(2*M_PI);
 
-                dphi = puGenPhi->at(0) - sigGenPhi->at(0);
-                if( dphi >= float(M_PI)) dphi -= float(2*M_PI);
-                if( dphi < -float(M_PI)) dphi += float(2*M_PI);
+                    deta = puGenEta->at(0) - sigGenEta->at(0);
+                    dR = sqrt(pow(dphi,2)+pow(deta,2));
+                    dZ = puGenZ->at(0) - sigGenZ->at(0);
+                    float siggenpt = sigGenPt->at(0);
+                    float pugenpt = puGenPt->at(0);
 
-                deta = puGenEta->at(0) - sigGenEta->at(0);
-                dR = sqrt(pow(dphi,2)+pow(deta,2));
-                dZ = puGenZ->at(0) - sigGenZ->at(0);
-                float siggenpt = sigGenPt->at(0);
-                float pugenpt = puGenPt->at(0);
-                if( Type == 1 && fabs(dR) < 0.3 && siggenpt < pugenpt*ratio ) {
-                    //cout << "Event from 200PU: " << i+1 << ", Event from NoPU: " << j+1 << endl;
-                    //cout << "  pT of 200PU event " << pugenpt << ", pT of NoPU event " << siggenpt << endl;
-                    //cout << "    EgEta: " << etaflag << ", vertex distance: " << fabs(dZ) << endl;
-
-                    if( etaflag < 0.8 && fabs(dZ) < 0.001 )
-                    {
-                        N_merged++;
-
-                        for(unsigned int k = 0; k < sigGenPt->size(); k++)
+                    if( fabs(dR) < 0.3 && (siggenpt < pugenpt*ratio*1.20 && siggenpt > pugenpt*ratio*0.80) ) {
+                        if( fabs(dZ) < 0.3 )
                         {
-                            propgenElPartPhi.push_back(sigGenPhi->at(k));
-                            propgenElPartEta.push_back(sigGenEta->at(k));
-                            propgenElPartPt.push_back(sigGenPt->at(k));
-                            propgenElPartX.push_back(sigGenX->at(k));
-                            propgenElPartY.push_back(sigGenY->at(k));
-                            propgenElPartZ.push_back(sigGenZ->at(k));
+                            N_merged++;
+
+                            for(unsigned int k = 0; k < sigGenPt->size(); k++)
+                            {
+                                propgenElPartPhi.push_back(sigGenPhi->at(k));
+                                propgenElPartEta.push_back(sigGenEta->at(k));
+                                propgenElPartPt.push_back(sigGenPt->at(k));
+                                propgenElPartX.push_back(sigGenX->at(k));
+                                propgenElPartY.push_back(sigGenY->at(k));
+                                propgenElPartZ.push_back(sigGenZ->at(k));
+                            }
+
+                            EgN = sigEgEt->size();
+                            for(unsigned int k = 0; k < EgN; k++)
+                            {
+                                egCrysClusterEta.push_back(sigEgEta->at(k));
+                                egCrysClusterPhi.push_back(sigEgPhi->at(k));
+                                egCrysClusterEt.push_back(sigEgEt->at(k)); 
+                                egCrysClusterGx.push_back(sigEgGx->at(k)); 
+                                egCrysClusterGy.push_back(sigEgGy->at(k)); 
+                                egCrysClusterGz.push_back(sigEgGz->at(k)); 
+                            }
+
+                            bN = sigbLa->size();
+                            for(unsigned int k = 0; k < bN; k++)
+                            {
+                                bRecHitLayer.push_back(sigbLa->at(k));
+                                bRecHitGx.push_back(sigbGx->at(k));
+                                bRecHitGy.push_back(sigbGy->at(k));
+                                bRecHitGz.push_back(sigbGz->at(k));
+                            }
+
+                            fN = sigfDi->size();
+                            for(unsigned int k = 0; k < fN; k++)
+                            {
+                                fRecHitDisk.push_back(sigfDi->at(k));
+                                fRecHitGx.push_back(sigfGx->at(k));
+                                fRecHitGy.push_back(sigfGy->at(k));
+                                fRecHitGz.push_back(sigfGz->at(k));
+                            }
+                            Double_t random_flag = gRandom->Uniform(0, 1);
+                            cout << "  Region 5/6 " << N_merged << " happened" << endl;
+                            if( random_flag < 0.7 ) break;
                         }
-
-                        EgN = sigEgEt->size();
-                        for(unsigned int k = 0; k < EgN; k++)
-                        {
-                            egCrysClusterEta.push_back(sigEgEta->at(k));
-                            egCrysClusterPhi.push_back(sigEgPhi->at(k));
-                            egCrysClusterEt.push_back(sigEgEt->at(k)); 
-                            egCrysClusterGx.push_back(sigEgGx->at(k)); 
-                            egCrysClusterGy.push_back(sigEgGy->at(k)); 
-                            egCrysClusterGz.push_back(sigEgGz->at(k)); 
-                        }
-
-                        bN = sigbLa->size();
-                        for(unsigned int k = 0; k < bN; k++)
-                        {
-                            bRecHitLayer.push_back(sigbLa->at(k));
-                            bRecHitGx.push_back(sigbGx->at(k));
-                            bRecHitGy.push_back(sigbGy->at(k));
-                            bRecHitGz.push_back(sigbGz->at(k));
-                        }
-
-                        fN = sigfDi->size();
-                        for(unsigned int k = 0; k < fN; k++)
-                        {
-                            fRecHitDisk.push_back(sigfDi->at(k));
-                            fRecHitGx.push_back(sigfGx->at(k));
-                            fRecHitGy.push_back(sigfGy->at(k));
-                            fRecHitGz.push_back(sigfGz->at(k));
-                        }
-
-                        Double_t random_flag = gRandom->Uniform(0, 1);
-                        cout << "  Region 1 " << N_merged << " happened" << endl;
-                        if( random_flag < 0.7 ) break;
-                    }
-                    if( etaflag > 0.8 && etaflag < 1.4 && fabs(dZ) < 0.002 )
-                    {
-                        N_merged++;
-
-                        for(unsigned int k = 0; k < sigGenPt->size(); k++)
-                        {
-                            propgenElPartPhi.push_back(sigGenPhi->at(k));
-                            propgenElPartEta.push_back(sigGenEta->at(k));
-                            propgenElPartPt.push_back(sigGenPt->at(k));
-                            propgenElPartX.push_back(sigGenX->at(k));
-                            propgenElPartY.push_back(sigGenY->at(k));
-                            propgenElPartZ.push_back(sigGenZ->at(k));
-                        }
-
-                        EgN = sigEgEt->size();
-                        for(unsigned int k = 0; k < EgN; k++)
-                        {
-                            egCrysClusterEta.push_back(sigEgEta->at(k));
-                            egCrysClusterPhi.push_back(sigEgPhi->at(k));
-                            egCrysClusterEt.push_back(sigEgEt->at(k)); 
-                            egCrysClusterGx.push_back(sigEgGx->at(k)); 
-                            egCrysClusterGy.push_back(sigEgGy->at(k)); 
-                            egCrysClusterGz.push_back(sigEgGz->at(k)); 
-                        }
-
-                        bN = sigbLa->size();
-                        for(unsigned int k = 0; k < bN; k++)
-                        {
-                            bRecHitLayer.push_back(sigbLa->at(k));
-                            bRecHitGx.push_back(sigbGx->at(k));
-                            bRecHitGy.push_back(sigbGy->at(k));
-                            bRecHitGz.push_back(sigbGz->at(k));
-                        }
-
-                        fN = sigfDi->size();
-                        for(unsigned int k = 0; k < fN; k++)
-                        {
-                            fRecHitDisk.push_back(sigfDi->at(k));
-                            fRecHitGx.push_back(sigfGx->at(k));
-                            fRecHitGy.push_back(sigfGy->at(k));
-                            fRecHitGz.push_back(sigfGz->at(k));
-                        }
-
-                        Double_t random_flag = gRandom->Uniform(0, 1);
-                        cout << "  Region 2 " << N_merged << " happened" << endl;
-                        if( random_flag < 0.7 ) break;
-                    }
-                    if( etaflag > 1.4 && etaflag < 1.7 && fabs(dZ) < 0.005 )
-                    {
-                        N_merged++;
-
-                        for(unsigned int k = 0; k < sigGenPt->size(); k++)
-                        {
-                            propgenElPartPhi.push_back(sigGenPhi->at(k));
-                            propgenElPartEta.push_back(sigGenEta->at(k));
-                            propgenElPartPt.push_back(sigGenPt->at(k));
-                            propgenElPartX.push_back(sigGenX->at(k));
-                            propgenElPartY.push_back(sigGenY->at(k));
-                            propgenElPartZ.push_back(sigGenZ->at(k));
-                        }
-
-                        EgN = sigEgEt->size();
-                        for(unsigned int k = 0; k < EgN; k++)
-                        {
-                            egCrysClusterEta.push_back(sigEgEta->at(k));
-                            egCrysClusterPhi.push_back(sigEgPhi->at(k));
-                            egCrysClusterEt.push_back(sigEgEt->at(k)); 
-                            egCrysClusterGx.push_back(sigEgGx->at(k)); 
-                            egCrysClusterGy.push_back(sigEgGy->at(k)); 
-                            egCrysClusterGz.push_back(sigEgGz->at(k)); 
-                        }
-
-                        bN = sigbLa->size();
-                        for(unsigned int k = 0; k < bN; k++)
-                        {
-                            bRecHitLayer.push_back(sigbLa->at(k));
-                            bRecHitGx.push_back(sigbGx->at(k));
-                            bRecHitGy.push_back(sigbGy->at(k));
-                            bRecHitGz.push_back(sigbGz->at(k));
-                        }
-
-                        fN = sigfDi->size();
-                        for(unsigned int k = 0; k < fN; k++)
-                        {
-                            fRecHitDisk.push_back(sigfDi->at(k));
-                            fRecHitGx.push_back(sigfGx->at(k));
-                            fRecHitGy.push_back(sigfGy->at(k));
-                            fRecHitGz.push_back(sigfGz->at(k));
-                        }
-
-                        Double_t random_flag = gRandom->Uniform(0, 1);
-                        cout << "  Central " << N_merged << " happened" << endl;
-                        if( random_flag < 0.7 ) break;
-                    }
-                } // central region
-                    
-                if( Type == 2 && fabs(dR) < 0.3 && (siggenpt < pugenpt*ratio*1.20 && siggenpt > pugenpt*ratio*0.80) ) {
-                    if( etaflag > 1.7 && etaflag < 2.1 && fabs(dZ) < 0.03 )
-                    {
-                        N_merged++;
-
-                        for(unsigned int k = 0; k < sigGenPt->size(); k++)
-                        {
-                            propgenElPartPhi.push_back(sigGenPhi->at(k));
-                            propgenElPartEta.push_back(sigGenEta->at(k));
-                            propgenElPartPt.push_back(sigGenPt->at(k));
-                            propgenElPartX.push_back(sigGenX->at(k));
-                            propgenElPartY.push_back(sigGenY->at(k));
-                            propgenElPartZ.push_back(sigGenZ->at(k));
-                        }
-
-                        EgN = sigEgEt->size();
-                        for(unsigned int k = 0; k < EgN; k++)
-                        {
-                            egCrysClusterEta.push_back(sigEgEta->at(k));
-                            egCrysClusterPhi.push_back(sigEgPhi->at(k));
-                            egCrysClusterEt.push_back(sigEgEt->at(k)); 
-                            egCrysClusterGx.push_back(sigEgGx->at(k)); 
-                            egCrysClusterGy.push_back(sigEgGy->at(k)); 
-                            egCrysClusterGz.push_back(sigEgGz->at(k)); 
-                        }
-
-                        bN = sigbLa->size();
-                        for(unsigned int k = 0; k < bN; k++)
-                        {
-                            bRecHitLayer.push_back(sigbLa->at(k));
-                            bRecHitGx.push_back(sigbGx->at(k));
-                            bRecHitGy.push_back(sigbGy->at(k));
-                            bRecHitGz.push_back(sigbGz->at(k));
-                        }
-
-                        fN = sigfDi->size();
-                        for(unsigned int k = 0; k < fN; k++)
-                        {
-                            fRecHitDisk.push_back(sigfDi->at(k));
-                            fRecHitGx.push_back(sigfGx->at(k));
-                            fRecHitGy.push_back(sigfGy->at(k));
-                            fRecHitGz.push_back(sigfGz->at(k));
-                        }
-                        Double_t random_flag = gRandom->Uniform(0, 1);
-                        cout << "  Region 4 " << N_merged << " happened" << endl;
-                        if( random_flag < 0.7 ) break;
-                    }
-                    if( etaflag > 2.1 && fabs(dZ) < 0.3 )
-                    {
-                        N_merged++;
-
-                        for(unsigned int k = 0; k < sigGenPt->size(); k++)
-                        {
-                            propgenElPartPhi.push_back(sigGenPhi->at(k));
-                            propgenElPartEta.push_back(sigGenEta->at(k));
-                            propgenElPartPt.push_back(sigGenPt->at(k));
-                            propgenElPartX.push_back(sigGenX->at(k));
-                            propgenElPartY.push_back(sigGenY->at(k));
-                            propgenElPartZ.push_back(sigGenZ->at(k));
-                        }
-
-                        EgN = sigEgEt->size();
-                        for(unsigned int k = 0; k < EgN; k++)
-                        {
-                            egCrysClusterEta.push_back(sigEgEta->at(k));
-                            egCrysClusterPhi.push_back(sigEgPhi->at(k));
-                            egCrysClusterEt.push_back(sigEgEt->at(k)); 
-                            egCrysClusterGx.push_back(sigEgGx->at(k)); 
-                            egCrysClusterGy.push_back(sigEgGy->at(k)); 
-                            egCrysClusterGz.push_back(sigEgGz->at(k)); 
-                        }
-
-                        bN = sigbLa->size();
-                        for(unsigned int k = 0; k < bN; k++)
-                        {
-                            bRecHitLayer.push_back(sigbLa->at(k));
-                            bRecHitGx.push_back(sigbGx->at(k));
-                            bRecHitGy.push_back(sigbGy->at(k));
-                            bRecHitGz.push_back(sigbGz->at(k));
-                        }
-
-                        fN = sigfDi->size();
-                        for(unsigned int k = 0; k < fN; k++)
-                        {
-                            fRecHitDisk.push_back(sigfDi->at(k));
-                            fRecHitGx.push_back(sigfGx->at(k));
-                            fRecHitGy.push_back(sigfGy->at(k));
-                            fRecHitGz.push_back(sigfGz->at(k));
-                        }
-                        Double_t random_flag = gRandom->Uniform(0, 1);
-                        cout << "  Region 5/6 " << N_merged << " happened" << endl;
-                        if( random_flag < 0.7 ) break;
-                    }
-
-                } // endcap region 
-            } // NoPU loop
-            mergedCheck[N_merged]++;
+                    } // endcap region 
+                } // NoPU loop
+            }
         } // end of gen matching
 
         bRecHitN = bRecHitGx.size();
