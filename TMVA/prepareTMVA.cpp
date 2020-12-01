@@ -37,10 +37,7 @@ void prepareTMVA()
     vector<int>     NumOfTrks;
     vector<float>   track_pT1;
 
-    TFile *result = new TFile("tmva_input_r6.root","RECREATE");
-    result->mkdir("t");
-    result->cd("t");
-
+    TFile *result = new TFile("tmva_input_r6_bkg.root","RECREATE");
     TTree *mytree = new TTree("t","t");
 
     mytree->Branch("ntEgEt", &ntEgEt);
@@ -205,6 +202,12 @@ void prepareTMVA()
                             ntEgPhi.push_back(EgPhi);
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }
@@ -235,6 +238,12 @@ void prepareTMVA()
                             ntEgPhi.push_back(EgPhi);
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }
@@ -247,6 +256,12 @@ void prepareTMVA()
                             ntEgPhi.push_back(EgPhi);
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }
@@ -259,6 +274,12 @@ void prepareTMVA()
                             ntEgPhi.push_back(EgPhi);
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }

@@ -32,9 +32,6 @@ void prepareTMVAsig()
     vector<float>   track_pT1;
 
     TFile *result = new TFile("tmva_input_r6_sig.root","RECREATE");
-    result->mkdir("t");
-    result->cd("t");
-
     TTree *mytree = new TTree("t","t");
 
     mytree->Branch("ntEgEt", &ntEgEt);
@@ -67,7 +64,7 @@ void prepareTMVAsig()
             float EgPhi = egphi->at(i);
 
             // Region separation //
-            if( fabs(EgEta) > 0.8 ) continue; // region 1
+            //if( fabs(EgEta) > 0.8 ) continue; // region 1
             if( fabs(EgEta) < 2.7 || fabs(EgEta) > 3.0 ) continue; // region 6
             
             if( pixtrkFlag->at(i) ) {
@@ -81,6 +78,7 @@ void prepareTMVAsig()
                 }
                 else {
                     IsoValue.push_back(0.);
+                }
             }
 
 
