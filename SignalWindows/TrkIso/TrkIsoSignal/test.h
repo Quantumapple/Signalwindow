@@ -120,6 +120,8 @@ class test {
 		int bit2;
 		int trigger_bit_width_;
 		int trigger_bit_width_iso_;
+		vector<bool> ntCl_match;
+		vector<bool> ntCl_iso_match;
 		int pix_comb_;
 
 		bool debug;
@@ -373,15 +375,6 @@ class test {
 		vector<float> track_pT4;
 		vector<float> track_pT5;
 		vector<float> track_pT6;
-		vector<float> track_pT7;
-		vector<float> track_pT8;
-		vector<float> track_pT9;
-		vector<float> track_pT10;
-		vector<float> track_pT11;
-		vector<float> track_pT12;
-		vector<float> track_pT13;
-		vector<float> track_pT14;
-		vector<float> track_pT15;
 		
 		vector<float> track_eta1;
 		vector<float> track_eta2;
@@ -421,7 +414,6 @@ class test {
 		vector<int> trigger_bit_width;
 		vector<int> trigger_bit_width_iso;
 
-		vector<bool> ntCl_match; 
 		vector<bool> isTrack_match; 
 		vector<float> chi2; 
 		vector<float> track_dr;
@@ -486,6 +478,7 @@ test::test(TTree *tree) : fChain(0)
 
 	pixtrk_tree->Branch("trigger_bit_width",&trigger_bit_width);
 	pixtrk_tree->Branch("trigger_bit_width_iso",&trigger_bit_width_iso);
+	pixtrk_tree->Branch("ntCl_match",&ntCl_match);
 
 	pixtrk_tree->Branch("nt_genPhi",&nt_genPhi,"nt_genPhi/F");
 	pixtrk_tree->Branch("nt_genEta",&nt_genEta,"nt_genEta/F");
@@ -499,15 +492,6 @@ test::test(TTree *tree) : fChain(0)
 	pixtrk_tree->Branch("track_pT4",&track_pT4);
 	pixtrk_tree->Branch("track_pT5",&track_pT5);
 	pixtrk_tree->Branch("track_pT6",&track_pT6);
-	pixtrk_tree->Branch("track_pT7",&track_pT7);
-	pixtrk_tree->Branch("track_pT8",&track_pT8);
-	pixtrk_tree->Branch("track_pT9",&track_pT9);
-	pixtrk_tree->Branch("track_pT10",&track_pT10);
-	pixtrk_tree->Branch("track_pT11",&track_pT11);
-	pixtrk_tree->Branch("track_pT12",&track_pT12);
-	pixtrk_tree->Branch("track_pT13",&track_pT13);
-	pixtrk_tree->Branch("track_pT14",&track_pT14);
-	pixtrk_tree->Branch("track_pT15",&track_pT15);
 	pixtrk_tree->Branch("track_eta1",&track_eta1);
 	pixtrk_tree->Branch("track_eta2",&track_eta2);
 	pixtrk_tree->Branch("track_eta3",&track_eta3);

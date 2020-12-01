@@ -31,6 +31,9 @@ void test::Loop()
     const double PiX_PiX_dphi_width_[9] = {0.0017, 0.003, 0.003, 0.0033, 0.0035, 0.0037, 0.0039, 0.004, 0.005};
     const double PiX_PiX_deta_width_[9] = {0.0017, 0.003, 0.005, 0.0033, 0.0035, 0.0037, 0.0039, 0.004, 0.005};
 
+    //const double isovalCut[6] = {0.09, 0.09, 0.06, 0.21, 0.40, 0.43}; // option 1 
+    const double isovalCut[6] = {0.10, 0.10, 0.07, 0.21, 0.27, 0.31};  // option 2
+
     TH1F *aa1 = new TH1F("aa1","z_{vtx}-z_{gen}",200,-0.04,0.04);
     TH1F *aa2 = new TH1F("aa2","z_{vtx}-z_{gen}",200,-0.04,0.04);
     TH1F *aa3 = new TH1F("aa3","z_{vtx}-z_{gen}",200,-0.06,0.06);
@@ -98,15 +101,6 @@ void test::Loop()
         track_pT4.clear();
         track_pT5.clear();
         track_pT6.clear();
-        track_pT7.clear();
-        track_pT8.clear();
-        track_pT9.clear();
-        track_pT10.clear();
-        track_pT11.clear();
-        track_pT12.clear();
-        track_pT13.clear();
-        track_pT14.clear();
-        track_pT15.clear();
         track_eta1.clear();
         track_eta2.clear();
         track_eta3.clear();
@@ -495,12 +489,24 @@ void test::Loop()
 
                 if( PixTrkPassed ) { 
                     trigger_bit_width_ = trigger_bit_width_| (bit1 << nth_eg_pix_deta);
+                    ntCl_match.push_back(true);
+                }
+                else {
+                    ntCl_match.push_back(false);
                 }
             
                 // %%%%%%%%%%%%%%%%%%%%% Track isolation algorithm %%%%%%%%%%%%%%%%%%%%%
 
                 TrkIsoPassed = false;
                 if( !PixTrkPassed ) {
+                    NumOfTrks.push_back(-1);
+                    IsoValue.push_back(-1.);
+                    track_pT1.push_back(-99.);
+                    track_pT2.push_back(-99.);
+                    track_pT3.push_back(-99.);
+                    track_pT4.push_back(-99.);
+                    track_pT5.push_back(-99.);
+                    track_pT6.push_back(-99.);
                     continue; // Skip when L1 Egamma doesn't pass PixTRK algorithm
                 }
 
@@ -626,180 +632,163 @@ void test::Loop()
                 all.erase(unique(all.begin(), all.end(), track::uni31),all.end());
                 all.erase(unique(all.begin(), all.end(), track::uni32),all.end());
 
-                // For distribution, we consider L1 e/gamma larger than 20 GeV
-                //if( EgEt < 20. ) continue;
-
                 ntnEg2Iso++;
                 ntEgEtIso.push_back(EgEt);
                 ntEgEtaIso.push_back(EgEta);
                 ntEgPhiIso.push_back(EgPhi);
 
                 vector<leading> pT_vector;
-                Int_t all_size = all.size();
-
-                //cout << "Number of tracks: " << all_size << endl;
-                //cout << endl;
-
-                if( all.size() == 0 || all.size() >= 16) { 
-                    TrkIsoPassed = true;
-                    
-                    if( EgEt > 20. ) {
-                        h1->Fill(0);
-                        h2->Fill(0);
-                        h3->Fill(0);
-                        h4->Fill(0);
-                        h5->Fill(0);
-                        h6->Fill(0);
-                    }
-                    NumOfTrks.push_back(0);
-                    IsoValue.push_back(0);
-                    track_pT1.push_back(-999.);
-                    track_pT2.push_back(-999.);
-                    track_pT3.push_back(-999.);
-                    track_pT4.push_back(-999.);
-                    track_pT5.push_back(-999.);
-                    track_pT6.push_back(-999.);
-                    track_pT7.push_back(-999.);
-                    track_pT8.push_back(-999.);
-                    track_pT9.push_back(-999.);
-                    track_pT10.push_back(-999.);
-                    track_pT11.push_back(-999.);
-                    track_pT12.push_back(-999.);
-                    track_pT13.push_back(-999.);
-                    track_pT14.push_back(-999.);
-                    track_pT15.push_back(-999.);
-                    track_eta1.push_back(-999.);
-                    track_eta2.push_back(-999.);
-                    track_eta3.push_back(-999.);
-                } // When the last vector size <= 1
-
-                else {
-
-                    pT_vector.clear();
-                    for(Int_t cur = 0; cur < all_size; cur++)
+                pT_vector.clear();
+                int all_size = all.size();
+                if( all_size > 15 ) all_size = 15;
+                
+                for(Int_t cur = 0; cur < all_size; cur++)
+                {
+                    if( all[cur].index == 1 )
                     {
-                        if( all[cur].index == 1 )
-                        {
-                            TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x1, all[cur].pos_y1, all[cur].pos_z1 - recoPV );
-                            TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x1, all[cur].pos_y3 - all[cur].pos_y1, all[cur].pos_z3 - all[cur].pos_z1 );
+                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x1, all[cur].pos_y1, all[cur].pos_z1 - recoPV );
+                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x1, all[cur].pos_y3 - all[cur].pos_y1, all[cur].pos_z3 - all[cur].pos_z1 );
 
-                            Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                            Float_t dPhi = deltaPhi(phi1,phi2);
-                            Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                            Float_t trackEta = pixel2.Eta();
-                            if( recopT > 0. ) pT_vector.push_back(leading(recopT, trackEta));
-                        }
-                        if( all[cur].index == 2 )
-                        {
-                            TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x2, all[cur].pos_y2, all[cur].pos_z2 - recoPV );
-                            TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x2, all[cur].pos_y3 - all[cur].pos_y2, all[cur].pos_z3 - all[cur].pos_z2 );
-
-                            Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                            Float_t dPhi = deltaPhi(phi1,phi2);
-                            Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                            Float_t trackEta = pixel2.Eta();
-                            if( recopT > 0. ) pT_vector.push_back(leading(recopT, trackEta));
-                        }
-                        if( all[cur].index == 3 )
-                        {
-                            TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x2, all[cur].pos_y2, all[cur].pos_z2 - recoPV );
-                            TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x2, all[cur].pos_y3 - all[cur].pos_y2, all[cur].pos_z3 - all[cur].pos_z2 );
-
-                            Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                            Float_t dPhi = deltaPhi(phi1,phi2);
-                            Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                            Float_t trackEta = pixel2.Eta();
-                            if( recopT > 0. ) pT_vector.push_back(leading(recopT, trackEta));
-                        }
-                        if( all[cur].index == 4 )
-                        {
-                            TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x1, all[cur].pos_y1, all[cur].pos_z1 - recoPV );
-                            TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x2, all[cur].pos_y3 - all[cur].pos_y2, all[cur].pos_z3 - all[cur].pos_z2 );
-
-                            Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                            Float_t dPhi = deltaPhi(phi1,phi2);
-                            Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                            Float_t trackEta = pixel2.Eta();
-                            if( recopT > 0. ) pT_vector.push_back(leading(recopT, trackEta));
-                        }
+                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
+                        Float_t dPhi = deltaPhi(phi1,phi2);
+                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
+                        Float_t trackEta = pixel2.Eta();
+                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
                     }
+                    if( all[cur].index == 2 )
+                    {
+                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x2, all[cur].pos_y2, all[cur].pos_z2 - recoPV );
+                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x2, all[cur].pos_y3 - all[cur].pos_y2, all[cur].pos_z3 - all[cur].pos_z2 );
 
-                    sort(pT_vector.begin(), pT_vector.end(), leading::ptsort );
+                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
+                        Float_t dPhi = deltaPhi(phi1,phi2);
+                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
+                        Float_t trackEta = pixel2.Eta();
+                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
+                    }
+                    if( all[cur].index == 3 )
+                    {
+                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x2, all[cur].pos_y2, all[cur].pos_z2 - recoPV );
+                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x2, all[cur].pos_y3 - all[cur].pos_y2, all[cur].pos_z3 - all[cur].pos_z2 );
+
+                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
+                        Float_t dPhi = deltaPhi(phi1,phi2);
+                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
+                        Float_t trackEta = pixel2.Eta();
+                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
+                    }
+                    if( all[cur].index == 4 )
+                    {
+                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x1, all[cur].pos_y1, all[cur].pos_z1 - recoPV );
+                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x2, all[cur].pos_y3 - all[cur].pos_y2, all[cur].pos_z3 - all[cur].pos_z2 );
+
+                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
+                        Float_t dPhi = deltaPhi(phi1,phi2);
+                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
+                        Float_t trackEta = pixel2.Eta();
+                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
+                    }
+                }
+                
+                sort(pT_vector.begin(), pT_vector.end(), leading::ptsort );
+
+                Float_t denomi = 0.; Float_t nomi = 0.;
+                Int_t vec_size = pT_vector.size();
+                for(Int_t k = 0; k < vec_size; k++) {
+                    denomi += pT_vector[k].pt;
+                    if( k < 4 ) h_tracketa_all->Fill(pT_vector[k].eta);
+                }
+                for(Int_t k = 1; k < vec_size; k++) nomi += pT_vector[k].pt;
+
+                Float_t ratio = nomi/denomi;
+                IsoValue.push_back(ratio);
+                NumOfTrks.push_back(vec_size);
+                
+                if( eta_region == 1 ) nh1->Fill(vec_size);
+                if( eta_region == 2 ) nh2->Fill(vec_size);
+                if( eta_region == 3 ) nh3->Fill(vec_size);
+                if( eta_region == 4 ) nh4->Fill(vec_size);
+                if( eta_region == 5 ) nh5->Fill(vec_size);
+                if( eta_region == 6 ) nh6->Fill(vec_size);
+                
+                if( EgEt > 20 ) {
+                    if( eta_region == 1 ) h1->Fill(ratio);
+                    if( eta_region == 2 ) h2->Fill(ratio);
+                    if( eta_region == 3 ) h3->Fill(ratio);
+                    if( eta_region == 4 ) h4->Fill(ratio);
+                    if( eta_region == 5 ) h5->Fill(ratio);
+                    if( eta_region == 6 ) h6->Fill(ratio);
+                }
                     
-                    Float_t denomi = 0.; Float_t nomi = 0.;
-                    Int_t vec_size = pT_vector.size();
-                    for(Int_t k = 0; k < vec_size; k++) {
-                        denomi += pT_vector[k].pt;
-                        if( k < 4 ) h_tracketa_all->Fill(pT_vector[k].eta);
+                float trash = -99.;
+                if( vec_size < 1 ) {
+                    TrkIsoPassed = true;
+                }
+                else {
+                    if( eta_region <= 2 ) {
+                        if( ratio < isovalCut[0] ) TrkIsoPassed = true;
                     }
-                    for(Int_t k = 1; k < vec_size; k++) nomi += pT_vector[k].pt;
+                    if( eta_region == 3 ) {
+                        if( ratio < isovalCut[2] ) TrkIsoPassed = true;
+                    }
+                    if( eta_region == 4 ) {
+                        if( ratio < isovalCut[3] ) TrkIsoPassed = true;
+                    }
+                    if( eta_region == 5 ) {
+                        if( ratio < isovalCut[4] ) TrkIsoPassed = true;
+                    }
+                    if( eta_region == 6 ) {
+                        if( ratio < isovalCut[5] ) TrkIsoPassed = true;
+                    }
+                }
 
-                    Float_t ratio = nomi/denomi;
-                    NumOfTrks.push_back(vec_size);
-
-                    switch( vec_size ) {
+                int flag = vec_size;
+                if( flag > 6 ) flag = 6;
+                switch( flag ) {
+                        case 0:
+                            track_pT1.push_back(trash);
+                            track_pT2.push_back(trash);
+                            track_pT3.push_back(trash);
+                            track_pT4.push_back(trash);
+                            track_pT5.push_back(trash);
+                            track_pT6.push_back(trash);
+                            h_tracketa_1->Fill(trash);
+                            track_eta1.push_back(trash);
+                            track_eta2.push_back(trash);
+                            track_eta3.push_back(trash);
+                            break;
                         case 1:
-                            IsoValue.push_back(0);
                             track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(-999.);
-                            track_pT3.push_back(-999.);
-                            track_pT4.push_back(-999.);
-                            track_pT5.push_back(-999.);
-                            track_pT6.push_back(-999.);
-                            track_pT7.push_back(-999.);
-                            track_pT8.push_back(-999.);
-                            track_pT9.push_back(-999.);
-                            track_pT10.push_back(-999.);
-                            track_pT11.push_back(-999.);
-                            track_pT12.push_back(-999.);
-                            track_pT13.push_back(-999.);
-                            track_pT14.push_back(-999.);
-                            track_pT15.push_back(-999.);
+                            track_pT2.push_back(trash);
+                            track_pT3.push_back(trash);
+                            track_pT4.push_back(trash);
+                            track_pT5.push_back(trash);
+                            track_pT6.push_back(trash);
                             h_tracketa_1->Fill(pT_vector[0].eta);
                             track_eta1.push_back(pT_vector[0].eta);
-                            track_eta2.push_back(-999.);
-                            track_eta3.push_back(-999.);
+                            track_eta2.push_back(trash);
+                            track_eta3.push_back(trash);
                             break;
                         case 2:
-                            IsoValue.push_back(ratio);
                             track_pT1.push_back(pT_vector[0].pt);
                             track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(-999.);
-                            track_pT4.push_back(-999.);
-                            track_pT5.push_back(-999.);
-                            track_pT6.push_back(-999.);
-                            track_pT7.push_back(-999.);
-                            track_pT8.push_back(-999.);
-                            track_pT9.push_back(-999.);
-                            track_pT10.push_back(-999.);
-                            track_pT11.push_back(-999.);
-                            track_pT12.push_back(-999.);
-                            track_pT13.push_back(-999.);
-                            track_pT14.push_back(-999.);
-                            track_pT15.push_back(-999.);
+                            track_pT3.push_back(trash);
+                            track_pT4.push_back(trash);
+                            track_pT5.push_back(trash);
+                            track_pT6.push_back(trash);
                             h_tracketa_1->Fill(pT_vector[0].eta);
                             h_tracketa_2->Fill(pT_vector[1].eta);
                             track_eta1.push_back(pT_vector[0].eta);
                             track_eta2.push_back(pT_vector[1].eta);
-                            track_eta3.push_back(-999.);
+                            track_eta3.push_back(trash);
                             break;
                         case 3:
-                            IsoValue.push_back(ratio);
                             track_pT1.push_back(pT_vector[0].pt);
                             track_pT2.push_back(pT_vector[1].pt);
                             track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(-999.);
-                            track_pT5.push_back(-999.);
-                            track_pT6.push_back(-999.);
-                            track_pT7.push_back(-999.);
-                            track_pT8.push_back(-999.);
-                            track_pT9.push_back(-999.);
-                            track_pT10.push_back(-999.);
-                            track_pT11.push_back(-999.);
-                            track_pT12.push_back(-999.);
-                            track_pT13.push_back(-999.);
-                            track_pT14.push_back(-999.);
-                            track_pT15.push_back(-999.);
+                            track_pT4.push_back(trash);
+                            track_pT5.push_back(trash);
+                            track_pT6.push_back(trash);
                             h_tracketa_1->Fill(pT_vector[0].eta);
                             h_tracketa_2->Fill(pT_vector[1].eta);
                             h_tracketa_3->Fill(pT_vector[2].eta);
@@ -808,22 +797,12 @@ void test::Loop()
                             track_eta3.push_back(pT_vector[2].eta);
                             break;
                         case 4:
-                            IsoValue.push_back(ratio);
                             track_pT1.push_back(pT_vector[0].pt);
                             track_pT2.push_back(pT_vector[1].pt);
                             track_pT3.push_back(pT_vector[2].pt);
                             track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(-999.);
-                            track_pT6.push_back(-999.);
-                            track_pT7.push_back(-999.);
-                            track_pT8.push_back(-999.);
-                            track_pT9.push_back(-999.);
-                            track_pT10.push_back(-999.);
-                            track_pT11.push_back(-999.);
-                            track_pT12.push_back(-999.);
-                            track_pT13.push_back(-999.);
-                            track_pT14.push_back(-999.);
-                            track_pT15.push_back(-999.);
+                            track_pT5.push_back(trash);
+                            track_pT6.push_back(trash);
                             h_tracketa_1->Fill(pT_vector[0].eta);
                             h_tracketa_2->Fill(pT_vector[1].eta);
                             h_tracketa_3->Fill(pT_vector[2].eta);
@@ -833,22 +812,12 @@ void test::Loop()
                             track_eta3.push_back(pT_vector[2].eta);
                             break;
                         case 5:
-                            IsoValue.push_back(ratio);
                             track_pT1.push_back(pT_vector[0].pt);
                             track_pT2.push_back(pT_vector[1].pt);
                             track_pT3.push_back(pT_vector[2].pt);
                             track_pT4.push_back(pT_vector[3].pt);
                             track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(-999.);
-                            track_pT7.push_back(-999.);
-                            track_pT8.push_back(-999.);
-                            track_pT9.push_back(-999.);
-                            track_pT10.push_back(-999.);
-                            track_pT11.push_back(-999.);
-                            track_pT12.push_back(-999.);
-                            track_pT13.push_back(-999.);
-                            track_pT14.push_back(-999.);
-                            track_pT15.push_back(-999.);
+                            track_pT6.push_back(trash);
                             h_tracketa_1->Fill(pT_vector[0].eta);
                             h_tracketa_2->Fill(pT_vector[1].eta);
                             h_tracketa_3->Fill(pT_vector[2].eta);
@@ -858,22 +827,12 @@ void test::Loop()
                             track_eta3.push_back(pT_vector[2].eta);
                             break;
                         case 6:
-                            IsoValue.push_back(ratio);
                             track_pT1.push_back(pT_vector[0].pt);
                             track_pT2.push_back(pT_vector[1].pt);
                             track_pT3.push_back(pT_vector[2].pt);
                             track_pT4.push_back(pT_vector[3].pt);
                             track_pT5.push_back(pT_vector[4].pt);
                             track_pT6.push_back(pT_vector[5].pt);
-                            track_pT7.push_back(-999.);
-                            track_pT8.push_back(-999.);
-                            track_pT9.push_back(-999.);
-                            track_pT10.push_back(-999.);
-                            track_pT11.push_back(-999.);
-                            track_pT12.push_back(-999.);
-                            track_pT13.push_back(-999.);
-                            track_pT14.push_back(-999.);
-                            track_pT15.push_back(-999.);
                             h_tracketa_1->Fill(pT_vector[0].eta);
                             h_tracketa_2->Fill(pT_vector[1].eta);
                             h_tracketa_3->Fill(pT_vector[2].eta);
@@ -882,248 +841,6 @@ void test::Loop()
                             track_eta2.push_back(pT_vector[1].eta);
                             track_eta3.push_back(pT_vector[2].eta);
                             break;
-                        case 7:
-                            IsoValue.push_back(ratio);
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(pT_vector[5].pt);
-                            track_pT7.push_back(pT_vector[6].pt);
-                            track_pT8.push_back(-999.);
-                            track_pT9.push_back(-999.);
-                            track_pT10.push_back(-999.);
-                            track_pT11.push_back(-999.);
-                            track_pT12.push_back(-999.);
-                            track_pT13.push_back(-999.);
-                            track_pT14.push_back(-999.);
-                            track_pT15.push_back(-999.);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            track_eta1.push_back(pT_vector[0].eta);
-                            track_eta2.push_back(pT_vector[1].eta);
-                            track_eta3.push_back(pT_vector[2].eta);
-                            break;
-                        case 8:
-                            IsoValue.push_back(ratio);
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(pT_vector[5].pt);
-                            track_pT7.push_back(pT_vector[6].pt);
-                            track_pT8.push_back(pT_vector[7].pt);
-                            track_pT9.push_back(-999.);
-                            track_pT10.push_back(-999.);
-                            track_pT11.push_back(-999.);
-                            track_pT12.push_back(-999.);
-                            track_pT13.push_back(-999.);
-                            track_pT14.push_back(-999.);
-                            track_pT15.push_back(-999.);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            track_eta1.push_back(pT_vector[0].eta);
-                            track_eta2.push_back(pT_vector[1].eta);
-                            track_eta3.push_back(pT_vector[2].eta);
-                            break;
-                        case 9:
-                            IsoValue.push_back(ratio);
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(pT_vector[5].pt);
-                            track_pT7.push_back(pT_vector[6].pt);
-                            track_pT8.push_back(pT_vector[7].pt);
-                            track_pT9.push_back(pT_vector[8].pt);
-                            track_pT10.push_back(-999.);
-                            track_pT11.push_back(-999.);
-                            track_pT12.push_back(-999.);
-                            track_pT13.push_back(-999.);
-                            track_pT14.push_back(-999.);
-                            track_pT15.push_back(-999.);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            track_eta1.push_back(pT_vector[0].eta);
-                            track_eta2.push_back(pT_vector[1].eta);
-                            track_eta3.push_back(pT_vector[2].eta);
-                            break;
-                        case 10:
-                            IsoValue.push_back(ratio);
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(pT_vector[5].pt);
-                            track_pT7.push_back(pT_vector[6].pt);
-                            track_pT8.push_back(pT_vector[7].pt);
-                            track_pT9.push_back(pT_vector[8].pt);
-                            track_pT10.push_back(pT_vector[9].pt);
-                            track_pT11.push_back(-999.);
-                            track_pT12.push_back(-999.);
-                            track_pT13.push_back(-999.);
-                            track_pT14.push_back(-999.);
-                            track_pT15.push_back(-999.);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            break;
-                        case 11:
-                            IsoValue.push_back(ratio);
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(pT_vector[5].pt);
-                            track_pT7.push_back(pT_vector[6].pt);
-                            track_pT8.push_back(pT_vector[7].pt);
-                            track_pT9.push_back(pT_vector[8].pt);
-                            track_pT10.push_back(pT_vector[9].pt);
-                            track_pT11.push_back(pT_vector[10].pt);
-                            track_pT12.push_back(-999.);
-                            track_pT13.push_back(-999.);
-                            track_pT14.push_back(-999.);
-                            track_pT15.push_back(-999.);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            break;
-                        case 12:
-                            IsoValue.push_back(ratio);
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(pT_vector[5].pt);
-                            track_pT7.push_back(pT_vector[6].pt);
-                            track_pT8.push_back(pT_vector[7].pt);
-                            track_pT9.push_back(pT_vector[8].pt);
-                            track_pT10.push_back(pT_vector[9].pt);
-                            track_pT11.push_back(pT_vector[10].pt);
-                            track_pT12.push_back(pT_vector[11].pt);
-                            track_pT13.push_back(-999.);
-                            track_pT14.push_back(-999.);
-                            track_pT15.push_back(-999.);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            break;
-                        case 13:
-                            IsoValue.push_back(ratio);
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(pT_vector[5].pt);
-                            track_pT7.push_back(pT_vector[6].pt);
-                            track_pT8.push_back(pT_vector[7].pt);
-                            track_pT9.push_back(pT_vector[8].pt);
-                            track_pT10.push_back(pT_vector[9].pt);
-                            track_pT11.push_back(pT_vector[10].pt);
-                            track_pT12.push_back(pT_vector[11].pt);
-                            track_pT13.push_back(pT_vector[12].pt);
-                            track_pT14.push_back(-999.);
-                            track_pT15.push_back(-999.);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            break;
-                        case 14:
-                            IsoValue.push_back(ratio);
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(pT_vector[5].pt);
-                            track_pT7.push_back(pT_vector[6].pt);
-                            track_pT8.push_back(pT_vector[7].pt);
-                            track_pT9.push_back(pT_vector[8].pt);
-                            track_pT10.push_back(pT_vector[9].pt);
-                            track_pT11.push_back(pT_vector[10].pt);
-                            track_pT12.push_back(pT_vector[11].pt);
-                            track_pT13.push_back(pT_vector[12].pt);
-                            track_pT14.push_back(pT_vector[13].pt);
-                            track_pT15.push_back(-999.);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            break;
-                        case 15:
-                            IsoValue.push_back(ratio);
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(pT_vector[5].pt);
-                            track_pT7.push_back(pT_vector[6].pt);
-                            track_pT8.push_back(pT_vector[7].pt);
-                            track_pT9.push_back(pT_vector[8].pt);
-                            track_pT10.push_back(pT_vector[9].pt);
-                            track_pT11.push_back(pT_vector[10].pt);
-                            track_pT12.push_back(pT_vector[11].pt);
-                            track_pT13.push_back(pT_vector[12].pt);
-                            track_pT14.push_back(pT_vector[13].pt);
-                            track_pT15.push_back(pT_vector[14].pt);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            break;
-                    } // switch function
-                    
-                    if( eta_region == 1 ) nh1->Fill(vec_size);
-                    if( eta_region == 2 ) nh2->Fill(vec_size);
-                    if( eta_region == 3 ) nh3->Fill(vec_size);
-                    if( eta_region == 4 ) nh4->Fill(vec_size);
-                    if( eta_region == 5 ) nh5->Fill(vec_size);
-                    if( eta_region == 6 ) nh6->Fill(vec_size);
-
-                    if( EgEt > 20 ) {
-                        if( eta_region == 1 ) h1->Fill(ratio);
-                        if( eta_region == 2 ) h2->Fill(ratio);
-                        if( eta_region == 3 ) h3->Fill(ratio);
-                        if( eta_region == 4 ) h4->Fill(ratio);
-                        if( eta_region == 5 ) h5->Fill(ratio);
-                        if( eta_region == 6 ) h6->Fill(ratio);
-                    }
-
-                    if( eta_region == 1 || eta_region == 4 ) {
-                        if( ratio < 0.18 ) TrkIsoPassed = true;
-                    }
-                    if( eta_region == 2 ) {
-                        if( ratio < 0.14 ) TrkIsoPassed = true;
-                    }
-                    if( eta_region == 3 ) {
-                        if( ratio < 0.08 ) TrkIsoPassed = true;
-                    }
-                    if( eta_region == 5 ) {
-                        if( ratio < 0.42 ) TrkIsoPassed = true;
-                    }
-                    if( eta_region == 6 ) {
-                        if( ratio < 0.23 ) TrkIsoPassed = true;
-                    }
-
-
                 }
 
                 if( PixTrkPassed && TrkIsoPassed ) {

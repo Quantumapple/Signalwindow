@@ -14,9 +14,9 @@ def now():
 sample = "SE_PU200"
 dirn = "mergeSE"
 #dirn = "SE"
-dirf = "0001"
+#dirf = "0024"
 
-InputDir = "/xrootd/store/user/jongho/Delphes/" + dirn + "/" + dirf
+InputDir = "/xrootd/store/user/jongho/Delphes/" + dirn + "/" + str(sys.argv[1])
 os.system("ls " + InputDir + " > ./inputlist.txt")
 
 line_count=0
@@ -25,7 +25,7 @@ myFile = open('./inputlist.txt','r')
 lines = myFile.readlines()
 newFile = open('./inputlist_my.txt','w')
 for name in lines:
-    newFile.write("root://cms-xrdr.private.lo:2094///xrd/store/user/jongho/Delphes/" + dirn + "/" + dirf + "/" + name)
+    newFile.write("root://cms-xrdr.private.lo:2094///xrd/store/user/jongho/Delphes/" + dirn + "/" + str(sys.argv[1]) + "/" + name)
     line_count += 1
 
 myFile.close()
@@ -38,7 +38,7 @@ number_of_files = line_count
 
 print "Job has " + str(number_of_files) + " files to process:"
 
-number_of_cores = line_count/5
+number_of_cores = line_count/10
 
 # determine the # of files per job
 nfilesperjobs= 0
