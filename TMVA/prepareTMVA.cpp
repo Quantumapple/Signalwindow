@@ -114,9 +114,14 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }
@@ -126,9 +131,14 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }
@@ -139,9 +149,14 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }
@@ -152,9 +167,14 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }
@@ -165,9 +185,14 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }
@@ -178,7 +203,6 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
                         }
@@ -191,9 +215,14 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }
@@ -204,7 +233,6 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
                         }
@@ -217,7 +245,6 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
                         }
@@ -230,7 +257,6 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
                         }
@@ -243,9 +269,14 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }
@@ -256,9 +287,14 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }
@@ -269,9 +305,14 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }
@@ -282,9 +323,14 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }
@@ -295,9 +341,14 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }
@@ -308,9 +359,14 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }
@@ -321,9 +377,14 @@ void prepareTMVA()
                             ntEgEt.push_back(EgEt);
                             ntEgEta.push_back(EgEta);
                             ntEgPhi.push_back(EgPhi);
-                            IsoValue.push_back(isoval->at(i));
                             NumOfTrks.push_back(numtrks->at(i));
                             track_pT1.push_back(pixpt1->at(i));
+                            if( numtrks->at(i) != 0 ) {
+                                IsoValue.push_back(isoval->at(i));
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
                         }
                     }
                 }

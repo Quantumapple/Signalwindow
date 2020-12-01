@@ -67,16 +67,20 @@ void prepareTMVAsig()
             float EgPhi = egphi->at(i);
 
             // Region separation //
-            //if( fabs(EgEta) > 0.8 ) continue; // region 1
+            if( fabs(EgEta) > 0.8 ) continue; // region 1
             if( fabs(EgEta) < 2.7 || fabs(EgEta) > 3.0 ) continue; // region 6
             
             if( pixtrkFlag->at(i) ) {
                 ntEgEt.push_back(EgEt);
                 ntEgEta.push_back(EgEta);
                 ntEgPhi.push_back(EgPhi);
-                IsoValue.push_back(isoval->at(i));
                 NumOfTrks.push_back(numtrks->at(i));
                 track_pT1.push_back(pixpt1->at(i));
+                if( numtrks->at(i) != 0 ) {
+                    IsoValue.push_back(isoval->at(i));
+                }
+                else {
+                    IsoValue.push_back(0.);
             }
 
 
