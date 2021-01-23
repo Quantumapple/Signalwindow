@@ -361,24 +361,9 @@ class test {
 		std::vector<track> L134;
 		std::vector<track> L234;
 
-		vector<int> NumOfTrks;
 		vector<float> IsoValue;
-
-		vector<float> ntEgEtIso;
-		vector<float> ntEgPhiIso;
-		vector<float> ntEgEtaIso;
-		int ntnEg2Iso; 
-
-		vector<float> track_pT1;
-		vector<float> track_pT2;
-		vector<float> track_pT3;
-		vector<float> track_pT4;
-		vector<float> track_pT5;
-		vector<float> track_pT6;
-		
-		vector<float> track_eta1;
-		vector<float> track_eta2;
-		vector<float> track_eta3;
+		vector<int> totaltrks;
+		vector<float> trackpt;
 
 		inline float deltaPhi(float phi1, float phi2) { 
 			float result = phi1 - phi2;
@@ -472,9 +457,6 @@ test::test(TTree *tree) : fChain(0)
 	pixtrk_tree->Branch("ntEgEt",&ntEgEt);
 	pixtrk_tree->Branch("ntEgEta",&ntEgEta);
 	pixtrk_tree->Branch("ntEgPhi",&ntEgPhi);
-	pixtrk_tree->Branch("ntEgEtIso", &ntEgEtIso);
-	pixtrk_tree->Branch("ntEgPhiIso", &ntEgPhiIso);
-	pixtrk_tree->Branch("ntEgEtaIso", &ntEgEtaIso);
 
 	pixtrk_tree->Branch("trigger_bit_width",&trigger_bit_width);
 	pixtrk_tree->Branch("trigger_bit_width_iso",&trigger_bit_width_iso);
@@ -485,18 +467,9 @@ test::test(TTree *tree) : fChain(0)
 	pixtrk_tree->Branch("nt_genPt",&nt_genPt,"nt_genPt/F");
 	
 	pixtrk_tree->Branch("IsoValue",&IsoValue); 
-	pixtrk_tree->Branch("NumOfTrks",&NumOfTrks);
-	pixtrk_tree->Branch("track_pT1",&track_pT1);
-	pixtrk_tree->Branch("track_pT2",&track_pT2);
-	pixtrk_tree->Branch("track_pT3",&track_pT3);
-	pixtrk_tree->Branch("track_pT4",&track_pT4);
-	pixtrk_tree->Branch("track_pT5",&track_pT5);
-	pixtrk_tree->Branch("track_pT6",&track_pT6);
-	pixtrk_tree->Branch("track_eta1",&track_eta1);
-	pixtrk_tree->Branch("track_eta2",&track_eta2);
-	pixtrk_tree->Branch("track_eta3",&track_eta3);
-
-
+	pixtrk_tree->Branch("totaltrks", &totaltrks);
+	pixtrk_tree->Branch("trackpt", &trackpt);
+	
 }
 
 test::~test()

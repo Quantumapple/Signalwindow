@@ -19,6 +19,8 @@ void test::Loop()
     Long64_t nbytes = 0, nb = 0;
 
     float dr_cut = 0.1;
+    int frame_flag = 1;
+    gRandom->SetSeed(0);
 
     bit1 = 0x1;
     bit2 = 0x1;
@@ -31,8 +33,7 @@ void test::Loop()
     const double PiX_PiX_dphi_width_[9] = {0.0017, 0.003, 0.003, 0.0033, 0.0035, 0.0037, 0.0039, 0.004, 0.005};
     const double PiX_PiX_deta_width_[9] = {0.0017, 0.003, 0.005, 0.0033, 0.0035, 0.0037, 0.0039, 0.004, 0.005};
 
-    //const double isovalCut[6] = {0.09, 0.09, 0.06, 0.21, 0.40, 0.43}; // option 1 
-    const double isovalCut[6] = {0.10, 0.10, 0.07, 0.21, 0.27, 0.31};  // option 2
+    const double isovalCut[6] = {0.10, 0.10, 0.17, 0.28, 0.27, 0.21};  // option 1
 
     TH1F *aa1 = new TH1F("aa1","z_{vtx}-z_{gen}",200,-0.04,0.04);
     TH1F *aa2 = new TH1F("aa2","z_{vtx}-z_{gen}",200,-0.04,0.04);
@@ -40,26 +41,6 @@ void test::Loop()
     TH1F *aa4 = new TH1F("aa4","z_{vtx}-z_{gen}",200,-0.1,0.1);
     TH1F *aa5 = new TH1F("aa5","z_{vtx}-z_{gen}",200,-0.2,0.2);
     TH1F *aa6 = new TH1F("aa6","z_{vtx}-z_{gen}",200,-0.2,0.2);
-    
-    TH1F *h1 = new TH1F("h1","; Isolation value; ",100,0,1);
-    TH1F *h2 = new TH1F("h2","; Isolation value; ",100,0,1);
-    TH1F *h3 = new TH1F("h3","; Isolation value; ",100,0,1);
-    TH1F *h4 = new TH1F("h4","; Isolation value; ",100,0,1);
-    TH1F *h5 = new TH1F("h5","; Isolation value; ",100,0,1);
-    TH1F *h6 = new TH1F("h6","; Isolation value; ",100,0,1);
-    
-    TH1F *nh1 = new TH1F("nh1","; Number of pixel tracks; ",10,0,10);
-    TH1F *nh2 = new TH1F("nh2","; Number of pixel tracks; ",10,0,10);
-    TH1F *nh3 = new TH1F("nh3","; Number of pixel tracks; ",10,0,10);
-    TH1F *nh4 = new TH1F("nh4","; Number of pixel tracks; ",10,0,10);
-    TH1F *nh5 = new TH1F("nh5","; Number of pixel tracks; ",10,0,10);
-    TH1F *nh6 = new TH1F("nh6","; Number of pixel tracks; ",10,0,10);
-
-    TH1F *h_tracketa_all = new TH1F("h_tracketa_all","All track eta",160,-4.,4.);
-    TH1F *h_tracketa_1 = new TH1F("h_tracketa_1","leading track eta",160,-4.,4.);
-    TH1F *h_tracketa_2 = new TH1F("h_tracketa_2","second track eta",160,-4.,4.);
-    TH1F *h_tracketa_3 = new TH1F("h_tracketa_3","third track eta",160,-4.,4.);
-    TH1F *h_tracketa_4 = new TH1F("h_tracketa_4","fourth track eta",160,-4.,4.);
 
     for (Long64_t jentry=0; jentry<nentries;jentry++) {
         Long64_t ientry = LoadTree(jentry);
@@ -78,11 +59,6 @@ void test::Loop()
         ntEgEt.clear();
         ntEgEta.clear();
         ntEgPhi.clear();
-        
-        ntnEg2Iso = 0;
-        ntEgEtIso.clear();
-        ntEgEtaIso.clear();
-        ntEgPhiIso.clear();
 
         PiXTRKbit.clear();
         trigger_bit_width.clear();
@@ -93,17 +69,9 @@ void test::Loop()
         withoutEM_match.clear();
         withEM_match.clear();
 
-        NumOfTrks.clear();
         IsoValue.clear();
-        track_pT1.clear();
-        track_pT2.clear();
-        track_pT3.clear();
-        track_pT4.clear();
-        track_pT5.clear();
-        track_pT6.clear();
-        track_eta1.clear();
-        track_eta2.clear();
-        track_eta3.clear();
+        totaltrks.clear();
+        trackpt.clear();
 
         nt_genPhi = propgenElPartPhi->at(0);
         nt_genEta = propgenElPartEta->at(0);
@@ -322,7 +290,7 @@ void test::Loop()
                                                 pix_comb_ = pix_comb_ | (bit1 << 1);
                                                 nPix123_segments++;
                                             }
-                                            
+
                                             // Save vertex coordinate and check whether pass or not
                                             if( all_cut_pass_Ele == 1 || all_cut_pass_Pos == 1 ) {
                                                 flag123 = true;
@@ -366,7 +334,7 @@ void test::Loop()
                                                 pix_comb_ = pix_comb_ | (bit1 << 2);
                                                 nPix124_segments++;
                                             }
-                                            
+
                                             // Save vertex coordinate and check whether pass or not
                                             if( all_cut_pass_Ele == 1 || all_cut_pass_Pos == 1 ) {
                                                 flag124 = true;
@@ -409,7 +377,7 @@ void test::Loop()
                                                 pix_comb_ = pix_comb_ | (bit1 << 3);
                                                 nPix134_segments++;
                                             }
-                                
+
                                             // Save vertex coordinate and check whether pass or not
                                             if( all_cut_pass_Ele == 1 || all_cut_pass_Pos == 1 ) {
                                                 flag134 = true;
@@ -452,7 +420,7 @@ void test::Loop()
                                                 pix_comb_ = pix_comb_ | (bit1 << 4);
                                                 nPix234_segments++;
                                             } 
-                                
+
                                             // Save vertex coordinate and check whether pass or not
                                             if( all_cut_pass_Ele == 1 || all_cut_pass_Pos == 1 ) {
                                                 flag234 = true;
@@ -493,23 +461,12 @@ void test::Loop()
                 }
                 else {
                     ntCl_match.push_back(false);
-                }
-            
-                // %%%%%%%%%%%%%%%%%%%%% Track isolation algorithm %%%%%%%%%%%%%%%%%%%%%
-
-                TrkIsoPassed = false;
-                if( !PixTrkPassed ) {
-                    NumOfTrks.push_back(-1);
-                    IsoValue.push_back(-1.);
-                    track_pT1.push_back(-99.);
-                    track_pT2.push_back(-99.);
-                    track_pT3.push_back(-99.);
-                    track_pT4.push_back(-99.);
-                    track_pT5.push_back(-99.);
-                    track_pT6.push_back(-99.);
                     continue; // Skip when L1 Egamma doesn't pass PixTRK algorithm
                 }
 
+                // %%%%%%%%%%%%%%%%%%%%% Track isolation algorithm %%%%%%%%%%%%%%%%%%%%%
+
+                TrkIsoPassed = false;
                 // Select which combination will be used to calculate reconstructed vertex
                 if( eta_region == 1 || eta_region >= 4 ) {
                     if( flag124 || flag134 ) { 
@@ -545,7 +502,7 @@ void test::Loop()
                 if( eta_region == 4 ) aa4->Fill(recoPV-nt_genZ);
                 if( eta_region == 5 ) aa5->Fill(recoPV-nt_genZ);
                 if( eta_region == 6 ) aa6->Fill(recoPV-nt_genZ);
-     
+
                 // initialize pixel hit variables to use in track isolation algorithm
                 first_hits.clear();
                 second_hits.clear();
@@ -632,96 +589,140 @@ void test::Loop()
                 all.erase(unique(all.begin(), all.end(), track::uni31),all.end());
                 all.erase(unique(all.begin(), all.end(), track::uni32),all.end());
 
-                ntnEg2Iso++;
-                ntEgEtIso.push_back(EgEt);
-                ntEgEtaIso.push_back(EgEta);
-                ntEgPhiIso.push_back(EgPhi);
-
-                vector<leading> pT_vector;
-                pT_vector.clear();
                 int all_size = all.size();
-                if( all_size > 15 ) all_size = 15;
-                
+                totaltrks.push_back(all_size);
+                vector<float> temp_pt;
+                temp_pt.clear();
+
                 for(Int_t cur = 0; cur < all_size; cur++)
                 {
-                    if( all[cur].index == 1 )
-                    {
-                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x1, all[cur].pos_y1, all[cur].pos_z1 - recoPV );
-                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x1, all[cur].pos_y3 - all[cur].pos_y1, all[cur].pos_z3 - all[cur].pos_z1 );
+                    double tempPhi = EgPhi;
+                    if( tempPhi < 0) tempPhi += 2.*TMath::Pi();
+                    double rotx1 = all[cur].pos_x1*cos(-tempPhi) - all[cur].pos_y1*sin(-tempPhi); 
+                    double roty1 = all[cur].pos_x1*sin(-tempPhi) + all[cur].pos_y1*cos(-tempPhi); 
+                    double rotx2 = all[cur].pos_x3*cos(-tempPhi) - all[cur].pos_y3*sin(-tempPhi); 
+                    double roty2 = all[cur].pos_x3*sin(-tempPhi) + all[cur].pos_y3*cos(-tempPhi);
 
-                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                        Float_t dPhi = deltaPhi(phi1,phi2);
-                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                        Float_t trackEta = pixel2.Eta();
-                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
-                    }
-                    if( all[cur].index == 2 )
-                    {
-                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x2, all[cur].pos_y2, all[cur].pos_z2 - recoPV );
-                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x2, all[cur].pos_y3 - all[cur].pos_y2, all[cur].pos_z3 - all[cur].pos_z2 );
+                    double r1 = sqrt(rotx1*rotx1 + roty1*roty1);
+                    double r2 = sqrt(rotx2*rotx2 + roty2*roty2);
 
-                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                        Float_t dPhi = deltaPhi(phi1,phi2);
-                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                        Float_t trackEta = pixel2.Eta();
-                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
-                    }
-                    if( all[cur].index == 3 )
-                    {
-                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x2, all[cur].pos_y2, all[cur].pos_z2 - recoPV );
-                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x2, all[cur].pos_y3 - all[cur].pos_y2, all[cur].pos_z3 - all[cur].pos_z2 );
+                    double radius1 = (r1*r1 - r2*r2)/(2.*(roty1 - roty2));
 
-                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                        Float_t dPhi = deltaPhi(phi1,phi2);
-                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                        Float_t trackEta = pixel2.Eta();
-                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
-                    }
-                    if( all[cur].index == 4 )
-                    {
-                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x1, all[cur].pos_y1, all[cur].pos_z1 - recoPV );
-                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x2, all[cur].pos_y3 - all[cur].pos_y2, all[cur].pos_z3 - all[cur].pos_z2 );
-
-                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                        Float_t dPhi = deltaPhi(phi1,phi2);
-                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                        Float_t trackEta = pixel2.Eta();
-                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
-                    }
+                    double pt1 = 0.003*3.8*fabs(radius1); // pT = 0.3Br (B = 3.8T)
+                    temp_pt.push_back(pt1);
                 }
-                
-                sort(pT_vector.begin(), pT_vector.end(), leading::ptsort );
+
+                sort(temp_pt.begin(), temp_pt.end(), greater<float>() );
 
                 Float_t denomi = 0.; Float_t nomi = 0.;
-                Int_t vec_size = pT_vector.size();
-                for(Int_t k = 0; k < vec_size; k++) {
-                    denomi += pT_vector[k].pt;
-                    if( k < 4 ) h_tracketa_all->Fill(pT_vector[k].eta);
+                Int_t track_counter1 = 0;
+                Int_t track_counter2 = 0;
+                for(unsigned int k = 0; k < temp_pt.size(); k++) {
+                    float track_pt = temp_pt.at(k);
+                    trackpt.push_back(track_pt);
+                    
+                    if( track_pt > 0.5 ) denomi += track_pt;
+                    if( k > 0 && track_pt > 0.5 ) nomi += track_pt;
+
+                    if( track_pt > 0.5 ) track_counter1++;
+                    if( track_pt > 2. ) track_counter2++;
                 }
-                for(Int_t k = 1; k < vec_size; k++) nomi += pT_vector[k].pt;
 
                 Float_t ratio = nomi/denomi;
-                IsoValue.push_back(ratio);
-                NumOfTrks.push_back(vec_size);
-                
-                if( eta_region == 1 ) nh1->Fill(vec_size);
-                if( eta_region == 2 ) nh2->Fill(vec_size);
-                if( eta_region == 3 ) nh3->Fill(vec_size);
-                if( eta_region == 4 ) nh4->Fill(vec_size);
-                if( eta_region == 5 ) nh5->Fill(vec_size);
-                if( eta_region == 6 ) nh6->Fill(vec_size);
-                
-                if( EgEt > 20 ) {
-                    if( eta_region == 1 ) h1->Fill(ratio);
-                    if( eta_region == 2 ) h2->Fill(ratio);
-                    if( eta_region == 3 ) h3->Fill(ratio);
-                    if( eta_region == 4 ) h4->Fill(ratio);
-                    if( eta_region == 5 ) h5->Fill(ratio);
-                    if( eta_region == 6 ) h6->Fill(ratio);
+                Float_t smear_flag = gRandom->Uniform(0, 1);
+
+                if( frame_flag == 1 ) {
+                    if( track_counter1 < 1 ) {
+                        IsoValue.push_back(0.);
+                    }
+                    else if( track_counter1 == 1 ) {
+                        if( eta_region > 4 ) {
+                            if( smear_flag < 0.09 ) {
+                                Float_t smearedpt = gRandom->Uniform(temp_pt.at(0)*0.1, temp_pt.at(0)*0.5);
+                                Float_t smearedratio = smearedpt/(smearedpt+temp_pt.at(0));
+                                trackpt.push_back(smearedpt);
+                                IsoValue.push_back(smearedratio);
+                                if( smearedpt > 0.5 ) track_counter1++;
+                                if( smearedpt > 2.0 ) track_counter2++;
+                                ratio = smearedratio;
+                            }
+                            else if( smear_flag < 0.11 ) {
+                                Float_t smearedpt = gRandom->Uniform(temp_pt.at(0)*0.5, temp_pt.at(0)*0.68);
+                                Float_t smearedratio = smearedpt/(smearedpt+temp_pt.at(0));
+                                trackpt.push_back(smearedpt);
+                                IsoValue.push_back(smearedratio);
+                                if( smearedpt > 0.5 ) track_counter1++;
+                                if( smearedpt > 2.0 ) track_counter2++;
+                                ratio = smearedratio;
+                            }
+                            else if( smear_flag < 0.15 ) {
+                                Float_t smearedpt = gRandom->Uniform(temp_pt.at(0)*0.68, temp_pt.at(0)*0.84);
+                                Float_t smearedratio = smearedpt/(smearedpt+temp_pt.at(0));
+                                trackpt.push_back(smearedpt);
+                                IsoValue.push_back(smearedratio);
+                                if( smearedpt > 0.5 ) track_counter1++;
+                                if( smearedpt > 2.0 ) track_counter2++;
+                                ratio = smearedratio;
+                            }
+                            else if( smear_flag < 0.22 ) {
+                                Float_t smearedpt = gRandom->Uniform(temp_pt.at(0)*0.84, temp_pt.at(0)*0.99);
+                                Float_t smearedratio = smearedpt/(smearedpt+temp_pt.at(0));
+                                trackpt.push_back(smearedpt);
+                                IsoValue.push_back(smearedratio);
+                                if( smearedpt > 0.5 ) track_counter1++;
+                                if( smearedpt > 2.0 ) track_counter2++;
+                                ratio = smearedratio;
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
+                        }
+                        else if( eta_region == 4 ) {
+                            if( smear_flag < 0.1 ) {
+                                Float_t smearedpt = gRandom->Uniform(temp_pt.at(0)*0.1, temp_pt.at(0)*0.8);
+                                Float_t smearedratio = smearedpt/(smearedpt+temp_pt.at(0));
+                                trackpt.push_back(smearedpt);
+                                IsoValue.push_back(smearedratio);
+                                if( smearedpt > 0.5 ) track_counter1++;
+                                if( smearedpt > 2.0 ) track_counter2++;
+                                ratio = smearedratio;
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
+                        }
+                        else if( eta_region == 2 || eta_region == 3) {
+                            if( smear_flag < 0.02 ) {
+                                Float_t smearedpt = gRandom->Uniform(temp_pt.at(0)*0.2, temp_pt.at(0)*0.8);
+                                Float_t smearedratio = smearedpt/(smearedpt+temp_pt.at(0));
+                                trackpt.push_back(smearedpt);
+                                IsoValue.push_back(smearedratio);
+                                if( smearedpt > 0.5 ) track_counter1++;
+                                if( smearedpt > 2.0 ) track_counter2++;
+                                ratio = smearedratio;
+                            }
+                            else {
+                                IsoValue.push_back(0.);
+                            }
+                        }
+                        else {
+                            IsoValue.push_back(0.);
+                        }
+                    }
+                    else if( track_counter1 > 1 ) {
+                        IsoValue.push_back(ratio);
+                    }
+                } // frame flag condition
+                else {
+                    if( track_counter1 < 1 ) {
+                        IsoValue.push_back(0.);
+                    }
+                    else {
+                        IsoValue.push_back(ratio);
+                    }
                 }
-                    
-                float trash = -99.;
-                if( vec_size < 1 ) {
+                
+                if( track_counter1 <= 1 ) {
                     TrkIsoPassed = true;
                 }
                 else {
@@ -742,114 +743,13 @@ void test::Loop()
                     }
                 }
 
-                int flag = vec_size;
-                if( flag > 6 ) flag = 6;
-                switch( flag ) {
-                        case 0:
-                            track_pT1.push_back(trash);
-                            track_pT2.push_back(trash);
-                            track_pT3.push_back(trash);
-                            track_pT4.push_back(trash);
-                            track_pT5.push_back(trash);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(trash);
-                            track_eta1.push_back(trash);
-                            track_eta2.push_back(trash);
-                            track_eta3.push_back(trash);
-                            break;
-                        case 1:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(trash);
-                            track_pT3.push_back(trash);
-                            track_pT4.push_back(trash);
-                            track_pT5.push_back(trash);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            track_eta1.push_back(pT_vector[0].eta);
-                            track_eta2.push_back(trash);
-                            track_eta3.push_back(trash);
-                            break;
-                        case 2:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(trash);
-                            track_pT4.push_back(trash);
-                            track_pT5.push_back(trash);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            track_eta1.push_back(pT_vector[0].eta);
-                            track_eta2.push_back(pT_vector[1].eta);
-                            track_eta3.push_back(trash);
-                            break;
-                        case 3:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(trash);
-                            track_pT5.push_back(trash);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            track_eta1.push_back(pT_vector[0].eta);
-                            track_eta2.push_back(pT_vector[1].eta);
-                            track_eta3.push_back(pT_vector[2].eta);
-                            break;
-                        case 4:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(trash);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            track_eta1.push_back(pT_vector[0].eta);
-                            track_eta2.push_back(pT_vector[1].eta);
-                            track_eta3.push_back(pT_vector[2].eta);
-                            break;
-                        case 5:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            track_eta1.push_back(pT_vector[0].eta);
-                            track_eta2.push_back(pT_vector[1].eta);
-                            track_eta3.push_back(pT_vector[2].eta);
-                            break;
-                        case 6:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(pT_vector[5].pt);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            track_eta1.push_back(pT_vector[0].eta);
-                            track_eta2.push_back(pT_vector[1].eta);
-                            track_eta3.push_back(pT_vector[2].eta);
-                            break;
-                }
-
                 if( PixTrkPassed && TrkIsoPassed ) {
                     trigger_bit_width_iso_ = trigger_bit_width_iso_| (bit2 << nth_eg_pix_deta);
                 }
 
 
             } // nth_eg_pix_deta loop
-        
+
         } // end of egamma (if function)
 
         trigger_bit_width.push_back(trigger_bit_width_);
