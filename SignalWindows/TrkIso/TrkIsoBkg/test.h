@@ -293,14 +293,6 @@ class test {
 		vector<float> track_dr;
 		vector<int> matchedPdgID;
 
-		vector<float> ntL1TkEgEt;
-		vector<float> ntL1TkEgEta;
-		vector<float> ntL1TkEgPhi;
-
-		vector<float> ntL1TkLooseEgEt;
-		vector<float> ntL1TkLooseEgEta;
-		vector<float> ntL1TkLooseEgPhi;
-
 		vector<bool> ntCl_match_wo4thPix, ntCl_match_wo3thPix, ntCl_match_wo2thPix, ntCl_match_wo1thPix;
 		vector<int> Npass_woEM_wo4thPix, Npass_woEM_wo3thPix, Npass_woEM_wo2thPix, Npass_woEM_wo1thPix;
 		vector<int> Npass_wEM_wo4thPix, Npass_wEM_wo3thPix, Npass_wEM_wo2thPix, Npass_wEM_wo1thPix;
@@ -440,30 +432,15 @@ class test {
 		std::vector<track> L124;
 		std::vector<track> L134;
 		std::vector<track> L234;
+
+		vector<float> IsoValue1;
+		vector<float> leadpt;
+		vector<float> secondpt;
+		vector<float> trackpt;
+		vector<int> totaltrks;
+		vector<int> trkswithcut1;
+		vector<int> trkswithcut2;
 		
-		vector<int> NumOfTrks;
-		vector<float> IsoValue;
-
-		vector<float> ntEgEtIso;
-		vector<float> ntEgPhiIso;
-		vector<float> ntEgEtaIso;
-		int ntnEg2Iso; 
-
-		vector<float> track_pT1;
-		vector<float> track_pT2;
-		vector<float> track_pT3;
-		vector<float> track_pT4;
-		vector<float> track_pT5;
-		vector<float> track_pT6;
-		vector<float> track_pT7;
-		vector<float> track_pT8;
-		vector<float> track_pT9;
-		vector<float> track_pT10;
-		vector<float> track_pT11;
-		vector<float> track_pT12;
-		vector<float> track_pT13;
-		vector<float> track_pT14;
-		vector<float> track_pT15;
 };
 
 #endif
@@ -505,27 +482,23 @@ test::test(TTree *tree) : fChain(0)
 	pixtrk_tree->Branch("totalEvent", &count_Entry, "count_Entry/I");   
 	pixtrk_tree->Branch("totalEgN", &EgN, "EgN/F");
 	pixtrk_tree->Branch("ntnEg2", &ntnEg2, "ntnEg2/I");
-	pixtrk_tree->Branch("ntnEg2Iso", &ntnEg2Iso, "ntnEg2Iso/I");
 
 	pixtrk_tree->Branch("ntEgEem",&ntEgEem);
 	pixtrk_tree->Branch("ntEgEhad",&ntEgEhad);
 	pixtrk_tree->Branch("ntEgEt",&ntEgEt);
 	pixtrk_tree->Branch("ntEgEta",&ntEgEta);
 	pixtrk_tree->Branch("ntEgPhi",&ntEgPhi);
-	pixtrk_tree->Branch("ntEgEtIso",&ntEgEtIso);
-	pixtrk_tree->Branch("ntEgEtaIso",&ntEgEtaIso);
-	pixtrk_tree->Branch("ntEgPhiIso",&ntEgPhiIso);
 	pixtrk_tree->Branch("ntCl_match",&ntCl_match);
 	pixtrk_tree->Branch("ntCl_iso_match",&ntCl_iso_match);
 
-	pixtrk_tree->Branch("IsoValue",&IsoValue);
-	pixtrk_tree->Branch("NumOfTrks",&NumOfTrks);
-	pixtrk_tree->Branch("track_pT1",&track_pT1);
-	pixtrk_tree->Branch("track_pT2",&track_pT2);
-	pixtrk_tree->Branch("track_pT3",&track_pT3);
-	pixtrk_tree->Branch("track_pT4",&track_pT4);
-	pixtrk_tree->Branch("track_pT5",&track_pT5);
-	pixtrk_tree->Branch("track_pT6",&track_pT6);
+	pixtrk_tree->Branch("IsoValue",&IsoValue1); 
+	pixtrk_tree->Branch("totaltrks", &totaltrks);
+	pixtrk_tree->Branch("trkswithcut1", &trkswithcut1);
+	pixtrk_tree->Branch("trkswithcut2", &trkswithcut2);
+	pixtrk_tree->Branch("leadpt", &leadpt);
+	pixtrk_tree->Branch("secondpt", &secondpt);
+	pixtrk_tree->Branch("trackpt", &trackpt);
+	
 
 }
 

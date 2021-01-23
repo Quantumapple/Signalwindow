@@ -7,7 +7,6 @@
 #include <string>
 #include <TLorentzVector.h>
 #include <TGraph.h>
-#include "../../../trkIsoPtFitFunction.h"
 
 using namespace std;
 
@@ -22,29 +21,16 @@ void test::Loop()
     int bit1 = 0x1;
     int bit2 = 0x1;
 
-    TH1F *h1 = new TH1F("h1","Isolation value distribution in 1st region",100,0,1);
-    TH1F *h2 = new TH1F("h2","Isolation value distribution in 2nd region",100,0,1);
-    TH1F *h3 = new TH1F("h3","Isolation value distribution in 3rd region",100,0,1);
-    TH1F *h4 = new TH1F("h4","Isolation value distribution in 4th region",100,0,1);
-    TH1F *h5 = new TH1F("h5","Isolation value distribution in 5th region",100,0,1);
-    TH1F *h6 = new TH1F("h6","Isolation value distribution in 6th region",100,0,1);
-
-    TH1F *h_tracketa_all = new TH1F("h_tracketa_all","All track eta",160,-4.,4.);
-    TH1F *h_tracketa_1 = new TH1F("h_tracketa_1","leading track eta",160,-4.,4.);
-    TH1F *h_tracketa_2 = new TH1F("h_tracketa_2","second track eta",160,-4.,4.);
-    TH1F *h_tracketa_3 = new TH1F("h_tracketa_3","third track eta",160,-4.,4.);
-    TH1F *h_tracketa_4 = new TH1F("h_tracketa_4","fourth track eta",160,-4.,4.);
-
     const double EM_PiX_dphi_width_[9] = {0.02, 0.03, 0.03, 0.033, 0.035, 0.037, 0.039, 0.04, 0.05}; // 
     const double EM_PiX_deta_width_[9] = {0.01, 0.015, 0.015, 0.033, 0.035, 0.037, 0.039, 0.04, 0.05}; // 
 
     const double PiX_PiX_dphi_width_[9] = {0.0017, 0.003, 0.003, 0.0033, 0.0035, 0.0037, 0.0039, 0.004, 0.005};
     const double PiX_PiX_deta_width_[9] = {0.0017, 0.003, 0.005, 0.0033, 0.0035, 0.0037, 0.0039, 0.004, 0.005};
-    
-    //const double isovalCut[6] = {0.09, 0.09, 0.06, 0.21, 0.40, 0.43}; // option 1 
-    const double isovalCut[6] = {0.10, 0.10, 0.07, 0.21, 0.27, 0.31};  // option 2
+
+    const double isovalCut[6] = {0.10, 0.10, 0.17, 0.28, 0.27, 0.21};  // option 2
 
     for (Long64_t jentry=0; jentry<nentries;jentry++) { //nentries
+    //for (Long64_t jentry=0; jentry<5;jentry++) { //nentries
         Long64_t ientry = LoadTree(jentry);
         if (ientry < 0) break;
         nb = fChain->GetEntry(jentry);   nbytes += nb;
@@ -79,69 +65,24 @@ void test::Loop()
         trigger_bit_width.clear();
         trigger_4Hits_bit_width.clear();
 
-        ntCl_match_wo4thPix.clear();
-        ntCl_match_wo3thPix.clear();
-        ntCl_match_wo2thPix.clear();
-        ntCl_match_wo1thPix.clear();
-
-        Npass_woEM_wo4thPix.clear();
-        Npass_woEM_wo3thPix.clear();
-        Npass_woEM_wo2thPix.clear();
-        Npass_woEM_wo1thPix.clear();
-
-        Npass_wEM_wo4thPix.clear();
-        Npass_wEM_wo3thPix.clear();
-        Npass_wEM_wo2thPix.clear();
-        Npass_wEM_wo1thPix.clear();
-
-        ntfirstPix.clear();
-        ntsecondPix.clear();
-        ntthirdPix.clear();
-        ntfourthPix.clear();
-
-        dphi_L12EM_wo4thPix.clear();
-        dphi_L12EM_wo3thPix.clear();
-        dphi_L12EM_wo2thPix.clear();
-        dphi_L12EM_wo1thPix.clear();
-
-        deta_L12EM_wo4thPix.clear();
-        deta_L12EM_wo3thPix.clear();
-        deta_L12EM_wo2thPix.clear();
-        deta_L12EM_wo1thPix.clear();
-
         all_cut_pass_eg = 0;
         event_nominator = 0;
         event_denominator = 0;
-
-        ntnEg2Iso = 0;
-        ntEgEtIso.clear();
-        ntEgEtaIso.clear();
-        ntEgPhiIso.clear();
-
-        NumOfTrks.clear();
-        IsoValue.clear();
-        track_pT1.clear();
-        track_pT2.clear();
-        track_pT3.clear();
-        track_pT4.clear();
-        track_pT5.clear();
-        track_pT6.clear();
-        track_pT7.clear();
-        track_pT8.clear();
-        track_pT9.clear();
-        track_pT10.clear();
-        track_pT11.clear();
-        track_pT12.clear();
-        track_pT13.clear();
-        track_pT14.clear();
-        track_pT15.clear();
+        
+        IsoValue1.clear();
+        totaltrks.clear();
+        trkswithcut1.clear();
+        trkswithcut2.clear();
+        leadpt.clear();
+        secondpt.clear();
+        trackpt.clear();
 
         //Consider maximum 6 egamma order of Et
 
         if( EgN <= 6 )
         {
             // find egamma objects passing pixtrk signal windows
-            for( int q=0; q<EgN; q++){ 
+            for( int q=0; q<EgN; q++) { 
                 float EgEem =egCrysClusterEem ->at(q);
                 float EgEhad =egCrysClusterEhad ->at(q);
                 EgEt =egCrysClusterEt ->at(q);
@@ -185,12 +126,6 @@ void test::Loop()
                 ntEgEta.push_back(EgEta);
                 ntEgPhi.push_back(EgPhi);
 
-                // set regin of interest
-                // for η < 1.3, Δφ < 0.05 
-                //if(eta_region==1)SetROI(2); 
-                //else SetROI(eta_region);
-                //SetROI(1);
-
                 SetROI(eta_region);
 
                 // initialize pixel hit variables
@@ -225,8 +160,9 @@ void test::Loop()
                 trigger_bit_width_ = 0x0;
                 PiXTRKbit_4Hits_ = 0x0; 
 
-                for(int nth_eg_pix_deta = 0; nth_eg_pix_deta < 9; nth_eg_pix_deta++){
-                    if(nth_eg_pix_deta != 0) continue;
+                for(int nth_eg_pix_deta = 0; nth_eg_pix_deta < 9; nth_eg_pix_deta++) {
+                    //if(nth_eg_pix_deta != 0) continue;
+                    if(nth_eg_pix_deta != 0) break;
 
                     //SetSingalBoundary(eta_region);
                     if(eta_region == 1) SetSingalBoundary(eta_region, EM_PiX_dphi_width_[nth_eg_pix_deta], EM_PiX_deta_width_[nth_eg_pix_deta], PiX_PiX_dphi_width_[nth_eg_pix_deta], PiX_PiX_deta_width_[nth_eg_pix_deta]);
@@ -561,24 +497,12 @@ void test::Loop()
                     ntCl_match.push_back(true);
                     all_cut_pass_eg = 1; 
                 }
-                else ntCl_match.push_back(false);
-
-                // %%%%%%%%%%%%%%%%%%%%% Track isolation algorithm %%%%%%%%%%%%%%%%%%%%%
-
-                if( pass_count == 0 ) 
-                {
-                    ntCl_iso_match.push_back(false);
-                    NumOfTrks.push_back(-1);
-                    IsoValue.push_back(-1.);
-                    track_pT1.push_back(-99.);
-                    track_pT2.push_back(-99.);
-                    track_pT3.push_back(-99.);
-                    track_pT4.push_back(-99.);
-                    track_pT5.push_back(-99.);
-                    track_pT6.push_back(-99.);
-                    continue; // Skip when L1 Egamma doesn't pass PixTRK algorithm
+                else {
+                    ntCl_match.push_back(false);
+                    continue;
                 }
 
+                // %%%%%%%%%%%%%%%%%%%%% Track isolation algorithm %%%%%%%%%%%%%%%%%%%%%
                 // Select which combination will be used to calculate reconstructed vertex
                 if( eta_region <= 1 || eta_region >= 4 ) {
                     if( flag124 || flag134 ) { 
@@ -694,89 +618,59 @@ void test::Loop()
                 all.erase(unique(all.begin(), all.end(), track::uni31),all.end());
                 all.erase(unique(all.begin(), all.end(), track::uni32),all.end());
 
-                ntnEg2Iso++;
-                ntEgEtIso.push_back(EgEt);
-                ntEgEtaIso.push_back(EgEta);
-                ntEgPhiIso.push_back(EgPhi);
-
-                vector<leading> pT_vector;
-                pT_vector.clear();
                 int all_size = all.size();
-                if( all_size > 15 ) all_size = 15;
-                
+                totaltrks.push_back(all_size);
+                vector<float> temp_pt;
+                temp_pt.clear();
+
                 for(Int_t cur = 0; cur < all_size; cur++)
                 {
-                    if( all[cur].index == 1 )
-                    {
-                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x1, all[cur].pos_y1, all[cur].pos_z1 - recoPV );
-                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x1, all[cur].pos_y3 - all[cur].pos_y1, all[cur].pos_z3 - all[cur].pos_z1 );
+                    double tempPhi = EgPhi;
+                    if( tempPhi < 0) tempPhi += 2.*TMath::Pi();
+                    double rotx1 = all[cur].pos_x1*cos(-tempPhi) - all[cur].pos_y1*sin(-tempPhi); 
+                    double roty1 = all[cur].pos_x1*sin(-tempPhi) + all[cur].pos_y1*cos(-tempPhi); 
+                    double rotx2 = all[cur].pos_x3*cos(-tempPhi) - all[cur].pos_y3*sin(-tempPhi); 
+                    double roty2 = all[cur].pos_x3*sin(-tempPhi) + all[cur].pos_y3*cos(-tempPhi);
 
-                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                        Float_t dPhi = deltaPhi(phi1,phi2);
-                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                        Float_t trackEta = pixel2.Eta();
-                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
-                    }
-                    if( all[cur].index == 2 )
-                    {
-                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x2, all[cur].pos_y2, all[cur].pos_z2 - recoPV );
-                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x2, all[cur].pos_y3 - all[cur].pos_y2, all[cur].pos_z3 - all[cur].pos_z2 );
+                    double r1 = sqrt(rotx1*rotx1 + roty1*roty1);
+                    double r2 = sqrt(rotx2*rotx2 + roty2*roty2);
 
-                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                        Float_t dPhi = deltaPhi(phi1,phi2);
-                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                        Float_t trackEta = pixel2.Eta();
-                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
-                    }
-                    if( all[cur].index == 3 )
-                    {
-                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x2, all[cur].pos_y2, all[cur].pos_z2 - recoPV );
-                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x2, all[cur].pos_y3 - all[cur].pos_y2, all[cur].pos_z3 - all[cur].pos_z2 );
+                    double radius1 = (r1*r1 - r2*r2)/(2.*(roty1 - roty2));
+                    double radius2 = (r1*r1 + r2*r2)/(2.*(roty1 + roty2));
 
-                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                        Float_t dPhi = deltaPhi(phi1,phi2);
-                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                        Float_t trackEta = pixel2.Eta();
-                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
-                    }
-                    if( all[cur].index == 4 )
-                    {
-                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x1, all[cur].pos_y1, all[cur].pos_z1 - recoPV );
-                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x2, all[cur].pos_y3 - all[cur].pos_y2, all[cur].pos_z3 - all[cur].pos_z2 );
-
-                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                        Float_t dPhi = deltaPhi(phi1,phi2);
-                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                        Float_t trackEta = pixel2.Eta();
-                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
-                    }
+                    double pt1 = 0.003*3.8*fabs(radius1); // pT = 0.3Br (B = 3.8T)
+                    temp_pt.push_back(pt1);
                 }
-                
-                sort(pT_vector.begin(), pT_vector.end(), leading::ptsort );
+
+                sort(temp_pt.begin(), temp_pt.end(), greater<float>() );
 
                 Float_t denomi = 0.; Float_t nomi = 0.;
-                Int_t vec_size = pT_vector.size();
-                for(Int_t k = 0; k < vec_size; k++) {
-                    denomi += pT_vector[k].pt;
-                    if( k < 4 ) h_tracketa_all->Fill(pT_vector[k].eta);
+                Int_t track_counter1 = 0;
+                Int_t track_counter2 = 0;
+                for(unsigned int k = 0; k < temp_pt.size(); k++) {
+                    float pixel_pt = temp_pt.at(k);
+                    trackpt.push_back(pixel_pt);
+                    if( k == 0 ) leadpt.push_back(pixel_pt);
+                    if( k == 1 ) secondpt.push_back(pixel_pt);
+                    
+                    if( pixel_pt > 0.5 ) denomi += pixel_pt;
+                    if( k > 0 && pixel_pt > 0.5 ) nomi += pixel_pt;
+
+                    if( pixel_pt > 0.5 ) track_counter1++;
+                    if( pixel_pt > 2. ) track_counter2++;
                 }
-                for(Int_t k = 1; k < vec_size; k++) nomi += pT_vector[k].pt;
+                trkswithcut1.push_back(track_counter1);
+                trkswithcut2.push_back(track_counter2);
 
                 Float_t ratio = nomi/denomi;
-                IsoValue.push_back(ratio);
-                NumOfTrks.push_back(vec_size);
-                
-                if( EgEt > 20 ) {
-                    if( eta_region == 1 ) h1->Fill(ratio);
-                    if( eta_region == 2 ) h2->Fill(ratio);
-                    if( eta_region == 3 ) h3->Fill(ratio);
-                    if( eta_region == 4 ) h4->Fill(ratio);
-                    if( eta_region == 5 ) h5->Fill(ratio);
-                    if( eta_region == 6 ) h6->Fill(ratio);
+                if( track_counter1 < 1 ) {
+                    IsoValue1.push_back(0.);
                 }
-                    
-                float trash = -99.;
-                if( vec_size < 1 ) {
+                else {
+                    IsoValue1.push_back(ratio);
+                }
+
+                if( track_counter1 < 2 ) {
                     ntCl_iso_match.push_back(true);
                 }
                 else {
@@ -802,87 +696,6 @@ void test::Loop()
                     }
 
                 }
-
-                int flag = vec_size;
-                if( flag > 6 ) flag = 6;
-                switch( flag ) {
-                        case 0:
-                            track_pT1.push_back(trash);
-                            track_pT2.push_back(trash);
-                            track_pT3.push_back(trash);
-                            track_pT4.push_back(trash);
-                            track_pT5.push_back(trash);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(trash);
-                            break;
-                        case 1:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(trash);
-                            track_pT3.push_back(trash);
-                            track_pT4.push_back(trash);
-                            track_pT5.push_back(trash);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            break;
-                        case 2:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(trash);
-                            track_pT4.push_back(trash);
-                            track_pT5.push_back(trash);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            break;
-                        case 3:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(trash);
-                            track_pT5.push_back(trash);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            break;
-                        case 4:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(trash);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            break;
-                        case 5:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            break;
-                        case 6:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(pT_vector[5].pt);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            break;
-                }
-
 
             } // end of egamma loop    
 
@@ -1012,12 +825,6 @@ void test::Loop()
                 ntEgEta.push_back(EgEta);
                 ntEgPhi.push_back(EgPhi);
 
-                // set regin of interest
-                // for η < 1.3, Δφ < 0.05 
-                //if(eta_region==1)SetROI(2); 
-                //else SetROI(eta_region);
-                //SetROI(1);
-
                 SetROI(eta_region);
 
                 // initialize pixel hit variables
@@ -1388,25 +1195,12 @@ void test::Loop()
                     ntCl_match.push_back(true);
                     all_cut_pass_eg = 1; 
                 }
-                else ntCl_match.push_back(false);
-
-                // %%%%%%%%%%%%%%%%%%%%% Track isolation algorithm %%%%%%%%%%%%%%%%%%%%%
-
-                if( pass_count == 0 ) 
-                {
-                    ntCl_iso_match.push_back(false);
-                    NumOfTrks.push_back(-1);
-                    IsoValue.push_back(-1.);
-                    track_pT1.push_back(-99.);
-                    track_pT2.push_back(-99.);
-                    track_pT3.push_back(-99.);
-                    track_pT4.push_back(-99.);
-                    track_pT5.push_back(-99.);
-                    track_pT6.push_back(-99.);
-                    //cout << "   Ignore this L1 Egamma" << endl;
-                    continue; // Skip when L1 Egamma doesn't pass PixTRK algorithm
+                else { 
+                    ntCl_match.push_back(false);
+                    continue;
                 }
 
+                // %%%%%%%%%%%%%%%%%%%%% Track isolation algorithm %%%%%%%%%%%%%%%%%%%%%
                 // Select which combination will be used to calculate reconstructed vertex
                 if( eta_region <= 1 || eta_region >= 4 ) {
                     if( flag124 || flag134 ) { 
@@ -1522,92 +1316,59 @@ void test::Loop()
                 all.erase(unique(all.begin(), all.end(), track::uni31),all.end());
                 all.erase(unique(all.begin(), all.end(), track::uni32),all.end());
 
-                // For distribution, we consider L1 e/gamma larger than 20 GeV
-                //if( EgEt < 20. ) continue;
-
-                ntnEg2Iso++;
-                ntEgEtIso.push_back(EgEt);
-                ntEgEtaIso.push_back(EgEta);
-                ntEgPhiIso.push_back(EgPhi);
-
-                vector<leading> pT_vector;
-                pT_vector.clear();
                 int all_size = all.size();
-                if( all_size > 15 ) all_size = 15;
-                
+                totaltrks.push_back(all_size);
+                vector<float> temp_pt;
+                temp_pt.clear();
+
                 for(Int_t cur = 0; cur < all_size; cur++)
                 {
-                    if( all[cur].index == 1 )
-                    {
-                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x1, all[cur].pos_y1, all[cur].pos_z1 - recoPV );
-                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x1, all[cur].pos_y3 - all[cur].pos_y1, all[cur].pos_z3 - all[cur].pos_z1 );
+                    double tempPhi = EgPhi;
+                    if( tempPhi < 0) tempPhi += 2.*TMath::Pi();
+                    double rotx1 = all[cur].pos_x1*cos(-tempPhi) - all[cur].pos_y1*sin(-tempPhi); 
+                    double roty1 = all[cur].pos_x1*sin(-tempPhi) + all[cur].pos_y1*cos(-tempPhi); 
+                    double rotx2 = all[cur].pos_x3*cos(-tempPhi) - all[cur].pos_y3*sin(-tempPhi); 
+                    double roty2 = all[cur].pos_x3*sin(-tempPhi) + all[cur].pos_y3*cos(-tempPhi);
 
-                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                        Float_t dPhi = deltaPhi(phi1,phi2);
-                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                        Float_t trackEta = pixel2.Eta();
-                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
-                    }
-                    if( all[cur].index == 2 )
-                    {
-                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x2, all[cur].pos_y2, all[cur].pos_z2 - recoPV );
-                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x2, all[cur].pos_y3 - all[cur].pos_y2, all[cur].pos_z3 - all[cur].pos_z2 );
+                    double r1 = sqrt(rotx1*rotx1 + roty1*roty1);
+                    double r2 = sqrt(rotx2*rotx2 + roty2*roty2);
 
-                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                        Float_t dPhi = deltaPhi(phi1,phi2);
-                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                        Float_t trackEta = pixel2.Eta();
-                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
-                    }
-                    if( all[cur].index == 3 )
-                    {
-                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x2, all[cur].pos_y2, all[cur].pos_z2 - recoPV );
-                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x2, all[cur].pos_y3 - all[cur].pos_y2, all[cur].pos_z3 - all[cur].pos_z2 );
+                    double radius1 = (r1*r1 - r2*r2)/(2.*(roty1 - roty2));
+                    double radius2 = (r1*r1 + r2*r2)/(2.*(roty1 + roty2));
 
-                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                        Float_t dPhi = deltaPhi(phi1,phi2);
-                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                        Float_t trackEta = pixel2.Eta();
-                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
-                    }
-                    if( all[cur].index == 4 )
-                    {
-                        TVector3 pixel1; pixel1.SetXYZ( all[cur].pos_x1, all[cur].pos_y1, all[cur].pos_z1 - recoPV );
-                        TVector3 pixel2; pixel2.SetXYZ( all[cur].pos_x3 - all[cur].pos_x2, all[cur].pos_y3 - all[cur].pos_y2, all[cur].pos_z3 - all[cur].pos_z2 );
-
-                        Float_t phi1 = pixel1.Phi(); Float_t phi2 = pixel2.Phi();
-                        Float_t dPhi = deltaPhi(phi1,phi2);
-                        Float_t recopT = pT_fit(eta_region, all[cur].index, dPhi);
-                        Float_t trackEta = pixel2.Eta();
-                        if( recopT > 0.5 ) pT_vector.push_back(leading(recopT, trackEta));
-                    }
+                    double pt1 = 0.003*3.8*fabs(radius1); // pT = 0.3Br (B = 3.8T)
+                    temp_pt.push_back(pt1);
                 }
-                
-                sort(pT_vector.begin(), pT_vector.end(), leading::ptsort );
+
+                sort(temp_pt.begin(), temp_pt.end(), greater<float>() );
 
                 Float_t denomi = 0.; Float_t nomi = 0.;
-                Int_t vec_size = pT_vector.size();
-                for(Int_t k = 0; k < vec_size; k++) {
-                    denomi += pT_vector[k].pt;
-                    if( k < 4 ) h_tracketa_all->Fill(pT_vector[k].eta);
+                Int_t track_counter1 = 0;
+                Int_t track_counter2 = 0;
+                for(unsigned int k = 0; k < temp_pt.size(); k++) {
+                    float pixel_pt = temp_pt.at(k);
+                    trackpt.push_back(pixel_pt);
+                    if( k == 0 ) leadpt.push_back(pixel_pt);
+                    if( k == 1 ) secondpt.push_back(pixel_pt);
+                    
+                    if( pixel_pt > 0.5 ) denomi += pixel_pt;
+                    if( k > 0 && pixel_pt > 0.5 ) nomi += pixel_pt;
+
+                    if( pixel_pt > 0.5 ) track_counter1++;
+                    if( pixel_pt > 2. ) track_counter2++;
                 }
-                for(Int_t k = 1; k < vec_size; k++) nomi += pT_vector[k].pt;
+                trkswithcut1.push_back(track_counter1);
+                trkswithcut2.push_back(track_counter2);
 
                 Float_t ratio = nomi/denomi;
-                IsoValue.push_back(ratio);
-                NumOfTrks.push_back(vec_size);
-                
-                if( EgEt > 20 ) {
-                    if( eta_region == 1 ) h1->Fill(ratio);
-                    if( eta_region == 2 ) h2->Fill(ratio);
-                    if( eta_region == 3 ) h3->Fill(ratio);
-                    if( eta_region == 4 ) h4->Fill(ratio);
-                    if( eta_region == 5 ) h5->Fill(ratio);
-                    if( eta_region == 6 ) h6->Fill(ratio);
+                if( track_counter1 < 1 ) {
+                    IsoValue1.push_back(0.);
                 }
-                    
-                float trash = -99.;
-                if( vec_size < 1 ) {
+                else {
+                    IsoValue1.push_back(ratio);
+                }
+
+                if( track_counter1 < 2 ) {
                     ntCl_iso_match.push_back(true);
                 }
                 else {
@@ -1634,86 +1395,7 @@ void test::Loop()
 
                 }
 
-                int flag = vec_size;
-                if( flag > 6 ) flag = 6;
-                switch( flag ) {
-                        case 0:
-                            track_pT1.push_back(trash);
-                            track_pT2.push_back(trash);
-                            track_pT3.push_back(trash);
-                            track_pT4.push_back(trash);
-                            track_pT5.push_back(trash);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(trash);
-                            break;
-                        case 1:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(trash);
-                            track_pT3.push_back(trash);
-                            track_pT4.push_back(trash);
-                            track_pT5.push_back(trash);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            break;
-                        case 2:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(trash);
-                            track_pT4.push_back(trash);
-                            track_pT5.push_back(trash);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            break;
-                        case 3:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(trash);
-                            track_pT5.push_back(trash);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            break;
-                        case 4:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(trash);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            break;
-                        case 5:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(trash);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            break;
-                        case 6:
-                            track_pT1.push_back(pT_vector[0].pt);
-                            track_pT2.push_back(pT_vector[1].pt);
-                            track_pT3.push_back(pT_vector[2].pt);
-                            track_pT4.push_back(pT_vector[3].pt);
-                            track_pT5.push_back(pT_vector[4].pt);
-                            track_pT6.push_back(pT_vector[5].pt);
-                            h_tracketa_1->Fill(pT_vector[0].eta);
-                            h_tracketa_2->Fill(pT_vector[1].eta);
-                            h_tracketa_3->Fill(pT_vector[2].eta);
-                            h_tracketa_4->Fill(pT_vector[3].eta);
-                            break;
-                }
-            
+
             } // end of egamma loop    
 
         } // EgN size >= 7 
