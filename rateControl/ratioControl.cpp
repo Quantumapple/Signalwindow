@@ -23,15 +23,15 @@ void ratioControl()
     TTreeReaderValue<std::vector<bool>> pixtrkFlag(tree_reader, "ntCl_match");
     TTreeReaderValue<std::vector<bool>> trkisoFlag(tree_reader, "ntCl_iso_match");
 
-    TTreeReaderValue<std::vector<float>> isoval(tree_reader, "IsoValue");
-    TTreeReaderValue<std::vector<int>> numtrks(tree_reader, "NumOfTrks");
+    //TTreeReaderValue<std::vector<float>> isoval(tree_reader, "IsoValue");
+    //TTreeReaderValue<std::vector<int>> numtrks(tree_reader, "NumOfTrks");
 
-    TTreeReaderValue<std::vector<float>> pixpt1(tree_reader, "track_pT1");
-    TTreeReaderValue<std::vector<float>> pixpt2(tree_reader, "track_pT2");
-    TTreeReaderValue<std::vector<float>> pixpt3(tree_reader, "track_pT3");
-    TTreeReaderValue<std::vector<float>> pixpt4(tree_reader, "track_pT4");
-    TTreeReaderValue<std::vector<float>> pixpt5(tree_reader, "track_pT5");
-    TTreeReaderValue<std::vector<float>> pixpt6(tree_reader, "track_pT6");
+    //TTreeReaderValue<std::vector<float>> pixpt1(tree_reader, "track_pT1");
+    //TTreeReaderValue<std::vector<float>> pixpt2(tree_reader, "track_pT2");
+    //TTreeReaderValue<std::vector<float>> pixpt3(tree_reader, "track_pT3");
+    //TTreeReaderValue<std::vector<float>> pixpt4(tree_reader, "track_pT4");
+    //TTreeReaderValue<std::vector<float>> pixpt5(tree_reader, "track_pT5");
+    //TTreeReaderValue<std::vector<float>> pixpt6(tree_reader, "track_pT6");
 
     // Declare branches for output //
     int             ntnEg2;
@@ -40,14 +40,14 @@ void ratioControl()
     vector<float>   ntEgPhi;
     vector<bool>    ntCl_match;
     vector<bool>    ntCl_iso_match;
-    vector<float>   IsoValue;
-    vector<int>     NumOfTrks;
-    vector<float>   track_pT1;
-    vector<float>   track_pT2;
-    vector<float>   track_pT3;
-    vector<float>   track_pT4;
-    vector<float>   track_pT5;
-    vector<float>   track_pT6;
+    //vector<float>   IsoValue;
+    //vector<int>     NumOfTrks;
+    //vector<float>   track_pT1;
+    //vector<float>   track_pT2;
+    //vector<float>   track_pT3;
+    //vector<float>   track_pT4;
+    //vector<float>   track_pT5;
+    //vector<float>   track_pT6;
 
     TFile *result = new TFile("results.root","RECREATE");
     result->mkdir("t");
@@ -64,15 +64,15 @@ void ratioControl()
     mytree->Branch("ntCl_match", &ntCl_match);
     mytree->Branch("ntCl_iso_match", &ntCl_iso_match);
 
-    mytree->Branch("IsoValue", &IsoValue);
-    mytree->Branch("NumOfTrks", &NumOfTrks); 
+    //mytree->Branch("IsoValue", &IsoValue);
+    //mytree->Branch("NumOfTrks", &NumOfTrks); 
 
-    mytree->Branch("track_pT1", &track_pT1);
-    mytree->Branch("track_pT2", &track_pT2);
-    mytree->Branch("track_pT3", &track_pT3);
-    mytree->Branch("track_pT4", &track_pT4);
-    mytree->Branch("track_pT5", &track_pT5);
-    mytree->Branch("track_pT6", &track_pT6);
+    //mytree->Branch("track_pT1", &track_pT1);
+    //mytree->Branch("track_pT2", &track_pT2);
+    //mytree->Branch("track_pT3", &track_pT3);
+    //mytree->Branch("track_pT4", &track_pT4);
+    //mytree->Branch("track_pT5", &track_pT5);
+    //mytree->Branch("track_pT6", &track_pT6);
 
 
     int eventCount = 0;
@@ -93,15 +93,15 @@ void ratioControl()
         ntCl_match.clear();
         ntCl_iso_match.clear();
 
-        IsoValue.clear();
-        NumOfTrks.clear();
+        //IsoValue.clear();
+        //NumOfTrks.clear();
 
-        track_pT1.clear();
-        track_pT2.clear();
-        track_pT3.clear();
-        track_pT4.clear();
-        track_pT5.clear();
-        track_pT6.clear();
+        //track_pT1.clear();
+        //track_pT2.clear();
+        //track_pT3.clear();
+        //track_pT4.clear();
+        //track_pT5.clear();
+        //track_pT6.clear();
 
         for(int i=0; i < eget->size(); i++) {
 

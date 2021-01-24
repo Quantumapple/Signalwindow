@@ -8,9 +8,9 @@
 
 void draw()
 {
-    float genN = 9256306.0*2.6306; 
+    //float genN = 9256306.0*2.6306*1.3668; 
+    float genN = 9256306.0*3.5952; 
 
-    int eta_r = 1;
 
     int nbins = 151; float x1 = 9.5 ; float x2 = 160.5 ;
     TH1F* hEG = new TH1F("hEG",";E_{T} threshold (GeV); Rate (kHz)",nbins,x1,x2);
@@ -22,7 +22,6 @@ void draw()
 
     // Declaration of leaf types
     TFile *f = TFile::Open("results.root"); 
-    //TFile *f = TFile::Open("results_had_100_all_et_range.root"); 
     TTreeReader tree_reader("t/t", f);
 
     TTreeReaderValue<int> egn(tree_reader, "ntnEg2");
@@ -34,6 +33,7 @@ void draw()
     TTreeReaderValue<std::vector<bool>> pixtrkFlag(tree_reader, "ntCl_match");
     TTreeReaderValue<std::vector<bool>> trkisoFlag(tree_reader, "ntCl_iso_match");
 
+    /*
     TTreeReaderValue<std::vector<float>> isoval(tree_reader, "IsoValue");
     TTreeReaderValue<std::vector<int>> numtrks(tree_reader, "NumOfTrks");
 
@@ -43,7 +43,10 @@ void draw()
     TTreeReaderValue<std::vector<float>> pixpt4(tree_reader, "track_pT4");
     TTreeReaderValue<std::vector<float>> pixpt5(tree_reader, "track_pT5");
     TTreeReaderValue<std::vector<float>> pixpt6(tree_reader, "track_pT6");
+    */
 
+    int eta_r = 3;
+    if( eta_r == 2 ) genN *= (99.2/60.);
     while( tree_reader.Next() ) {
 
         if(!*egn) continue;
@@ -51,30 +54,36 @@ void draw()
         float max_eget = -999.;
         for(int i=0; i < *egn; i++){
 
-            //if(eta_r == 1 && eget->at(i) > max_eget && (fabs(egeta->at(i)) < 1.5) ) max_eget = eget->at(i);
-            //if(eta_r == 1 && eget->at(i) > max_eget && (fabs(egeta->at(i)) > 1.5 && fabs(egeta->at(i)) < 2.5) ) max_eget = eget->at(i);
-            //if(eta_r == 1 && eget->at(i) > max_eget && (fabs(egeta->at(i)) > 2.5 && fabs(egeta->at(i)) < 3.0) ) max_eget = eget->at(i);
-            if(eta_r == 1 && eget->at(i) > max_eget && (fabs(egeta->at(i)) < 2.5) ) max_eget = eget->at(i);
+            //if(eta_r == 1 && eget->at(i) > max_eget && (fabs(egeta->at(i)) < 1.0) ) max_eget = eget->at(i);
+            if(eta_r == 1 && eget->at(i) > max_eget && (fabs(egeta->at(i)) < 1.5) ) max_eget = eget->at(i);
+            //if(eta_r == 1 && eget->at(i) > max_eget && (fabs(egeta->at(i)) > 1.0 && fabs(egeta->at(i)) < 1.5) ) max_eget = eget->at(i);
+            if(eta_r == 2 && eget->at(i) > max_eget && (fabs(egeta->at(i)) > 1.5 && fabs(egeta->at(i)) < 2.5) ) max_eget = eget->at(i);
+            if(eta_r == 3 && eget->at(i) > max_eget && (fabs(egeta->at(i)) > 2.5 && fabs(egeta->at(i)) < 3.0) ) max_eget = eget->at(i);
+            if(eta_r == 4 && eget->at(i) > max_eget && (fabs(egeta->at(i)) < 2.5) ) max_eget = eget->at(i);
             //if(eta_r == 1 && eget->at(i) > max_eget && (fabs(egeta->at(i)) < 3.0) ) max_eget = eget->at(i);
 
         }// eg loop
 
         float max_pxeget = -999.;
         for(int i=0; i < *egn; i++){
-            //if(eta_r == 1 && eget->at(i) > max_pxeget && pixtrkFlag->at(i) && (fabs(egeta->at(i)) < 1.5)) max_pxeget = eget->at(i);
-            //if(eta_r == 1 && eget->at(i) > max_pxeget && pixtrkFlag->at(i) && (fabs(egeta->at(i)) > 1.5 && fabs(egeta->at(i)) < 2.5) ) max_pxeget = eget->at(i);
-            //if(eta_r == 1 && eget->at(i) > max_pxeget && pixtrkFlag->at(i) && (fabs(egeta->at(i)) > 2.5 && fabs(egeta->at(i)) < 3.0) ) max_pxeget = eget->at(i);
-            if(eta_r == 1 && eget->at(i) > max_pxeget && pixtrkFlag->at(i) && (fabs(egeta->at(i)) < 2.5) ) max_pxeget = eget->at(i);
+            //if(eta_r == 1 && eget->at(i) > max_pxeget && pixtrkFlag->at(i) && (fabs(egeta->at(i)) < 1.0)) max_pxeget = eget->at(i);
+            if(eta_r == 1 && eget->at(i) > max_pxeget && pixtrkFlag->at(i) && (fabs(egeta->at(i)) < 1.5)) max_pxeget = eget->at(i);
+            //if(eta_r == 1 && eget->at(i) > max_pxeget && pixtrkFlag->at(i) && (fabs(egeta->at(i)) > 1.0 && fabs(egeta->at(i)) < 1.5) ) max_pxeget = eget->at(i);
+            if(eta_r == 2 && eget->at(i) > max_pxeget && pixtrkFlag->at(i) && (fabs(egeta->at(i)) > 1.5 && fabs(egeta->at(i)) < 2.5) ) max_pxeget = eget->at(i);
+            if(eta_r == 3 && eget->at(i) > max_pxeget && pixtrkFlag->at(i) && (fabs(egeta->at(i)) > 2.5 && fabs(egeta->at(i)) < 3.0) ) max_pxeget = eget->at(i);
+            if(eta_r == 4 && eget->at(i) > max_pxeget && pixtrkFlag->at(i) && (fabs(egeta->at(i)) < 2.5) ) max_pxeget = eget->at(i);
             //if(eta_r == 1 && eget->at(i) > max_pxeget && pixtrkFlag->at(i) && (fabs(egeta->at(i)) < 3.0) ) max_pxeget = eget->at(i);
 
         }// pxeg loop
 
         float max_pxeget_iso = -999.;
         for(int i=0; i < *egn; i++){
-            //if(eta_r == 1 && eget->at(i) > max_pxeget_iso && trkisoFlag->at(i) && (fabs(egeta->at(i)) < 1.5)) max_pxeget_iso = eget->at(i);
-            //if(eta_r == 1 && eget->at(i) > max_pxeget_iso && trkisoFlag->at(i) && (fabs(egeta->at(i)) > 1.5 && fabs(egeta->at(i)) < 2.5) ) max_pxeget_iso = eget->at(i);
-            //if(eta_r == 1 && eget->at(i) > max_pxeget_iso && trkisoFlag->at(i) && (fabs(egeta->at(i)) > 2.5 && fabs(egeta->at(i)) < 3.0) ) max_pxeget_iso = eget->at(i);
-            if(eta_r == 1 && eget->at(i) > max_pxeget_iso && trkisoFlag->at(i) && (fabs(egeta->at(i)) < 2.5) ) max_pxeget_iso = eget->at(i);
+            //if(eta_r == 1 && eget->at(i) > max_pxeget_iso && trkisoFlag->at(i) && (fabs(egeta->at(i)) < 1.0)) max_pxeget_iso = eget->at(i);
+            if(eta_r == 1 && eget->at(i) > max_pxeget_iso && trkisoFlag->at(i) && (fabs(egeta->at(i)) < 1.5)) max_pxeget_iso = eget->at(i);
+            //if(eta_r == 1 && eget->at(i) > max_pxeget_iso && trkisoFlag->at(i) && (fabs(egeta->at(i)) > 1.0 && fabs(egeta->at(i)) < 1.5) ) max_pxeget_iso = eget->at(i);
+            if(eta_r == 2 && eget->at(i) > max_pxeget_iso && trkisoFlag->at(i) && (fabs(egeta->at(i)) > 1.5 && fabs(egeta->at(i)) < 2.5) ) max_pxeget_iso = eget->at(i);
+            if(eta_r == 3 && eget->at(i) > max_pxeget_iso && trkisoFlag->at(i) && (fabs(egeta->at(i)) > 2.5 && fabs(egeta->at(i)) < 3.0) ) max_pxeget_iso = eget->at(i);
+            if(eta_r == 4 && eget->at(i) > max_pxeget_iso && trkisoFlag->at(i) && (fabs(egeta->at(i)) < 2.5) ) max_pxeget_iso = eget->at(i);
             //if(eta_r == 1 && eget->at(i) > max_pxeget_iso && trkisoFlag->at(i) && (fabs(egeta->at(i)) < 3.0) ) max_pxeget_iso = eget->at(i);
 
         }// pxegIso loop
@@ -120,16 +129,14 @@ void draw()
     }
     
     cout << "1 bin: " << hEG->GetBinContent(1) * 30000./genN << endl;
-    cout << "2 bin: " << hEG->GetBinContent(2) * 30000./genN << endl;
+    //cout << "2 bin: " << hEG->GetBinContent(2) * 30000./genN << endl;
     cout << "11 bin: " << hEG->GetBinContent(11) * 30000./genN<< endl;
     cout << "11px 1 bin: " << hPXEG->GetBinContent(1) * 30000./genN<< endl;
     cout << "11px bin: " << hPXEG->GetBinContent(11) * 30000./genN<< endl;
+    cout << "11px 1 bin: " << hPXIsoEG->GetBinContent(1) * 30000./genN<< endl;
     cout << "11px iso bin: " << hPXIsoEG->GetBinContent(11) * 30000./genN<< endl;
 
-    //float s=14500.;
     float s=30000.;
-    //float s=50000.;
-    //float s=13500.;
 
     hEG      -> Scale(s/genN);
     hPXEG    -> Scale(s/genN);
@@ -160,28 +167,29 @@ void draw()
     hEG->GetYaxis()->SetRangeUser(1,35000);
     hEG->GetYaxis()->SetTitleOffset(1.2);
     hEG->GetYaxis()->SetTitleSize(0.055);
+    hEG->SetMaximum(7500);
     hEG->SetMinimum(1.);
 
-    hEG->SetMarkerColor(2);
-    hEG->SetLineColor(2);
+    hEG->SetMarkerColor(kBlack);
+    hEG->SetLineColor(kBlack);
     hEG->SetLineWidth(2);
     hEG->SetMarkerStyle(20);
     hEG->SetMarkerSize(1.);
-    hEG->Draw("HIST E");
+    hEG->Draw("HIST PE");
 
-    hPXEG->SetMarkerColor(4);
-    hPXEG->SetLineColor(4);
+    hPXEG->SetMarkerColor(kRed);
+    hPXEG->SetLineColor(kRed);
     hPXEG->SetLineWidth(2);
     hPXEG->SetMarkerStyle(20);
     hPXEG->SetMarkerSize(1.);
-    hPXEG->Draw("HIST same E");
+    hPXEG->Draw("HIST same PE");
 
     hPXIsoEG->SetMarkerColor(8);
     hPXIsoEG->SetLineColor(8);
     hPXIsoEG->SetLineWidth(2);
     hPXIsoEG->SetMarkerStyle(20);
     hPXIsoEG->SetMarkerSize(1.);
-    hPXIsoEG->Draw("HIST same E");
+    hPXIsoEG->Draw("HIST same PE");
 
     TLegend *Lgd = new TLegend(0.45, 0.65, 0.65, 0.9);
     Lgd->SetFillColor(0);
@@ -206,33 +214,37 @@ void draw()
 
     TString eta_str;
 
-    //if(eta_r == 1) eta_str = "#it{#lbar#bf{#eta}#lbar < 1.5}";
-    if(eta_r == 1) eta_str = "#it{1.5 < #lbar#bf{#eta}#lbar < 2.5}";
-    //if(eta_r == 1) eta_str = "#it{2.5 < #lbar#bf{#eta}#lbar < 3.0}";
-    //if(eta_r == 1) eta_str = "#it{#lbar#bf{#eta}#lbar < 2.5}";
+    //if(eta_r == 1) eta_str = "#it{#lbar#bf{#eta}#lbar < 1.0}";
+    if(eta_r == 1) eta_str = "#it{#lbar#bf{#eta}#lbar < 1.5}";
+    //if(eta_r == 1) eta_str = "#it{1.0 < #lbar#bf{#eta}#lbar < 1.5}";
+    if(eta_r == 2) eta_str = "#it{1.5 < #lbar#bf{#eta}#lbar < 2.5}";
+    if(eta_r == 3) eta_str = "#it{2.5 < #lbar#bf{#eta}#lbar < 3.0}";
+    if(eta_r == 4) eta_str = "#it{#lbar#bf{#eta}#lbar < 2.5}";
     //if(eta_r == 1) eta_str = "#it{#lbar#bf{#eta}#lbar < 3.0}";
 
     TLatex eta_range( 0.75*(1-r_), 0.87*(1-t_) ,eta_str);
-    //TLatex eta_range(70,200,eta_str);
-    //TLatex eta_range(70,4500,eta_str);
-    //TLatex eta_range(66.5,4500,eta_str);
     eta_range.SetNDC();
     eta_range.SetTextSize(0.035);
     eta_range.Draw();
 
-    TString l1rate = "l1rate";
+    TString pngname;
+    TString pdfname;
 
-    //if(eta_r == 0) l1rate = l1rate + "_all.png";
-    if(eta_r == 1) l1rate = l1rate + "_r1.png";
-    //if(eta_r == 1) l1rate = l1rate + "_all.png";
-    //if(eta_r == 2) l1rate = l1rate + "_r2.png";
-    //if(eta_r == 3) l1rate = l1rate + "_r3.png";
-    //if(eta_r == 4) l1rate = l1rate + "_r4.png";
+    if(eta_r == 1) pngname = "plots/l1rate_eta0to1p5.png";
+    if(eta_r == 2) pngname = "plots/l1rate_eta1p5to2p5.png";
+    if(eta_r == 3) pngname = "plots/l1rate_eta2p5to3p0.png";
+    if(eta_r == 4) pngname = "plots/l1rate_eta0to2p5.png";
+    
+    if(eta_r == 1) pdfname = "plots/l1rate_eta0to1p5.pdf";
+    if(eta_r == 2) pdfname = "plots/l1rate_eta1p5to2p5.pdf";
+    if(eta_r == 3) pdfname = "plots/l1rate_eta2p5to3p0.pdf";
+    if(eta_r == 4) pdfname = "plots/l1rate_eta0to2p5.pdf";
 
-    c1->Print(l1rate);
-    c1->SaveAs("l1rate_all.pdf");
+    c1->Print(pngname);
+    c1->SaveAs(pdfname);
 
-
+    c1->Close();
+    
     //TCanvas *c2 = new TCanvas("c2","c2",700,700);
     //gStyle->SetOptStat(0);
     //gStyle->SetLineWidth(2); // axis width, default is 1
